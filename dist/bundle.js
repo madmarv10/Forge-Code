@@ -386405,9 +386405,9 @@ function Clawd(t0) {
     t11 = /* @__PURE__ */ jsx_runtime243.jsxs(ThemedText, {
       color: "clawd_body",
       children: [
-        "  ",
-        "\u2598\u2598 \u259D\u259D",
-        "  "
+        " ",
+        "\u259F\u2588\u2588\u2588\u2588\u2588\u2599",
+        " "
       ]
     });
     $[22] = t11;
@@ -386441,7 +386441,7 @@ function AppleTerminalClawd(t0) {
   if ($[0] === Symbol.for("react.memo_cache_sentinel")) {
     t1 = /* @__PURE__ */ jsx_runtime243.jsx(ThemedText, {
       color: "clawd_body",
-      children: "\u2597"
+      children: "\u2588"
     });
     $[0] = t1;
   } else {
@@ -386464,7 +386464,7 @@ function AppleTerminalClawd(t0) {
   if ($[3] === Symbol.for("react.memo_cache_sentinel")) {
     t4 = /* @__PURE__ */ jsx_runtime243.jsx(ThemedText, {
       color: "clawd_body",
-      children: "\u2596"
+      children: "\u2588"
     });
     $[3] = t4;
   } else {
@@ -386489,11 +386489,11 @@ function AppleTerminalClawd(t0) {
   if ($[6] === Symbol.for("react.memo_cache_sentinel")) {
     t6 = /* @__PURE__ */ jsx_runtime243.jsx(ThemedText, {
       backgroundColor: "clawd_body",
-      children: " ".repeat(7)
+      children: " ".repeat(5)
     });
     t7 = /* @__PURE__ */ jsx_runtime243.jsx(ThemedText, {
       color: "clawd_body",
-      children: "\u2598\u2598 \u259D\u259D"
+      children: "\u259F\u2588\u2588\u2588\u2588\u2588\u2599"
     });
     $[6] = t6;
     $[7] = t7;
@@ -386527,39 +386527,39 @@ var init_Clawd = __esm(() => {
   jsx_runtime243 = __toESM(require_jsx_runtime(), 1);
   POSES = {
     default: {
-      r1L: " \u2590",
-      r1E: "\u259B\u2588\u2588\u2588\u259C",
-      r1R: "\u258C",
-      r2L: "\u259D\u259C",
-      r2R: "\u259B\u2598"
+      r1L: "\u2588\u2588",
+      r1E: "\u2588\u2588\u2588\u2588\u2588",
+      r1R: "\u2588\u2588",
+      r2L: "  ",
+      r2R: "  "
     },
     "look-left": {
-      r1L: " \u2590",
-      r1E: "\u259F\u2588\u2588\u2588\u259F",
-      r1R: "\u258C",
-      r2L: "\u259D\u259C",
-      r2R: "\u259B\u2598"
+      r1L: "\u2588\u2588",
+      r1E: "\u2588\u2588\u2588\u2588\u2588",
+      r1R: "\u2588\u2588",
+      r2L: "  ",
+      r2R: "  "
     },
     "look-right": {
-      r1L: " \u2590",
-      r1E: "\u2599\u2588\u2588\u2588\u2599",
-      r1R: "\u258C",
-      r2L: "\u259D\u259C",
-      r2R: "\u259B\u2598"
+      r1L: "\u2588\u2588",
+      r1E: "\u2588\u2588\u2588\u2588\u2588",
+      r1R: "\u2588\u2588",
+      r2L: "  ",
+      r2R: "  "
     },
     "arms-up": {
-      r1L: "\u2597\u259F",
-      r1E: "\u259B\u2588\u2588\u2588\u259C",
-      r1R: "\u2599\u2596",
-      r2L: " \u259C",
-      r2R: "\u259B "
+      r1L: "\u2588\u2588",
+      r1E: "\u2588\u2588\u2588\u2588\u2588",
+      r1R: "\u2588\u2588",
+      r2L: "  ",
+      r2R: "  "
     }
   };
   APPLE_EYES = {
-    default: " \u2597   \u2596 ",
-    "look-left": " \u2598   \u2598 ",
-    "look-right": " \u259D   \u259D ",
-    "arms-up": " \u2597   \u2596 "
+    default: "\u2588\u2588\u2588\u2588\u2588",
+    "look-left": "\u2588\u2588\u2588\u2588\u2588",
+    "look-right": "\u2588\u2588\u2588\u2588\u2588",
+    "arms-up": "\u2588\u2588\u2588\u2588\u2588"
   };
 });
 
@@ -387329,7 +387329,7 @@ function CondensedLogo() {
   if ($[8] === Symbol.for("react.memo_cache_sentinel")) {
     t5 = /* @__PURE__ */ jsx_runtime249.jsx(ThemedText, {
       bold: true,
-      children: "Claude Code"
+      children: "Forge Code"
     });
     $[8] = t5;
   } else {
@@ -508304,4 +508304,4 @@ async function main2() {
 }
 main2();
 
-//# debugId=40C2523F608CE8F964756E2164756E21
+//# debugId=54E5AFEBE72CB25064756E2164756E21
