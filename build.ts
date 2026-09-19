@@ -15,9 +15,15 @@
 import { existsSync } from "node:fs";
 import { rm } from "node:fs/promises";
 import { resolve } from "node:path";
+import { FEATURE_FLAGS } from "./shims/feature-flags.ts";
 
 const ROOT = import.meta.dir;
 const SRC = resolve(ROOT, "src");
+
+// Resolve a feature flag name to its build-time boolean (default false).
+function flagValue(name: string): boolean {
+  return FEATURE_FLAGS[name] ?? false;
+}
 
 const MACRO_VALUE = {
   VERSION: "2.1.88",
@@ -29,7 +35,10 @@ const MACRO_VALUE = {
   FEEDBACK_CHANNEL: "",
 };
 
-const FEATURE_CALL = /\bfeature\(\s*['"][A-Z_][A-Z_0-9]*['"]\s*\)/g;
+// Matches `feature('FLAG')` / `feature("FLAG")` and captures the flag name so we
+// can resolve it per-flag from shims/feature-flags.ts (true keeps the branch,
+// false DCEs it). Every call uses an uppercase string literal.
+const FEATURE_CALL = /\bfeature\(\s*['"]([A-Z_][A-Z_0-9]*)['"]\s*\)/g;
 
 const EXTERNAL = [
   "@aws-sdk/client-bedrock",
@@ -95,7 +104,9 @@ const featureDcePlugin = {
       if (args.path.startsWith(SRC)) {
         const input = await Bun.file(args.path).text();
         if (input.includes("feature(")) {
-          const transformed = input.replace(FEATURE_CALL, "false");
+          const transformed = input.replace(FEATURE_CALL, (_m, name: string) =>
+            flagValue(name) ? "true" : "false",
+          );
           const loader = args.path.endsWith(".tsx")
             ? "tsx"
             : args.path.endsWith(".jsx")
