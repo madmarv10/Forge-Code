@@ -223564,7 +223564,7 @@ async function isAppleTerminalBellDisabled() {
     return false;
   }
 }
-var DEFAULT_TITLE = "Claude Code";
+var DEFAULT_TITLE = "Forge Code";
 var init_notifier = __esm(() => {
   init_config2();
   init_env();
@@ -335218,7 +335218,7 @@ async function setupSdkMcpClients(sdkMcpConfigs, sendMcpMessage) {
     const transport = new SdkControlClientTransport(name, sendMcpMessage);
     const client = new Client2({
       name: "claude-code",
-      title: "Claude Code",
+      title: "Forge Code",
       version: { VERSION: "2.1.88", BUILD_TIME: "", PACKAGE_URL: "https://www.npmjs.com/package/@anthropic-ai/claude-code", NATIVE_PACKAGE_URL: "", VERSION_CHANGELOG: "", ISSUES_EXPLAINER: "", FEEDBACK_CHANNEL: "" }.VERSION ?? "unknown",
       description: "Anthropic's agentic coding tool",
       websiteUrl: PRODUCT_URL
@@ -335572,7 +335572,7 @@ var init_client6 = __esm(() => {
       }
       const client = new Client2({
         name: "claude-code",
-        title: "Claude Code",
+        title: "Forge Code",
         version: { VERSION: "2.1.88", BUILD_TIME: "", PACKAGE_URL: "https://www.npmjs.com/package/@anthropic-ai/claude-code", NATIVE_PACKAGE_URL: "", VERSION_CHANGELOG: "", ISSUES_EXPLAINER: "", FEEDBACK_CHANNEL: "" }.VERSION ?? "unknown",
         description: "Anthropic's agentic coding tool",
         websiteUrl: PRODUCT_URL
@@ -483166,7 +483166,7 @@ function REPL({
   const [haikuTitle, setHaikuTitle] = import_react319.useState();
   const haikuTitleAttemptedRef = import_react319.useRef((initialMessages?.length ?? 0) > 0);
   const agentTitle = mainThreadAgentDefinition?.agentType;
-  const terminalTitle = sessionTitle ?? agentTitle ?? haikuTitle ?? "Claude Code";
+  const terminalTitle = sessionTitle ?? agentTitle ?? haikuTitle ?? "Forge Code";
   const isWaitingForApproval = toolUseConfirmQueue.length > 0 || promptQueue.length > 0 || pendingWorkerRequest || pendingSandboxRequest;
   const isShowingLocalJSXCommand = toolJSX?.isLocalJSXCommand === true && toolJSX?.jsx != null;
   const titleIsAnimating = isLoading && !isWaitingForApproval && !isShowingLocalJSXCommand;
@@ -508303,4 +508303,4 @@ async function main2() {
 }
 main2();
 
-//# debugId=0E8BC743F774A65E64756E2164756E21
+//# debugId=C3853A652FDD1CE864756E2164756E21
