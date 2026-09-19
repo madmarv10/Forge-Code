@@ -4,6 +4,21 @@ import { feature } from 'bun:bundle';
 // eslint-disable-next-line custom-rules/no-top-level-side-effects
 process.env.COREPACK_ENABLE_AUTO_PIN = '0';
 
+// FORGE CODE: map FORGE_* env vars to the ANTHROPIC_* names the CLI reads
+// internally. This lets users write FORGE_API_KEY / FORGE_BASE_URL / etc. in
+// their .env (Forge branding) while the bundle — and spawned child processes,
+// and the @anthropic-ai/sdk's own auth fallback — keep reading ANTHROPIC_*.
+// Runs before any auth module is imported (all imports below are dynamic).
+// An explicit ANTHROPIC_* value always wins over a FORGE_* alias.
+for (const [k, v] of Object.entries(process.env)) {
+  if (k.startsWith('FORGE_') && typeof v === 'string') {
+    const anth = 'ANTHROPIC_' + k.slice('FORGE_'.length);
+    if (process.env[anth] === undefined) {
+      process.env[anth] = v;
+    }
+  }
+}
+
 // COMPILED BUILD: when an API key is set (the OpenRouter / 3P path), drop any
 // inherited ANTHROPIC_AUTH_TOKEN so the two don't conflict. Without this, an
 // AUTH_TOKEN leaking in from a parent shell triggers a spurious "Auth conflict"
