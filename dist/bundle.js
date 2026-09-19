@@ -387582,7 +387582,7 @@ var init_AnimatedAsterisk = __esm(() => {
 
 // src/components/LogoV2/Opus1mMergeNotice.tsx
 function shouldShowOpus1mMergeNotice() {
-  return isOpus1mMergeEnabled() && (getGlobalConfig().opus1mMergeNoticeSeenCount ?? 0) < MAX_SHOW_COUNT;
+  return false;
 }
 function Opus1mMergeNotice() {
   const $ = import_compiler_runtime202.c(4);
@@ -387640,12 +387640,11 @@ function Opus1mMergeNotice() {
   }
   return t2;
 }
-var import_compiler_runtime202, import_react148, jsx_runtime252, MAX_SHOW_COUNT = 6;
+var import_compiler_runtime202, import_react148, jsx_runtime252;
 var init_Opus1mMergeNotice = __esm(() => {
   init_figures2();
   init_ink2();
   init_config2();
-  init_model();
   init_AnimatedAsterisk();
   import_compiler_runtime202 = __toESM(require_compiler_runtime(), 1);
   import_react148 = __toESM(require_react(), 1);
@@ -480883,7 +480882,7 @@ function useCanSwitchToExistingSubscription() {
   useStartupNotification(_temp293);
 }
 async function _temp293() {
-  if ((getGlobalConfig().subscriptionNoticeCount ?? 0) >= MAX_SHOW_COUNT2) {
+  if ((getGlobalConfig().subscriptionNoticeCount ?? 0) >= MAX_SHOW_COUNT) {
     return null;
   }
   const subscriptionType = await getExistingClaudeSubscription();
@@ -480935,7 +480934,7 @@ async function getExistingClaudeSubscription() {
   }
   return null;
 }
-var jsx_runtime452, MAX_SHOW_COUNT2 = 3;
+var jsx_runtime452, MAX_SHOW_COUNT = 3;
 var init_useCanSwitchToExistingSubscription = __esm(() => {
   init_getOauthProfile();
   init_auth();
@@ -508304,4 +508303,4 @@ async function main2() {
 }
 main2();
 
-//# debugId=54E5AFEBE72CB25064756E2164756E21
+//# debugId=0E8BC743F774A65E64756E2164756E21
