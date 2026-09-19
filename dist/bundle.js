@@ -418807,10 +418807,94 @@ var init_model3 = __esm(() => {
   };
 });
 
+// src/commands/openrouter/openrouter.tsx
+var exports_openrouter = {};
+__export(exports_openrouter, {
+  call: () => call64
+});
+function renderModelLabel2(model) {
+  const rendered = renderDefaultModelSetting(model ?? getDefaultMainLoopModelSetting());
+  return model === null ? `${rendered} (default)` : rendered;
+}
+function SetOpenRouterModelAndClose({
+  args,
+  onDone
+}) {
+  const setAppState = useSetAppState();
+  const model = args === "default" ? null : args;
+  React108.useEffect(() => {
+    setAppState((prev) => ({
+      ...prev,
+      mainLoopModel: model,
+      mainLoopModelForSession: null
+    }));
+    const label = renderModelLabel2(model);
+    if (model === null) {
+      onDone(`Reset model to default (${source_default.bold(label)})`);
+    } else {
+      onDone(`Set OpenRouter model to ${source_default.bold(label)}`);
+    }
+  }, [model, onDone, setAppState]);
+  return null;
+}
+function ShowModelAndClose2({
+  onDone
+}) {
+  const mainLoopModel = useAppState((s) => s.mainLoopModel);
+  const mainLoopModelForSession = useAppState((s) => s.mainLoopModelForSession);
+  if (mainLoopModelForSession) {
+    onDone(`Current model: ${source_default.bold(renderModelLabel2(mainLoopModelForSession))} (session override from plan mode)
+Base model: ${renderModelLabel2(mainLoopModel)}`);
+  } else {
+    onDone(`Current model: ${renderModelLabel2(mainLoopModel)}`);
+  }
+  return null;
+}
+var React108, jsx_runtime348, call64 = async (onDone, _context, args) => {
+  args = args?.trim() || "";
+  if (!args) {
+    return /* @__PURE__ */ jsx_runtime348.jsx(ShowModelAndClose2, {
+      onDone
+    });
+  }
+  if (args === "help" || args === "?") {
+    onDone("Usage: /openrouter <model> \u2014 switch to any OpenRouter model (e.g. /openrouter openai/gpt-4o-mini, /openrouter anthropic/claude-3.5-sonnet). Use /openrouter default to reset. Use /openrouter with no args to see the current model.", { display: "system" });
+    return;
+  }
+  return /* @__PURE__ */ jsx_runtime348.jsx(SetOpenRouterModelAndClose, {
+    args,
+    onDone
+  });
+};
+var init_openrouter = __esm(() => {
+  init_source();
+  init_AppState();
+  init_model();
+  React108 = __toESM(require_react(), 1);
+  jsx_runtime348 = __toESM(require_jsx_runtime(), 1);
+});
+
+// src/commands/openrouter/index.ts
+var openrouter_default;
+var init_openrouter2 = __esm(() => {
+  init_model();
+  openrouter_default = {
+    type: "local-jsx",
+    name: "openrouter",
+    aliases: ["or"],
+    get description() {
+      return `Switch the OpenRouter model (e.g. /openrouter openai/gpt-4o-mini). Currently ${renderModelName(getMainLoopModel())}.`;
+    },
+    argumentHint: "[model]",
+    disableModelInvocation: true,
+    load: () => Promise.resolve().then(() => (init_openrouter(), exports_openrouter))
+  };
+});
+
 // src/commands/tag/tag.tsx
 var exports_tag = {};
 __export(exports_tag, {
-  call: () => call64
+  call: () => call65
 });
 function ConfirmRemoveTag(t0) {
   const $ = import_compiler_runtime274.c(11);
@@ -418822,7 +418906,7 @@ function ConfirmRemoveTag(t0) {
   const t1 = `Current tag: #${tagName}`;
   let t2;
   if ($[0] === Symbol.for("react.memo_cache_sentinel")) {
-    t2 = /* @__PURE__ */ jsx_runtime348.jsx(ThemedText, {
+    t2 = /* @__PURE__ */ jsx_runtime349.jsx(ThemedText, {
       children: "This will remove the tag from the current session."
     });
     $[0] = t2;
@@ -418853,12 +418937,12 @@ function ConfirmRemoveTag(t0) {
   }
   let t5;
   if ($[5] !== t3) {
-    t5 = /* @__PURE__ */ jsx_runtime348.jsxs(ThemedBox_default, {
+    t5 = /* @__PURE__ */ jsx_runtime349.jsxs(ThemedBox_default, {
       flexDirection: "column",
       gap: 1,
       children: [
         t2,
-        /* @__PURE__ */ jsx_runtime348.jsx(Select, {
+        /* @__PURE__ */ jsx_runtime349.jsx(Select, {
           onChange: t3,
           options: t4
         })
@@ -418871,7 +418955,7 @@ function ConfirmRemoveTag(t0) {
   }
   let t6;
   if ($[7] !== onCancel || $[8] !== t1 || $[9] !== t5) {
-    t6 = /* @__PURE__ */ jsx_runtime348.jsx(Dialog, {
+    t6 = /* @__PURE__ */ jsx_runtime349.jsx(Dialog, {
       title: "Remove tag?",
       subtitle: t1,
       onCancel,
@@ -418893,8 +418977,8 @@ function ToggleTagAndClose(t0) {
     tagName,
     onDone
   } = t0;
-  const [showConfirm, setShowConfirm] = React108.useState(false);
-  const [sessionId, setSessionId] = React108.useState(null);
+  const [showConfirm, setShowConfirm] = React109.useState(false);
+  const [sessionId, setSessionId] = React109.useState(null);
   let t1;
   if ($[0] !== tagName) {
     t1 = recursivelySanitizeUnicode(tagName).trim();
@@ -418949,7 +419033,7 @@ function ToggleTagAndClose(t0) {
     t2 = $[4];
     t3 = $[5];
   }
-  React108.useEffect(t2, t3);
+  React109.useEffect(t2, t3);
   if (showConfirm && sessionId) {
     let t4;
     if ($[6] !== normalizedTag || $[7] !== onDone || $[8] !== sessionId) {
@@ -418984,7 +419068,7 @@ function ToggleTagAndClose(t0) {
     }
     let t6;
     if ($[13] !== normalizedTag || $[14] !== t4 || $[15] !== t5) {
-      t6 = /* @__PURE__ */ jsx_runtime348.jsx(ConfirmRemoveTag, {
+      t6 = /* @__PURE__ */ jsx_runtime349.jsx(ConfirmRemoveTag, {
         tagName: normalizedTag,
         onConfirm: t4,
         onCancel: t5
@@ -419031,27 +419115,27 @@ Examples:
     t1 = $[1];
     t2 = $[2];
   }
-  React108.useEffect(t1, t2);
+  React109.useEffect(t1, t2);
   return null;
 }
-async function call64(onDone, _context, args) {
+async function call65(onDone, _context, args) {
   args = args?.trim() || "";
   if (COMMON_INFO_ARGS.includes(args) || COMMON_HELP_ARGS.includes(args)) {
-    return /* @__PURE__ */ jsx_runtime348.jsx(ShowHelp, {
+    return /* @__PURE__ */ jsx_runtime349.jsx(ShowHelp, {
       onDone
     });
   }
   if (!args) {
-    return /* @__PURE__ */ jsx_runtime348.jsx(ShowHelp, {
+    return /* @__PURE__ */ jsx_runtime349.jsx(ShowHelp, {
       onDone
     });
   }
-  return /* @__PURE__ */ jsx_runtime348.jsx(ToggleTagAndClose, {
+  return /* @__PURE__ */ jsx_runtime349.jsx(ToggleTagAndClose, {
     tagName: args,
     onDone
   });
 }
-var import_compiler_runtime274, React108, jsx_runtime348;
+var import_compiler_runtime274, React109, jsx_runtime349;
 var init_tag = __esm(() => {
   init_source();
   init_state();
@@ -419062,8 +419146,8 @@ var init_tag = __esm(() => {
   init_analytics();
   init_sessionStorage();
   import_compiler_runtime274 = __toESM(require_compiler_runtime(), 1);
-  React108 = __toESM(require_react(), 1);
-  jsx_runtime348 = __toESM(require_jsx_runtime(), 1);
+  React109 = __toESM(require_react(), 1);
+  jsx_runtime349 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/commands/tag/index.ts
@@ -419083,9 +419167,9 @@ var init_tag2 = __esm(() => {
 // src/commands/output-style/output-style.tsx
 var exports_output_style = {};
 __export(exports_output_style, {
-  call: () => call65
+  call: () => call66
 });
-async function call65(onDone) {
+async function call66(onDone) {
   onDone("/output-style has been deprecated. Use /config to change your output style, or set it in your settings file. Changes take effect on the next session.", {
     display: "system"
   });
@@ -419234,7 +419318,7 @@ function RemoteEnvironmentDialog(t0) {
   if (loadingState === "loading") {
     let t5;
     if ($[6] === Symbol.for("react.memo_cache_sentinel")) {
-      t5 = /* @__PURE__ */ jsx_runtime349.jsx(LoadingState, {
+      t5 = /* @__PURE__ */ jsx_runtime350.jsx(LoadingState, {
         message: "Loading environments\u2026"
       });
       $[6] = t5;
@@ -419243,7 +419327,7 @@ function RemoteEnvironmentDialog(t0) {
     }
     let t6;
     if ($[7] !== onDone) {
-      t6 = /* @__PURE__ */ jsx_runtime349.jsx(Dialog, {
+      t6 = /* @__PURE__ */ jsx_runtime350.jsx(Dialog, {
         title: DIALOG_TITLE,
         onCancel: onDone,
         hideInputGuide: true,
@@ -419259,7 +419343,7 @@ function RemoteEnvironmentDialog(t0) {
   if (error) {
     let t5;
     if ($[9] !== error) {
-      t5 = /* @__PURE__ */ jsx_runtime349.jsxs(ThemedText, {
+      t5 = /* @__PURE__ */ jsx_runtime350.jsxs(ThemedText, {
         color: "error",
         children: [
           "Error: ",
@@ -419273,7 +419357,7 @@ function RemoteEnvironmentDialog(t0) {
     }
     let t6;
     if ($[11] !== onDone || $[12] !== t5) {
-      t6 = /* @__PURE__ */ jsx_runtime349.jsx(Dialog, {
+      t6 = /* @__PURE__ */ jsx_runtime350.jsx(Dialog, {
         title: DIALOG_TITLE,
         onCancel: onDone,
         children: t5
@@ -419289,7 +419373,7 @@ function RemoteEnvironmentDialog(t0) {
   if (!selectedEnvironment) {
     let t5;
     if ($[14] === Symbol.for("react.memo_cache_sentinel")) {
-      t5 = /* @__PURE__ */ jsx_runtime349.jsx(ThemedText, {
+      t5 = /* @__PURE__ */ jsx_runtime350.jsx(ThemedText, {
         children: "No remote environments available."
       });
       $[14] = t5;
@@ -419298,7 +419382,7 @@ function RemoteEnvironmentDialog(t0) {
     }
     let t6;
     if ($[15] !== onDone) {
-      t6 = /* @__PURE__ */ jsx_runtime349.jsx(Dialog, {
+      t6 = /* @__PURE__ */ jsx_runtime350.jsx(Dialog, {
         title: DIALOG_TITLE,
         subtitle: SETUP_HINT,
         onCancel: onDone,
@@ -419314,7 +419398,7 @@ function RemoteEnvironmentDialog(t0) {
   if (environments.length === 1) {
     let t5;
     if ($[17] !== onDone || $[18] !== selectedEnvironment) {
-      t5 = /* @__PURE__ */ jsx_runtime349.jsx(SingleEnvironmentContent, {
+      t5 = /* @__PURE__ */ jsx_runtime350.jsx(SingleEnvironmentContent, {
         environment: selectedEnvironment,
         onDone
       });
@@ -419328,7 +419412,7 @@ function RemoteEnvironmentDialog(t0) {
   }
   let t5;
   if ($[20] !== environments || $[21] !== handleSelect || $[22] !== loadingState || $[23] !== onDone || $[24] !== selectedEnvironment || $[25] !== selectedEnvironmentSource) {
-    t5 = /* @__PURE__ */ jsx_runtime349.jsx(MultipleEnvironmentsContent, {
+    t5 = /* @__PURE__ */ jsx_runtime350.jsx(MultipleEnvironmentsContent, {
       environments,
       selectedEnvironment,
       selectedEnvironmentSource,
@@ -419355,7 +419439,7 @@ function EnvironmentLabel(t0) {
   } = t0;
   let t1;
   if ($[0] !== environment.name) {
-    t1 = /* @__PURE__ */ jsx_runtime349.jsx(ThemedText, {
+    t1 = /* @__PURE__ */ jsx_runtime350.jsx(ThemedText, {
       bold: true,
       children: environment.name
     });
@@ -419366,7 +419450,7 @@ function EnvironmentLabel(t0) {
   }
   let t2;
   if ($[2] !== environment.environment_id) {
-    t2 = /* @__PURE__ */ jsx_runtime349.jsxs(ThemedText, {
+    t2 = /* @__PURE__ */ jsx_runtime350.jsxs(ThemedText, {
       dimColor: true,
       children: [
         "(",
@@ -419381,7 +419465,7 @@ function EnvironmentLabel(t0) {
   }
   let t3;
   if ($[4] !== t1 || $[5] !== t2) {
-    t3 = /* @__PURE__ */ jsx_runtime349.jsxs(ThemedText, {
+    t3 = /* @__PURE__ */ jsx_runtime350.jsxs(ThemedText, {
       children: [
         figures_default.tick,
         " Using ",
@@ -419416,7 +419500,7 @@ function SingleEnvironmentContent(t0) {
   useKeybinding("confirm:yes", onDone, t1);
   let t2;
   if ($[1] !== environment) {
-    t2 = /* @__PURE__ */ jsx_runtime349.jsx(EnvironmentLabel, {
+    t2 = /* @__PURE__ */ jsx_runtime350.jsx(EnvironmentLabel, {
       environment
     });
     $[1] = environment;
@@ -419426,7 +419510,7 @@ function SingleEnvironmentContent(t0) {
   }
   let t3;
   if ($[3] !== onDone || $[4] !== t2) {
-    t3 = /* @__PURE__ */ jsx_runtime349.jsx(Dialog, {
+    t3 = /* @__PURE__ */ jsx_runtime350.jsx(Dialog, {
       title: DIALOG_TITLE,
       subtitle: SETUP_HINT,
       onCancel: onDone,
@@ -419461,7 +419545,7 @@ function MultipleEnvironmentsContent(t0) {
   const sourceSuffix = t1;
   let t2;
   if ($[2] !== selectedEnvironment.name) {
-    t2 = /* @__PURE__ */ jsx_runtime349.jsx(ThemedText, {
+    t2 = /* @__PURE__ */ jsx_runtime350.jsx(ThemedText, {
       bold: true,
       children: selectedEnvironment.name
     });
@@ -419472,7 +419556,7 @@ function MultipleEnvironmentsContent(t0) {
   }
   let t3;
   if ($[4] !== sourceSuffix || $[5] !== t2) {
-    t3 = /* @__PURE__ */ jsx_runtime349.jsxs(ThemedText, {
+    t3 = /* @__PURE__ */ jsx_runtime350.jsxs(ThemedText, {
       children: [
         "Currently using: ",
         t2,
@@ -419488,7 +419572,7 @@ function MultipleEnvironmentsContent(t0) {
   const subtitle = t3;
   let t4;
   if ($[7] === Symbol.for("react.memo_cache_sentinel")) {
-    t4 = /* @__PURE__ */ jsx_runtime349.jsx(ThemedText, {
+    t4 = /* @__PURE__ */ jsx_runtime350.jsx(ThemedText, {
       dimColor: true,
       children: SETUP_HINT
     });
@@ -419498,9 +419582,9 @@ function MultipleEnvironmentsContent(t0) {
   }
   let t5;
   if ($[8] !== environments || $[9] !== loadingState || $[10] !== onSelect || $[11] !== selectedEnvironment.environment_id) {
-    t5 = loadingState === "updating" ? /* @__PURE__ */ jsx_runtime349.jsx(LoadingState, {
+    t5 = loadingState === "updating" ? /* @__PURE__ */ jsx_runtime350.jsx(LoadingState, {
       message: "Updating\u2026"
-    }) : /* @__PURE__ */ jsx_runtime349.jsx(Select, {
+    }) : /* @__PURE__ */ jsx_runtime350.jsx(Select, {
       options: environments.map(_temp154),
       defaultValue: selectedEnvironment.environment_id,
       onChange: onSelect,
@@ -419517,15 +419601,15 @@ function MultipleEnvironmentsContent(t0) {
   }
   let t6;
   if ($[13] === Symbol.for("react.memo_cache_sentinel")) {
-    t6 = /* @__PURE__ */ jsx_runtime349.jsx(ThemedText, {
+    t6 = /* @__PURE__ */ jsx_runtime350.jsx(ThemedText, {
       dimColor: true,
-      children: /* @__PURE__ */ jsx_runtime349.jsxs(Byline, {
+      children: /* @__PURE__ */ jsx_runtime350.jsxs(Byline, {
         children: [
-          /* @__PURE__ */ jsx_runtime349.jsx(KeyboardShortcutHint, {
+          /* @__PURE__ */ jsx_runtime350.jsx(KeyboardShortcutHint, {
             shortcut: "Enter",
             action: "select"
           }),
-          /* @__PURE__ */ jsx_runtime349.jsx(ConfigurableShortcutHint, {
+          /* @__PURE__ */ jsx_runtime350.jsx(ConfigurableShortcutHint, {
             action: "confirm:no",
             context: "Confirmation",
             fallback: "Esc",
@@ -419540,7 +419624,7 @@ function MultipleEnvironmentsContent(t0) {
   }
   let t7;
   if ($[14] !== onCancel || $[15] !== subtitle || $[16] !== t5) {
-    t7 = /* @__PURE__ */ jsx_runtime349.jsxs(Dialog, {
+    t7 = /* @__PURE__ */ jsx_runtime350.jsxs(Dialog, {
       title: DIALOG_TITLE,
       subtitle,
       onCancel,
@@ -419562,11 +419646,11 @@ function MultipleEnvironmentsContent(t0) {
 }
 function _temp154(env) {
   return {
-    label: /* @__PURE__ */ jsx_runtime349.jsxs(ThemedText, {
+    label: /* @__PURE__ */ jsx_runtime350.jsxs(ThemedText, {
       children: [
         env.name,
         " ",
-        /* @__PURE__ */ jsx_runtime349.jsxs(ThemedText, {
+        /* @__PURE__ */ jsx_runtime350.jsxs(ThemedText, {
           dimColor: true,
           children: [
             "(",
@@ -419579,7 +419663,7 @@ function _temp154(env) {
     value: env.environment_id
   };
 }
-var import_compiler_runtime275, import_react191, jsx_runtime349, DIALOG_TITLE = "Select Remote Environment", SETUP_HINT = `Configure environments at: https://claude.ai/code`;
+var import_compiler_runtime275, import_react191, jsx_runtime350, DIALOG_TITLE = "Select Remote Environment", SETUP_HINT = `Configure environments at: https://claude.ai/code`;
 var init_RemoteEnvironmentDialog = __esm(() => {
   init_source();
   init_figures();
@@ -419598,23 +419682,23 @@ var init_RemoteEnvironmentDialog = __esm(() => {
   init_LoadingState();
   import_compiler_runtime275 = __toESM(require_compiler_runtime(), 1);
   import_react191 = __toESM(require_react(), 1);
-  jsx_runtime349 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime350 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/commands/remote-env/remote-env.tsx
 var exports_remote_env = {};
 __export(exports_remote_env, {
-  call: () => call66
+  call: () => call67
 });
-async function call66(onDone) {
-  return /* @__PURE__ */ jsx_runtime350.jsx(RemoteEnvironmentDialog, {
+async function call67(onDone) {
+  return /* @__PURE__ */ jsx_runtime351.jsx(RemoteEnvironmentDialog, {
     onDone
   });
 }
-var jsx_runtime350;
+var jsx_runtime351;
 var init_remote_env = __esm(() => {
   init_RemoteEnvironmentDialog();
-  jsx_runtime350 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime351 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/commands/remote-env/index.ts
@@ -419637,9 +419721,9 @@ var init_remote_env2 = __esm(() => {
 // src/commands/upgrade/upgrade.tsx
 var exports_upgrade = {};
 __export(exports_upgrade, {
-  call: () => call67
+  call: () => call68
 });
-async function call67(onDone, context) {
+async function call68(onDone, context) {
   try {
     if (isClaudeAISubscriber()) {
       const tokens = getClaudeAIOAuthTokens();
@@ -419657,7 +419741,7 @@ async function call67(onDone, context) {
     }
     const url = "https://claude.ai/upgrade/max";
     await openBrowser(url);
-    return /* @__PURE__ */ jsx_runtime351.jsx(Login, {
+    return /* @__PURE__ */ jsx_runtime352.jsx(Login, {
       startingMessage: "Starting new login following /upgrade. Exit with Ctrl-C to use existing account.",
       onDone: (success) => {
         context.onChangeAPIKey();
@@ -419670,14 +419754,14 @@ async function call67(onDone, context) {
   }
   return null;
 }
-var jsx_runtime351;
+var jsx_runtime352;
 var init_upgrade = __esm(() => {
   init_getOauthProfile();
   init_auth();
   init_browser();
   init_log3();
   init_login();
-  jsx_runtime351 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime352 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/commands/upgrade/index.ts
@@ -419699,7 +419783,7 @@ var init_upgrade2 = __esm(() => {
 // src/commands/rate-limit-options/rate-limit-options.tsx
 var exports_rate_limit_options = {};
 __export(exports_rate_limit_options, {
-  call: () => call68
+  call: () => call69
 });
 function RateLimitOptionsMenu(t0) {
   const $ = import_compiler_runtime276.c(25);
@@ -419833,7 +419917,7 @@ function RateLimitOptionsMenu(t0) {
     t5 = function handleSelect(value) {
       if (value === "upgrade") {
         logEvent("tengu_rate_limit_options_menu_select_upgrade", {});
-        call67(onDone, context).then((jsx) => {
+        call68(onDone, context).then((jsx) => {
           if (jsx) {
             setSubCommandJSX(jsx);
           }
@@ -419866,7 +419950,7 @@ function RateLimitOptionsMenu(t0) {
   }
   let t6;
   if ($[19] !== handleSelect || $[20] !== options) {
-    t6 = /* @__PURE__ */ jsx_runtime352.jsx(Select, {
+    t6 = /* @__PURE__ */ jsx_runtime353.jsx(Select, {
       options,
       onChange: handleSelect,
       visibleOptionCount: options.length
@@ -419879,7 +419963,7 @@ function RateLimitOptionsMenu(t0) {
   }
   let t7;
   if ($[22] !== handleCancel || $[23] !== t6) {
-    t7 = /* @__PURE__ */ jsx_runtime352.jsx(Dialog, {
+    t7 = /* @__PURE__ */ jsx_runtime353.jsx(Dialog, {
       title: "What do you want to do?",
       onCancel: handleCancel,
       color: "suggestion",
@@ -419893,13 +419977,13 @@ function RateLimitOptionsMenu(t0) {
   }
   return t7;
 }
-async function call68(onDone, context) {
-  return /* @__PURE__ */ jsx_runtime352.jsx(RateLimitOptionsMenu, {
+async function call69(onDone, context) {
+  return /* @__PURE__ */ jsx_runtime353.jsx(RateLimitOptionsMenu, {
     onDone,
     context
   });
 }
-var import_compiler_runtime276, import_react192, jsx_runtime352;
+var import_compiler_runtime276, import_react192, jsx_runtime353;
 var init_rate_limit_options = __esm(() => {
   init_select();
   init_Dialog();
@@ -419914,7 +419998,7 @@ var init_rate_limit_options = __esm(() => {
   init_upgrade();
   import_compiler_runtime276 = __toESM(require_compiler_runtime(), 1);
   import_react192 = __toESM(require_react(), 1);
-  jsx_runtime352 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime353 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/commands/rate-limit-options/index.ts
@@ -419965,7 +420049,7 @@ var init_statusline = __esm(() => {
 // src/commands/effort/effort.tsx
 var exports_effort = {};
 __export(exports_effort, {
-  call: () => call69,
+  call: () => call70,
   executeEffort: () => executeEffort,
   showCurrentEffort: () => showCurrentEffort
 });
@@ -420115,10 +420199,10 @@ function ApplyEffortAndClose(t0) {
     t1 = $[4];
     t2 = $[5];
   }
-  React110.useEffect(t1, t2);
+  React111.useEffect(t1, t2);
   return null;
 }
-async function call69(onDone, _context, args) {
+async function call70(onDone, _context, args) {
   args = args?.trim() || "";
   if (COMMON_HELP_ARGS2.includes(args)) {
     onDone(`Usage: /effort [low|medium|high|max|auto]
@@ -420132,17 +420216,17 @@ Effort levels:
     return;
   }
   if (!args || args === "current" || args === "status") {
-    return /* @__PURE__ */ jsx_runtime353.jsx(ShowCurrentEffort, {
+    return /* @__PURE__ */ jsx_runtime354.jsx(ShowCurrentEffort, {
       onDone
     });
   }
   const result = executeEffort(args);
-  return /* @__PURE__ */ jsx_runtime353.jsx(ApplyEffortAndClose, {
+  return /* @__PURE__ */ jsx_runtime354.jsx(ApplyEffortAndClose, {
     result,
     onDone
   });
 }
-var import_compiler_runtime277, React110, jsx_runtime353, COMMON_HELP_ARGS2;
+var import_compiler_runtime277, React111, jsx_runtime354, COMMON_HELP_ARGS2;
 var init_effort2 = __esm(() => {
   init_useMainLoopModel();
   init_analytics();
@@ -420150,8 +420234,8 @@ var init_effort2 = __esm(() => {
   init_effort();
   init_settings2();
   import_compiler_runtime277 = __toESM(require_compiler_runtime(), 1);
-  React110 = __toESM(require_react(), 1);
-  jsx_runtime353 = __toESM(require_jsx_runtime(), 1);
+  React111 = __toESM(require_react(), 1);
+  jsx_runtime354 = __toESM(require_jsx_runtime(), 1);
   COMMON_HELP_ARGS2 = ["help", "-h", "--help"];
 });
 
@@ -421711,11 +421795,11 @@ function Stats2(t0) {
   const allTimePromise = t1;
   let t2;
   if ($[1] === Symbol.for("react.memo_cache_sentinel")) {
-    t2 = /* @__PURE__ */ jsx_runtime354.jsxs(ThemedBox_default, {
+    t2 = /* @__PURE__ */ jsx_runtime355.jsxs(ThemedBox_default, {
       marginTop: 1,
       children: [
-        /* @__PURE__ */ jsx_runtime354.jsx(Spinner, {}),
-        /* @__PURE__ */ jsx_runtime354.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime355.jsx(Spinner, {}),
+        /* @__PURE__ */ jsx_runtime355.jsx(ThemedText, {
           children: " Loading your Claude Code stats\u2026"
         })
       ]
@@ -421726,9 +421810,9 @@ function Stats2(t0) {
   }
   let t3;
   if ($[2] !== onClose) {
-    t3 = /* @__PURE__ */ jsx_runtime354.jsx(import_react193.Suspense, {
+    t3 = /* @__PURE__ */ jsx_runtime355.jsx(import_react193.Suspense, {
       fallback: t2,
-      children: /* @__PURE__ */ jsx_runtime354.jsx(StatsContent, {
+      children: /* @__PURE__ */ jsx_runtime355.jsx(StatsContent, {
         allTimePromise,
         onClose
       })
@@ -421853,9 +421937,9 @@ function StatsContent(t0) {
   if (allTimeResult.type === "error") {
     let t7;
     if ($[13] !== allTimeResult.message) {
-      t7 = /* @__PURE__ */ jsx_runtime354.jsx(ThemedBox_default, {
+      t7 = /* @__PURE__ */ jsx_runtime355.jsx(ThemedBox_default, {
         marginTop: 1,
-        children: /* @__PURE__ */ jsx_runtime354.jsxs(ThemedText, {
+        children: /* @__PURE__ */ jsx_runtime355.jsxs(ThemedText, {
           color: "error",
           children: [
             "Failed to load stats: ",
@@ -421873,9 +421957,9 @@ function StatsContent(t0) {
   if (allTimeResult.type === "empty") {
     let t7;
     if ($[15] === Symbol.for("react.memo_cache_sentinel")) {
-      t7 = /* @__PURE__ */ jsx_runtime354.jsx(ThemedBox_default, {
+      t7 = /* @__PURE__ */ jsx_runtime355.jsx(ThemedBox_default, {
         marginTop: 1,
-        children: /* @__PURE__ */ jsx_runtime354.jsx(ThemedText, {
+        children: /* @__PURE__ */ jsx_runtime355.jsx(ThemedText, {
           color: "warning",
           children: "No stats available yet. Start using Claude Code!"
         })
@@ -421889,11 +421973,11 @@ function StatsContent(t0) {
   if (!displayStats || !allTimeStats) {
     let t7;
     if ($[16] === Symbol.for("react.memo_cache_sentinel")) {
-      t7 = /* @__PURE__ */ jsx_runtime354.jsxs(ThemedBox_default, {
+      t7 = /* @__PURE__ */ jsx_runtime355.jsxs(ThemedBox_default, {
         marginTop: 1,
         children: [
-          /* @__PURE__ */ jsx_runtime354.jsx(Spinner, {}),
-          /* @__PURE__ */ jsx_runtime354.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime355.jsx(Spinner, {}),
+          /* @__PURE__ */ jsx_runtime355.jsx(ThemedText, {
             children: " Loading stats\u2026"
           })
         ]
@@ -421906,9 +421990,9 @@ function StatsContent(t0) {
   }
   let t7;
   if ($[17] !== allTimeStats || $[18] !== dateRange || $[19] !== displayStats || $[20] !== isLoadingFiltered) {
-    t7 = /* @__PURE__ */ jsx_runtime354.jsx(Tab, {
+    t7 = /* @__PURE__ */ jsx_runtime355.jsx(Tab, {
       title: "Overview",
-      children: /* @__PURE__ */ jsx_runtime354.jsx(OverviewTab, {
+      children: /* @__PURE__ */ jsx_runtime355.jsx(OverviewTab, {
         stats: displayStats,
         allTimeStats,
         dateRange,
@@ -421925,9 +422009,9 @@ function StatsContent(t0) {
   }
   let t8;
   if ($[22] !== dateRange || $[23] !== displayStats || $[24] !== isLoadingFiltered) {
-    t8 = /* @__PURE__ */ jsx_runtime354.jsx(Tab, {
+    t8 = /* @__PURE__ */ jsx_runtime355.jsx(Tab, {
       title: "Models",
-      children: /* @__PURE__ */ jsx_runtime354.jsx(ModelsTab, {
+      children: /* @__PURE__ */ jsx_runtime355.jsx(ModelsTab, {
         stats: displayStats,
         dateRange,
         isLoading: isLoadingFiltered
@@ -421942,11 +422026,11 @@ function StatsContent(t0) {
   }
   let t9;
   if ($[26] !== t7 || $[27] !== t8) {
-    t9 = /* @__PURE__ */ jsx_runtime354.jsx(ThemedBox_default, {
+    t9 = /* @__PURE__ */ jsx_runtime355.jsx(ThemedBox_default, {
       flexDirection: "row",
       gap: 1,
       marginBottom: 1,
-      children: /* @__PURE__ */ jsx_runtime354.jsxs(Tabs, {
+      children: /* @__PURE__ */ jsx_runtime355.jsxs(Tabs, {
         title: "",
         color: "claude",
         defaultTab: "Overview",
@@ -421965,9 +422049,9 @@ function StatsContent(t0) {
   const t10 = copyStatus ? ` \xB7 ${copyStatus}` : "";
   let t11;
   if ($[29] !== t10) {
-    t11 = /* @__PURE__ */ jsx_runtime354.jsx(ThemedBox_default, {
+    t11 = /* @__PURE__ */ jsx_runtime355.jsx(ThemedBox_default, {
       paddingLeft: 2,
-      children: /* @__PURE__ */ jsx_runtime354.jsxs(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime355.jsxs(ThemedText, {
         dimColor: true,
         children: [
           "Esc to cancel \xB7 r to cycle dates \xB7 ctrl+s to copy",
@@ -421982,7 +422066,7 @@ function StatsContent(t0) {
   }
   let t12;
   if ($[31] !== t11 || $[32] !== t9) {
-    t12 = /* @__PURE__ */ jsx_runtime354.jsxs(Pane, {
+    t12 = /* @__PURE__ */ jsx_runtime355.jsxs(Pane, {
       color: "claude",
       children: [
         t9,
@@ -422008,17 +422092,17 @@ function DateRangeSelector(t0) {
   } = t0;
   let t1;
   if ($[0] !== dateRange) {
-    t1 = DATE_RANGE_ORDER.map((range, i) => /* @__PURE__ */ jsx_runtime354.jsxs(ThemedText, {
+    t1 = DATE_RANGE_ORDER.map((range, i) => /* @__PURE__ */ jsx_runtime355.jsxs(ThemedText, {
       children: [
-        i > 0 && /* @__PURE__ */ jsx_runtime354.jsx(ThemedText, {
+        i > 0 && /* @__PURE__ */ jsx_runtime355.jsx(ThemedText, {
           dimColor: true,
           children: " \xB7 "
         }),
-        range === dateRange ? /* @__PURE__ */ jsx_runtime354.jsx(ThemedText, {
+        range === dateRange ? /* @__PURE__ */ jsx_runtime355.jsx(ThemedText, {
           bold: true,
           color: "claude",
           children: DATE_RANGE_LABELS[range]
-        }) : /* @__PURE__ */ jsx_runtime354.jsx(ThemedText, {
+        }) : /* @__PURE__ */ jsx_runtime355.jsx(ThemedText, {
           dimColor: true,
           children: DATE_RANGE_LABELS[range]
         })
@@ -422031,7 +422115,7 @@ function DateRangeSelector(t0) {
   }
   let t2;
   if ($[2] !== t1) {
-    t2 = /* @__PURE__ */ jsx_runtime354.jsx(ThemedBox_default, {
+    t2 = /* @__PURE__ */ jsx_runtime355.jsx(ThemedBox_default, {
       children: t1
     });
     $[2] = t1;
@@ -422041,7 +422125,7 @@ function DateRangeSelector(t0) {
   }
   let t3;
   if ($[4] !== isLoading) {
-    t3 = isLoading && /* @__PURE__ */ jsx_runtime354.jsx(Spinner, {});
+    t3 = isLoading && /* @__PURE__ */ jsx_runtime355.jsx(Spinner, {});
     $[4] = isLoading;
     $[5] = t3;
   } else {
@@ -422049,7 +422133,7 @@ function DateRangeSelector(t0) {
   }
   let t4;
   if ($[6] !== t2 || $[7] !== t3) {
-    t4 = /* @__PURE__ */ jsx_runtime354.jsxs(ThemedBox_default, {
+    t4 = /* @__PURE__ */ jsx_runtime355.jsxs(ThemedBox_default, {
       marginBottom: 1,
       gap: 1,
       children: [
@@ -422116,37 +422200,37 @@ function OverviewTab({
       };
     }
   }
-  return /* @__PURE__ */ jsx_runtime354.jsxs(ThemedBox_default, {
+  return /* @__PURE__ */ jsx_runtime355.jsxs(ThemedBox_default, {
     flexDirection: "column",
     marginTop: 1,
     children: [
-      allTimeStats.dailyActivity.length > 0 && /* @__PURE__ */ jsx_runtime354.jsx(ThemedBox_default, {
+      allTimeStats.dailyActivity.length > 0 && /* @__PURE__ */ jsx_runtime355.jsx(ThemedBox_default, {
         flexDirection: "column",
         marginBottom: 1,
-        children: /* @__PURE__ */ jsx_runtime354.jsx(Ansi, {
+        children: /* @__PURE__ */ jsx_runtime355.jsx(Ansi, {
           children: generateHeatmap(allTimeStats.dailyActivity, {
             terminalWidth
           })
         })
       }),
-      /* @__PURE__ */ jsx_runtime354.jsx(DateRangeSelector, {
+      /* @__PURE__ */ jsx_runtime355.jsx(DateRangeSelector, {
         dateRange,
         isLoading
       }),
-      /* @__PURE__ */ jsx_runtime354.jsxs(ThemedBox_default, {
+      /* @__PURE__ */ jsx_runtime355.jsxs(ThemedBox_default, {
         flexDirection: "row",
         gap: 4,
         marginBottom: 1,
         children: [
-          /* @__PURE__ */ jsx_runtime354.jsx(ThemedBox_default, {
+          /* @__PURE__ */ jsx_runtime355.jsx(ThemedBox_default, {
             flexDirection: "column",
             width: 28,
-            children: favoriteModel && /* @__PURE__ */ jsx_runtime354.jsxs(ThemedText, {
+            children: favoriteModel && /* @__PURE__ */ jsx_runtime355.jsxs(ThemedText, {
               wrap: "truncate",
               children: [
                 "Favorite model:",
                 " ",
-                /* @__PURE__ */ jsx_runtime354.jsx(ThemedText, {
+                /* @__PURE__ */ jsx_runtime355.jsx(ThemedText, {
                   color: "claude",
                   bold: true,
                   children: renderModelName(favoriteModel[0])
@@ -422154,15 +422238,15 @@ function OverviewTab({
               ]
             })
           }),
-          /* @__PURE__ */ jsx_runtime354.jsx(ThemedBox_default, {
+          /* @__PURE__ */ jsx_runtime355.jsx(ThemedBox_default, {
             flexDirection: "column",
             width: 28,
-            children: /* @__PURE__ */ jsx_runtime354.jsxs(ThemedText, {
+            children: /* @__PURE__ */ jsx_runtime355.jsxs(ThemedText, {
               wrap: "truncate",
               children: [
                 "Total tokens:",
                 " ",
-                /* @__PURE__ */ jsx_runtime354.jsx(ThemedText, {
+                /* @__PURE__ */ jsx_runtime355.jsx(ThemedText, {
                   color: "claude",
                   children: formatNumber(totalTokens)
                 })
@@ -422171,34 +422255,34 @@ function OverviewTab({
           })
         ]
       }),
-      /* @__PURE__ */ jsx_runtime354.jsxs(ThemedBox_default, {
+      /* @__PURE__ */ jsx_runtime355.jsxs(ThemedBox_default, {
         flexDirection: "row",
         gap: 4,
         children: [
-          /* @__PURE__ */ jsx_runtime354.jsx(ThemedBox_default, {
+          /* @__PURE__ */ jsx_runtime355.jsx(ThemedBox_default, {
             flexDirection: "column",
             width: 28,
-            children: /* @__PURE__ */ jsx_runtime354.jsxs(ThemedText, {
+            children: /* @__PURE__ */ jsx_runtime355.jsxs(ThemedText, {
               wrap: "truncate",
               children: [
                 "Sessions:",
                 " ",
-                /* @__PURE__ */ jsx_runtime354.jsx(ThemedText, {
+                /* @__PURE__ */ jsx_runtime355.jsx(ThemedText, {
                   color: "claude",
                   children: formatNumber(stats.totalSessions)
                 })
               ]
             })
           }),
-          /* @__PURE__ */ jsx_runtime354.jsx(ThemedBox_default, {
+          /* @__PURE__ */ jsx_runtime355.jsx(ThemedBox_default, {
             flexDirection: "column",
             width: 28,
-            children: stats.longestSession && /* @__PURE__ */ jsx_runtime354.jsxs(ThemedText, {
+            children: stats.longestSession && /* @__PURE__ */ jsx_runtime355.jsxs(ThemedText, {
               wrap: "truncate",
               children: [
                 "Longest session:",
                 " ",
-                /* @__PURE__ */ jsx_runtime354.jsx(ThemedText, {
+                /* @__PURE__ */ jsx_runtime355.jsx(ThemedText, {
                   color: "claude",
                   children: formatDuration(stats.longestSession.duration)
                 })
@@ -422207,22 +422291,22 @@ function OverviewTab({
           })
         ]
       }),
-      /* @__PURE__ */ jsx_runtime354.jsxs(ThemedBox_default, {
+      /* @__PURE__ */ jsx_runtime355.jsxs(ThemedBox_default, {
         flexDirection: "row",
         gap: 4,
         children: [
-          /* @__PURE__ */ jsx_runtime354.jsx(ThemedBox_default, {
+          /* @__PURE__ */ jsx_runtime355.jsx(ThemedBox_default, {
             flexDirection: "column",
             width: 28,
-            children: /* @__PURE__ */ jsx_runtime354.jsxs(ThemedText, {
+            children: /* @__PURE__ */ jsx_runtime355.jsxs(ThemedText, {
               wrap: "truncate",
               children: [
                 "Active days: ",
-                /* @__PURE__ */ jsx_runtime354.jsx(ThemedText, {
+                /* @__PURE__ */ jsx_runtime355.jsx(ThemedText, {
                   color: "claude",
                   children: stats.activeDays
                 }),
-                /* @__PURE__ */ jsx_runtime354.jsxs(ThemedText, {
+                /* @__PURE__ */ jsx_runtime355.jsxs(ThemedText, {
                   color: "subtle",
                   children: [
                     "/",
@@ -422232,15 +422316,15 @@ function OverviewTab({
               ]
             })
           }),
-          /* @__PURE__ */ jsx_runtime354.jsx(ThemedBox_default, {
+          /* @__PURE__ */ jsx_runtime355.jsx(ThemedBox_default, {
             flexDirection: "column",
             width: 28,
-            children: /* @__PURE__ */ jsx_runtime354.jsxs(ThemedText, {
+            children: /* @__PURE__ */ jsx_runtime355.jsxs(ThemedText, {
               wrap: "truncate",
               children: [
                 "Longest streak:",
                 " ",
-                /* @__PURE__ */ jsx_runtime354.jsx(ThemedText, {
+                /* @__PURE__ */ jsx_runtime355.jsx(ThemedText, {
                   color: "claude",
                   bold: true,
                   children: stats.streaks.longestStreak
@@ -422252,34 +422336,34 @@ function OverviewTab({
           })
         ]
       }),
-      /* @__PURE__ */ jsx_runtime354.jsxs(ThemedBox_default, {
+      /* @__PURE__ */ jsx_runtime355.jsxs(ThemedBox_default, {
         flexDirection: "row",
         gap: 4,
         children: [
-          /* @__PURE__ */ jsx_runtime354.jsx(ThemedBox_default, {
+          /* @__PURE__ */ jsx_runtime355.jsx(ThemedBox_default, {
             flexDirection: "column",
             width: 28,
-            children: stats.peakActivityDay && /* @__PURE__ */ jsx_runtime354.jsxs(ThemedText, {
+            children: stats.peakActivityDay && /* @__PURE__ */ jsx_runtime355.jsxs(ThemedText, {
               wrap: "truncate",
               children: [
                 "Most active day:",
                 " ",
-                /* @__PURE__ */ jsx_runtime354.jsx(ThemedText, {
+                /* @__PURE__ */ jsx_runtime355.jsx(ThemedText, {
                   color: "claude",
                   children: formatPeakDay(stats.peakActivityDay)
                 })
               ]
             })
           }),
-          /* @__PURE__ */ jsx_runtime354.jsx(ThemedBox_default, {
+          /* @__PURE__ */ jsx_runtime355.jsx(ThemedBox_default, {
             flexDirection: "column",
             width: 28,
-            children: /* @__PURE__ */ jsx_runtime354.jsxs(ThemedText, {
+            children: /* @__PURE__ */ jsx_runtime355.jsxs(ThemedText, {
               wrap: "truncate",
               children: [
                 "Current streak:",
                 " ",
-                /* @__PURE__ */ jsx_runtime354.jsx(ThemedText, {
+                /* @__PURE__ */ jsx_runtime355.jsx(ThemedText, {
                   color: "claude",
                   bold: true,
                   children: allTimeStats.streaks.currentStreak
@@ -422292,32 +422376,32 @@ function OverviewTab({
         ]
       }),
       false,
-      shotStatsData && /* @__PURE__ */ jsx_runtime354.jsxs(jsx_runtime354.Fragment, {
+      shotStatsData && /* @__PURE__ */ jsx_runtime355.jsxs(jsx_runtime355.Fragment, {
         children: [
-          /* @__PURE__ */ jsx_runtime354.jsx(ThemedBox_default, {
+          /* @__PURE__ */ jsx_runtime355.jsx(ThemedBox_default, {
             marginTop: 1,
-            children: /* @__PURE__ */ jsx_runtime354.jsx(ThemedText, {
+            children: /* @__PURE__ */ jsx_runtime355.jsx(ThemedText, {
               children: "Shot distribution"
             })
           }),
-          /* @__PURE__ */ jsx_runtime354.jsxs(ThemedBox_default, {
+          /* @__PURE__ */ jsx_runtime355.jsxs(ThemedBox_default, {
             flexDirection: "row",
             gap: 4,
             children: [
-              /* @__PURE__ */ jsx_runtime354.jsx(ThemedBox_default, {
+              /* @__PURE__ */ jsx_runtime355.jsx(ThemedBox_default, {
                 flexDirection: "column",
                 width: 28,
-                children: /* @__PURE__ */ jsx_runtime354.jsxs(ThemedText, {
+                children: /* @__PURE__ */ jsx_runtime355.jsxs(ThemedText, {
                   wrap: "truncate",
                   children: [
                     shotStatsData.buckets[0].label,
                     ":",
                     " ",
-                    /* @__PURE__ */ jsx_runtime354.jsx(ThemedText, {
+                    /* @__PURE__ */ jsx_runtime355.jsx(ThemedText, {
                       color: "claude",
                       children: shotStatsData.buckets[0].count
                     }),
-                    /* @__PURE__ */ jsx_runtime354.jsxs(ThemedText, {
+                    /* @__PURE__ */ jsx_runtime355.jsxs(ThemedText, {
                       color: "subtle",
                       children: [
                         " (",
@@ -422328,20 +422412,20 @@ function OverviewTab({
                   ]
                 })
               }),
-              /* @__PURE__ */ jsx_runtime354.jsx(ThemedBox_default, {
+              /* @__PURE__ */ jsx_runtime355.jsx(ThemedBox_default, {
                 flexDirection: "column",
                 width: 28,
-                children: /* @__PURE__ */ jsx_runtime354.jsxs(ThemedText, {
+                children: /* @__PURE__ */ jsx_runtime355.jsxs(ThemedText, {
                   wrap: "truncate",
                   children: [
                     shotStatsData.buckets[1].label,
                     ":",
                     " ",
-                    /* @__PURE__ */ jsx_runtime354.jsx(ThemedText, {
+                    /* @__PURE__ */ jsx_runtime355.jsx(ThemedText, {
                       color: "claude",
                       children: shotStatsData.buckets[1].count
                     }),
-                    /* @__PURE__ */ jsx_runtime354.jsxs(ThemedText, {
+                    /* @__PURE__ */ jsx_runtime355.jsxs(ThemedText, {
                       color: "subtle",
                       children: [
                         " (",
@@ -422354,24 +422438,24 @@ function OverviewTab({
               })
             ]
           }),
-          /* @__PURE__ */ jsx_runtime354.jsxs(ThemedBox_default, {
+          /* @__PURE__ */ jsx_runtime355.jsxs(ThemedBox_default, {
             flexDirection: "row",
             gap: 4,
             children: [
-              /* @__PURE__ */ jsx_runtime354.jsx(ThemedBox_default, {
+              /* @__PURE__ */ jsx_runtime355.jsx(ThemedBox_default, {
                 flexDirection: "column",
                 width: 28,
-                children: /* @__PURE__ */ jsx_runtime354.jsxs(ThemedText, {
+                children: /* @__PURE__ */ jsx_runtime355.jsxs(ThemedText, {
                   wrap: "truncate",
                   children: [
                     shotStatsData.buckets[2].label,
                     ":",
                     " ",
-                    /* @__PURE__ */ jsx_runtime354.jsx(ThemedText, {
+                    /* @__PURE__ */ jsx_runtime355.jsx(ThemedText, {
                       color: "claude",
                       children: shotStatsData.buckets[2].count
                     }),
-                    /* @__PURE__ */ jsx_runtime354.jsxs(ThemedText, {
+                    /* @__PURE__ */ jsx_runtime355.jsxs(ThemedText, {
                       color: "subtle",
                       children: [
                         " (",
@@ -422382,20 +422466,20 @@ function OverviewTab({
                   ]
                 })
               }),
-              /* @__PURE__ */ jsx_runtime354.jsx(ThemedBox_default, {
+              /* @__PURE__ */ jsx_runtime355.jsx(ThemedBox_default, {
                 flexDirection: "column",
                 width: 28,
-                children: /* @__PURE__ */ jsx_runtime354.jsxs(ThemedText, {
+                children: /* @__PURE__ */ jsx_runtime355.jsxs(ThemedText, {
                   wrap: "truncate",
                   children: [
                     shotStatsData.buckets[3].label,
                     ":",
                     " ",
-                    /* @__PURE__ */ jsx_runtime354.jsx(ThemedText, {
+                    /* @__PURE__ */ jsx_runtime355.jsx(ThemedText, {
                       color: "claude",
                       children: shotStatsData.buckets[3].count
                     }),
-                    /* @__PURE__ */ jsx_runtime354.jsxs(ThemedText, {
+                    /* @__PURE__ */ jsx_runtime355.jsxs(ThemedText, {
                       color: "subtle",
                       children: [
                         " (",
@@ -422408,18 +422492,18 @@ function OverviewTab({
               })
             ]
           }),
-          /* @__PURE__ */ jsx_runtime354.jsx(ThemedBox_default, {
+          /* @__PURE__ */ jsx_runtime355.jsx(ThemedBox_default, {
             flexDirection: "row",
             gap: 4,
-            children: /* @__PURE__ */ jsx_runtime354.jsx(ThemedBox_default, {
+            children: /* @__PURE__ */ jsx_runtime355.jsx(ThemedBox_default, {
               flexDirection: "column",
               width: 28,
-              children: /* @__PURE__ */ jsx_runtime354.jsxs(ThemedText, {
+              children: /* @__PURE__ */ jsx_runtime355.jsxs(ThemedText, {
                 wrap: "truncate",
                 children: [
                   "Avg/session:",
                   " ",
-                  /* @__PURE__ */ jsx_runtime354.jsx(ThemedText, {
+                  /* @__PURE__ */ jsx_runtime355.jsx(ThemedText, {
                     color: "claude",
                     children: shotStatsData.avgShots
                   })
@@ -422429,9 +422513,9 @@ function OverviewTab({
           })
         ]
       }),
-      factoid && /* @__PURE__ */ jsx_runtime354.jsx(ThemedBox_default, {
+      factoid && /* @__PURE__ */ jsx_runtime355.jsx(ThemedBox_default, {
         marginTop: 1,
-        children: /* @__PURE__ */ jsx_runtime354.jsx(ThemedText, {
+        children: /* @__PURE__ */ jsx_runtime355.jsx(ThemedText, {
           color: "suggestion",
           children: factoid
         })
@@ -422509,8 +422593,8 @@ function ModelsTab(t0) {
   if (modelEntries.length === 0) {
     let t3;
     if ($[2] === Symbol.for("react.memo_cache_sentinel")) {
-      t3 = /* @__PURE__ */ jsx_runtime354.jsx(ThemedBox_default, {
-        children: /* @__PURE__ */ jsx_runtime354.jsx(ThemedText, {
+      t3 = /* @__PURE__ */ jsx_runtime355.jsx(ThemedBox_default, {
+        children: /* @__PURE__ */ jsx_runtime355.jsx(ThemedText, {
           color: "subtle",
           children: "No model usage data available"
         })
@@ -422532,7 +422616,7 @@ function ModelsTab(t0) {
   const showScrollHint = modelEntries.length > 4;
   let t3;
   if ($[3] !== dateRange || $[4] !== isLoading) {
-    t3 = /* @__PURE__ */ jsx_runtime354.jsx(DateRangeSelector, {
+    t3 = /* @__PURE__ */ jsx_runtime355.jsx(DateRangeSelector, {
       dateRange,
       isLoading
     });
@@ -422547,7 +422631,7 @@ function ModelsTab(t0) {
   const t6 = 36;
   const t8 = rightModels.map((t7) => {
     const [model_1, usage_1] = t7;
-    return /* @__PURE__ */ jsx_runtime354.jsx(ModelEntry, {
+    return /* @__PURE__ */ jsx_runtime355.jsx(ModelEntry, {
       model: model_1,
       usage: usage_1,
       totalTokens
@@ -422555,7 +422639,7 @@ function ModelsTab(t0) {
   });
   let t9;
   if ($[6] !== T0 || $[7] !== t8) {
-    t9 = /* @__PURE__ */ jsx_runtime354.jsx(T0, {
+    t9 = /* @__PURE__ */ jsx_runtime355.jsx(T0, {
       flexDirection: t5,
       width: t6,
       children: t8
@@ -422568,9 +422652,9 @@ function ModelsTab(t0) {
   }
   let t10;
   if ($[9] !== canScrollDown || $[10] !== canScrollUp || $[11] !== modelEntries || $[12] !== scrollOffset || $[13] !== showScrollHint) {
-    t10 = showScrollHint && /* @__PURE__ */ jsx_runtime354.jsx(ThemedBox_default, {
+    t10 = showScrollHint && /* @__PURE__ */ jsx_runtime355.jsx(ThemedBox_default, {
       marginTop: 1,
-      children: /* @__PURE__ */ jsx_runtime354.jsxs(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime355.jsxs(ThemedText, {
         color: "subtle",
         children: [
           canScrollUp ? figures_default.arrowUp : " ",
@@ -422596,41 +422680,41 @@ function ModelsTab(t0) {
   } else {
     t10 = $[14];
   }
-  return /* @__PURE__ */ jsx_runtime354.jsxs(ThemedBox_default, {
+  return /* @__PURE__ */ jsx_runtime355.jsxs(ThemedBox_default, {
     flexDirection: "column",
     marginTop: 1,
     children: [
-      chartOutput && /* @__PURE__ */ jsx_runtime354.jsxs(ThemedBox_default, {
+      chartOutput && /* @__PURE__ */ jsx_runtime355.jsxs(ThemedBox_default, {
         flexDirection: "column",
         marginBottom: 1,
         children: [
-          /* @__PURE__ */ jsx_runtime354.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime355.jsx(ThemedText, {
             bold: true,
             children: "Tokens per Day"
           }),
-          /* @__PURE__ */ jsx_runtime354.jsx(Ansi, {
+          /* @__PURE__ */ jsx_runtime355.jsx(Ansi, {
             children: chartOutput.chart
           }),
-          /* @__PURE__ */ jsx_runtime354.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime355.jsx(ThemedText, {
             color: "subtle",
             children: chartOutput.xAxisLabels
           }),
-          /* @__PURE__ */ jsx_runtime354.jsx(ThemedBox_default, {
+          /* @__PURE__ */ jsx_runtime355.jsx(ThemedBox_default, {
             children: chartOutput.legend.map(_temp157)
           })
         ]
       }),
       t3,
-      /* @__PURE__ */ jsx_runtime354.jsxs(ThemedBox_default, {
+      /* @__PURE__ */ jsx_runtime355.jsxs(ThemedBox_default, {
         flexDirection: "row",
         gap: 4,
         children: [
-          /* @__PURE__ */ jsx_runtime354.jsx(ThemedBox_default, {
+          /* @__PURE__ */ jsx_runtime355.jsx(ThemedBox_default, {
             flexDirection: "column",
             width: 36,
             children: leftModels.map((t4) => {
               const [model_0, usage_0] = t4;
-              return /* @__PURE__ */ jsx_runtime354.jsx(ModelEntry, {
+              return /* @__PURE__ */ jsx_runtime355.jsx(ModelEntry, {
                 model: model_0,
                 usage: usage_0,
                 totalTokens
@@ -422645,10 +422729,10 @@ function ModelsTab(t0) {
   });
 }
 function _temp157(item, i) {
-  return /* @__PURE__ */ jsx_runtime354.jsxs(ThemedText, {
+  return /* @__PURE__ */ jsx_runtime355.jsxs(ThemedText, {
     children: [
       i > 0 ? " \xB7 " : "",
-      /* @__PURE__ */ jsx_runtime354.jsx(Ansi, {
+      /* @__PURE__ */ jsx_runtime355.jsx(Ansi, {
         children: item.coloredBullet
       }),
       " ",
@@ -422700,7 +422784,7 @@ function ModelEntry(t0) {
   }
   let t4;
   if ($[4] !== t3) {
-    t4 = /* @__PURE__ */ jsx_runtime354.jsx(ThemedText, {
+    t4 = /* @__PURE__ */ jsx_runtime355.jsx(ThemedText, {
       bold: true,
       children: t3
     });
@@ -422711,7 +422795,7 @@ function ModelEntry(t0) {
   }
   let t5;
   if ($[6] !== percentage) {
-    t5 = /* @__PURE__ */ jsx_runtime354.jsxs(ThemedText, {
+    t5 = /* @__PURE__ */ jsx_runtime355.jsxs(ThemedText, {
       color: "subtle",
       children: [
         "(",
@@ -422726,7 +422810,7 @@ function ModelEntry(t0) {
   }
   let t6;
   if ($[8] !== t4 || $[9] !== t5) {
-    t6 = /* @__PURE__ */ jsx_runtime354.jsxs(ThemedText, {
+    t6 = /* @__PURE__ */ jsx_runtime355.jsxs(ThemedText, {
       children: [
         figures_default.bullet,
         " ",
@@ -422759,7 +422843,7 @@ function ModelEntry(t0) {
   }
   let t9;
   if ($[15] !== t7 || $[16] !== t8) {
-    t9 = /* @__PURE__ */ jsx_runtime354.jsxs(ThemedText, {
+    t9 = /* @__PURE__ */ jsx_runtime355.jsxs(ThemedText, {
       color: "subtle",
       children: [
         "  ",
@@ -422778,7 +422862,7 @@ function ModelEntry(t0) {
   }
   let t10;
   if ($[18] !== t6 || $[19] !== t9) {
-    t10 = /* @__PURE__ */ jsx_runtime354.jsxs(ThemedBox_default, {
+    t10 = /* @__PURE__ */ jsx_runtime355.jsxs(ThemedBox_default, {
       flexDirection: "column",
       children: [
         t6,
@@ -423006,7 +423090,7 @@ function renderModelsToAnsi(stats) {
   }
   return lines;
 }
-var import_compiler_runtime278, import_asciichart, import_react193, jsx_runtime354, DATE_RANGE_LABELS, DATE_RANGE_ORDER, BOOK_COMPARISONS, TIME_COMPARISONS;
+var import_compiler_runtime278, import_asciichart, import_react193, jsx_runtime355, DATE_RANGE_LABELS, DATE_RANGE_ORDER, BOOK_COMPARISONS, TIME_COMPARISONS;
 var init_Stats = __esm(() => {
   init_source();
   init_figures();
@@ -423029,7 +423113,7 @@ var init_Stats = __esm(() => {
   import_compiler_runtime278 = __toESM(require_compiler_runtime(), 1);
   import_asciichart = __toESM(require_asciichart(), 1);
   import_react193 = __toESM(require_react(), 1);
-  jsx_runtime354 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime355 = __toESM(require_jsx_runtime(), 1);
   DATE_RANGE_LABELS = {
     "7d": "Last 7 days",
     "30d": "Last 30 days",
@@ -423145,16 +423229,16 @@ var init_Stats = __esm(() => {
 // src/commands/stats/stats.tsx
 var exports_stats = {};
 __export(exports_stats, {
-  call: () => call70
+  call: () => call71
 });
-var jsx_runtime355, call70 = async (onDone) => {
-  return /* @__PURE__ */ jsx_runtime355.jsx(Stats2, {
+var jsx_runtime356, call71 = async (onDone) => {
+  return /* @__PURE__ */ jsx_runtime356.jsx(Stats2, {
     onClose: onDone
   });
 };
 var init_stats2 = __esm(() => {
   init_Stats();
-  jsx_runtime355 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime356 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/commands/stats/index.ts
@@ -425411,6 +425495,7 @@ var init_commands3 = __esm(() => {
   init_exit2();
   init_export2();
   init_model3();
+  init_openrouter2();
   init_tag2();
   init_output_style();
   init_remote_env2();
@@ -425501,6 +425586,7 @@ var init_commands3 = __esm(() => {
     memory_default,
     mobile_default,
     model_default,
+    openrouter_default,
     output_style_default,
     remote_env_default,
     plugin_default,
@@ -437999,10 +438085,10 @@ function InvalidConfigDialog(t0) {
   const handleSelect = t1;
   let t2;
   if ($[3] !== filePath) {
-    t2 = /* @__PURE__ */ jsx_runtime356.jsxs(ThemedText, {
+    t2 = /* @__PURE__ */ jsx_runtime357.jsxs(ThemedText, {
       children: [
         "The configuration file at ",
-        /* @__PURE__ */ jsx_runtime356.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime357.jsx(ThemedText, {
           bold: true,
           children: filePath
         }),
@@ -438016,7 +438102,7 @@ function InvalidConfigDialog(t0) {
   }
   let t3;
   if ($[5] !== errorDescription) {
-    t3 = /* @__PURE__ */ jsx_runtime356.jsx(ThemedText, {
+    t3 = /* @__PURE__ */ jsx_runtime357.jsx(ThemedText, {
       children: errorDescription
     });
     $[5] = errorDescription;
@@ -438026,7 +438112,7 @@ function InvalidConfigDialog(t0) {
   }
   let t4;
   if ($[7] !== t2 || $[8] !== t3) {
-    t4 = /* @__PURE__ */ jsx_runtime356.jsxs(ThemedBox_default, {
+    t4 = /* @__PURE__ */ jsx_runtime357.jsxs(ThemedBox_default, {
       flexDirection: "column",
       gap: 1,
       children: [
@@ -438042,7 +438128,7 @@ function InvalidConfigDialog(t0) {
   }
   let t5;
   if ($[10] === Symbol.for("react.memo_cache_sentinel")) {
-    t5 = /* @__PURE__ */ jsx_runtime356.jsx(ThemedText, {
+    t5 = /* @__PURE__ */ jsx_runtime357.jsx(ThemedText, {
       bold: true,
       children: "Choose an option:"
     });
@@ -438065,11 +438151,11 @@ function InvalidConfigDialog(t0) {
   }
   let t7;
   if ($[12] !== handleSelect || $[13] !== onExit) {
-    t7 = /* @__PURE__ */ jsx_runtime356.jsxs(ThemedBox_default, {
+    t7 = /* @__PURE__ */ jsx_runtime357.jsxs(ThemedBox_default, {
       flexDirection: "column",
       children: [
         t5,
-        /* @__PURE__ */ jsx_runtime356.jsx(Select, {
+        /* @__PURE__ */ jsx_runtime357.jsx(Select, {
           options: t6,
           onChange: handleSelect,
           onCancel: onExit
@@ -438084,7 +438170,7 @@ function InvalidConfigDialog(t0) {
   }
   let t8;
   if ($[15] !== onExit || $[16] !== t4 || $[17] !== t7) {
-    t8 = /* @__PURE__ */ jsx_runtime356.jsxs(Dialog, {
+    t8 = /* @__PURE__ */ jsx_runtime357.jsxs(Dialog, {
       title: "Configuration Error",
       color: "error",
       onCancel: onExit,
@@ -438112,9 +438198,9 @@ async function showInvalidConfigDialog({
   await new Promise(async (resolve) => {
     const {
       unmount
-    } = await render(/* @__PURE__ */ jsx_runtime356.jsx(AppStateProvider, {
-      children: /* @__PURE__ */ jsx_runtime356.jsx(KeybindingSetup, {
-        children: /* @__PURE__ */ jsx_runtime356.jsx(InvalidConfigDialog, {
+    } = await render(/* @__PURE__ */ jsx_runtime357.jsx(AppStateProvider, {
+      children: /* @__PURE__ */ jsx_runtime357.jsx(KeybindingSetup, {
+        children: /* @__PURE__ */ jsx_runtime357.jsx(InvalidConfigDialog, {
           filePath: error.filePath,
           errorDescription: error.message,
           onExit: () => {
@@ -438136,7 +438222,7 @@ async function showInvalidConfigDialog({
     }), renderOptions);
   });
 }
-var import_compiler_runtime279, jsx_runtime356, SAFE_ERROR_THEME_NAME = "dark";
+var import_compiler_runtime279, jsx_runtime357, SAFE_ERROR_THEME_NAME = "dark";
 var init_InvalidConfigDialog = __esm(() => {
   init_ink2();
   init_KeybindingProviderSetup();
@@ -438146,7 +438232,7 @@ var init_InvalidConfigDialog = __esm(() => {
   init_CustomSelect();
   init_Dialog();
   import_compiler_runtime279 = __toESM(require_compiler_runtime(), 1);
-  jsx_runtime356 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime357 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/entrypoints/init.ts
@@ -438345,7 +438431,7 @@ function FpsMetricsProvider(t0) {
   } = t0;
   let t1;
   if ($[0] !== children2 || $[1] !== getFpsMetrics) {
-    t1 = /* @__PURE__ */ jsx_runtime357.jsx(FpsMetricsContext.Provider, {
+    t1 = /* @__PURE__ */ jsx_runtime358.jsx(FpsMetricsContext.Provider, {
       value: getFpsMetrics,
       children: children2
     });
@@ -438360,11 +438446,11 @@ function FpsMetricsProvider(t0) {
 function useFpsMetrics() {
   return import_react194.useContext(FpsMetricsContext);
 }
-var import_compiler_runtime280, import_react194, jsx_runtime357, FpsMetricsContext;
+var import_compiler_runtime280, import_react194, jsx_runtime358, FpsMetricsContext;
 var init_fpsMetrics = __esm(() => {
   import_compiler_runtime280 = __toESM(require_compiler_runtime(), 1);
   import_react194 = __toESM(require_react(), 1);
-  jsx_runtime357 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime358 = __toESM(require_jsx_runtime(), 1);
   FpsMetricsContext = import_react194.createContext(undefined);
 });
 
@@ -438492,7 +438578,7 @@ function StatsProvider(t0) {
   import_react195.useEffect(t2, t3);
   let t4;
   if ($[4] !== children2 || $[5] !== store) {
-    t4 = /* @__PURE__ */ jsx_runtime358.jsx(StatsContext.Provider, {
+    t4 = /* @__PURE__ */ jsx_runtime359.jsx(StatsContext.Provider, {
       value: store,
       children: children2
     });
@@ -438504,12 +438590,12 @@ function StatsProvider(t0) {
   }
   return t4;
 }
-var import_compiler_runtime281, import_react195, jsx_runtime358, RESERVOIR_SIZE = 1024, StatsContext;
+var import_compiler_runtime281, import_react195, jsx_runtime359, RESERVOIR_SIZE = 1024, StatsContext;
 var init_stats4 = __esm(() => {
   init_config2();
   import_compiler_runtime281 = __toESM(require_compiler_runtime(), 1);
   import_react195 = __toESM(require_react(), 1);
-  jsx_runtime358 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime359 = __toESM(require_jsx_runtime(), 1);
   StatsContext = import_react195.createContext(null);
 });
 
@@ -438659,7 +438745,7 @@ function App2(t0) {
   } = t0;
   let t1;
   if ($[0] !== children2 || $[1] !== initialState) {
-    t1 = /* @__PURE__ */ jsx_runtime359.jsx(AppStateProvider, {
+    t1 = /* @__PURE__ */ jsx_runtime360.jsx(AppStateProvider, {
       initialState,
       onChangeAppState,
       children: children2
@@ -438672,7 +438758,7 @@ function App2(t0) {
   }
   let t2;
   if ($[3] !== stats || $[4] !== t1) {
-    t2 = /* @__PURE__ */ jsx_runtime359.jsx(StatsProvider, {
+    t2 = /* @__PURE__ */ jsx_runtime360.jsx(StatsProvider, {
       store: stats,
       children: t1
     });
@@ -438684,7 +438770,7 @@ function App2(t0) {
   }
   let t3;
   if ($[6] !== getFpsMetrics || $[7] !== t2) {
-    t3 = /* @__PURE__ */ jsx_runtime359.jsx(FpsMetricsProvider, {
+    t3 = /* @__PURE__ */ jsx_runtime360.jsx(FpsMetricsProvider, {
       getFpsMetrics,
       children: t2
     });
@@ -438696,14 +438782,14 @@ function App2(t0) {
   }
   return t3;
 }
-var import_compiler_runtime282, jsx_runtime359;
+var import_compiler_runtime282, jsx_runtime360;
 var init_App2 = __esm(() => {
   init_fpsMetrics();
   init_stats4();
   init_AppState();
   init_onChangeAppState();
   import_compiler_runtime282 = __toESM(require_compiler_runtime(), 1);
-  jsx_runtime359 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime360 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/ink/hooks/use-search-highlight.ts
@@ -438740,13 +438826,13 @@ function CostThresholdDialog(t0) {
   } = t0;
   let t1;
   if ($[0] === Symbol.for("react.memo_cache_sentinel")) {
-    t1 = /* @__PURE__ */ jsx_runtime360.jsxs(ThemedBox_default, {
+    t1 = /* @__PURE__ */ jsx_runtime361.jsxs(ThemedBox_default, {
       flexDirection: "column",
       children: [
-        /* @__PURE__ */ jsx_runtime360.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime361.jsx(ThemedText, {
           children: "Learn more about how to monitor your spending:"
         }),
-        /* @__PURE__ */ jsx_runtime360.jsx(Link, {
+        /* @__PURE__ */ jsx_runtime361.jsx(Link, {
           url: "https://code.claude.com/docs/en/costs"
         })
       ]
@@ -438767,7 +438853,7 @@ function CostThresholdDialog(t0) {
   }
   let t3;
   if ($[2] !== onDone) {
-    t3 = /* @__PURE__ */ jsx_runtime360.jsx(Select, {
+    t3 = /* @__PURE__ */ jsx_runtime361.jsx(Select, {
       options: t2,
       onChange: onDone
     });
@@ -438778,7 +438864,7 @@ function CostThresholdDialog(t0) {
   }
   let t4;
   if ($[4] !== onDone || $[5] !== t3) {
-    t4 = /* @__PURE__ */ jsx_runtime360.jsxs(Dialog, {
+    t4 = /* @__PURE__ */ jsx_runtime361.jsxs(Dialog, {
       title: "You've spent $5 on the Anthropic API this session.",
       onCancel: onDone,
       children: [
@@ -438794,13 +438880,13 @@ function CostThresholdDialog(t0) {
   }
   return t4;
 }
-var import_compiler_runtime283, jsx_runtime360;
+var import_compiler_runtime283, jsx_runtime361;
 var init_CostThresholdDialog = __esm(() => {
   init_ink2();
   init_CustomSelect();
   init_Dialog();
   import_compiler_runtime283 = __toESM(require_compiler_runtime(), 1);
-  jsx_runtime360 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime361 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/IdleReturnDialog.tsx
@@ -438840,9 +438926,9 @@ function IdleReturnDialog(t0) {
   }
   let t5;
   if ($[6] === Symbol.for("react.memo_cache_sentinel")) {
-    t5 = /* @__PURE__ */ jsx_runtime361.jsx(ThemedBox_default, {
+    t5 = /* @__PURE__ */ jsx_runtime362.jsx(ThemedBox_default, {
       flexDirection: "column",
-      children: /* @__PURE__ */ jsx_runtime361.jsx(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime362.jsx(ThemedText, {
         children: "If this is a new task, clearing context will save usage and be faster."
       })
     });
@@ -438882,7 +438968,7 @@ function IdleReturnDialog(t0) {
   }
   let t9;
   if ($[10] !== onDone) {
-    t9 = /* @__PURE__ */ jsx_runtime361.jsx(Select, {
+    t9 = /* @__PURE__ */ jsx_runtime362.jsx(Select, {
       options: t8,
       onChange: (value) => onDone(value)
     });
@@ -438893,7 +438979,7 @@ function IdleReturnDialog(t0) {
   }
   let t10;
   if ($[12] !== t3 || $[13] !== t4 || $[14] !== t9) {
-    t10 = /* @__PURE__ */ jsx_runtime361.jsxs(Dialog, {
+    t10 = /* @__PURE__ */ jsx_runtime362.jsxs(Dialog, {
       title: t3,
       onCancel: t4,
       children: [
@@ -438924,14 +439010,14 @@ function formatIdleDuration(minutes) {
   }
   return `${hours}h ${remainingMinutes}m`;
 }
-var import_compiler_runtime284, jsx_runtime361;
+var import_compiler_runtime284, jsx_runtime362;
 var init_IdleReturnDialog = __esm(() => {
   init_ink2();
   init_format();
   init_CustomSelect();
   init_Dialog();
   import_compiler_runtime284 = __toESM(require_compiler_runtime(), 1);
-  jsx_runtime361 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime362 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/services/preventSleep.ts
@@ -439105,7 +439191,7 @@ function WorkerBadge(t0) {
   const inkColor = t1;
   let t2;
   if ($[2] !== name) {
-    t2 = /* @__PURE__ */ jsx_runtime362.jsxs(ThemedText, {
+    t2 = /* @__PURE__ */ jsx_runtime363.jsxs(ThemedText, {
       bold: true,
       children: [
         "@",
@@ -439119,10 +439205,10 @@ function WorkerBadge(t0) {
   }
   let t3;
   if ($[4] !== inkColor || $[5] !== t2) {
-    t3 = /* @__PURE__ */ jsx_runtime362.jsx(ThemedBox_default, {
+    t3 = /* @__PURE__ */ jsx_runtime363.jsx(ThemedBox_default, {
       flexDirection: "row",
       gap: 1,
-      children: /* @__PURE__ */ jsx_runtime362.jsxs(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime363.jsxs(ThemedText, {
         color: inkColor,
         children: [
           BLACK_CIRCLE,
@@ -439139,13 +439225,13 @@ function WorkerBadge(t0) {
   }
   return t3;
 }
-var import_compiler_runtime285, jsx_runtime362;
+var import_compiler_runtime285, jsx_runtime363;
 var init_WorkerBadge = __esm(() => {
   init_figures2();
   init_ink2();
   init_ink3();
   import_compiler_runtime285 = __toESM(require_compiler_runtime(), 1);
-  jsx_runtime362 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime363 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/permissions/WorkerPendingPermission.tsx
@@ -439182,11 +439268,11 @@ function WorkerPendingPermission(t0) {
   let t4;
   let t5;
   if ($[3] === Symbol.for("react.memo_cache_sentinel")) {
-    t4 = /* @__PURE__ */ jsx_runtime363.jsxs(ThemedBox_default, {
+    t4 = /* @__PURE__ */ jsx_runtime364.jsxs(ThemedBox_default, {
       marginBottom: 1,
       children: [
-        /* @__PURE__ */ jsx_runtime363.jsx(Spinner, {}),
-        /* @__PURE__ */ jsx_runtime363.jsxs(ThemedText, {
+        /* @__PURE__ */ jsx_runtime364.jsx(Spinner, {}),
+        /* @__PURE__ */ jsx_runtime364.jsxs(ThemedText, {
           color: "warning",
           bold: true,
           children: [
@@ -439196,9 +439282,9 @@ function WorkerPendingPermission(t0) {
         })
       ]
     });
-    t5 = agentName && agentColor && /* @__PURE__ */ jsx_runtime363.jsx(ThemedBox_default, {
+    t5 = agentName && agentColor && /* @__PURE__ */ jsx_runtime364.jsx(ThemedBox_default, {
       marginBottom: 1,
-      children: /* @__PURE__ */ jsx_runtime363.jsx(WorkerBadge, {
+      children: /* @__PURE__ */ jsx_runtime364.jsx(WorkerBadge, {
         name: agentName,
         color: agentColor
       })
@@ -439211,7 +439297,7 @@ function WorkerPendingPermission(t0) {
   }
   let t6;
   if ($[5] === Symbol.for("react.memo_cache_sentinel")) {
-    t6 = /* @__PURE__ */ jsx_runtime363.jsx(ThemedText, {
+    t6 = /* @__PURE__ */ jsx_runtime364.jsx(ThemedText, {
       dimColor: true,
       children: "Tool: "
     });
@@ -439221,10 +439307,10 @@ function WorkerPendingPermission(t0) {
   }
   let t7;
   if ($[6] !== toolName) {
-    t7 = /* @__PURE__ */ jsx_runtime363.jsxs(ThemedBox_default, {
+    t7 = /* @__PURE__ */ jsx_runtime364.jsxs(ThemedBox_default, {
       children: [
         t6,
-        /* @__PURE__ */ jsx_runtime363.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime364.jsx(ThemedText, {
           children: toolName
         })
       ]
@@ -439236,7 +439322,7 @@ function WorkerPendingPermission(t0) {
   }
   let t8;
   if ($[8] === Symbol.for("react.memo_cache_sentinel")) {
-    t8 = /* @__PURE__ */ jsx_runtime363.jsx(ThemedText, {
+    t8 = /* @__PURE__ */ jsx_runtime364.jsx(ThemedText, {
       dimColor: true,
       children: "Action: "
     });
@@ -439246,10 +439332,10 @@ function WorkerPendingPermission(t0) {
   }
   let t9;
   if ($[9] !== description) {
-    t9 = /* @__PURE__ */ jsx_runtime363.jsxs(ThemedBox_default, {
+    t9 = /* @__PURE__ */ jsx_runtime364.jsxs(ThemedBox_default, {
       children: [
         t8,
-        /* @__PURE__ */ jsx_runtime363.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime364.jsx(ThemedText, {
           children: description
         })
       ]
@@ -439261,9 +439347,9 @@ function WorkerPendingPermission(t0) {
   }
   let t10;
   if ($[11] === Symbol.for("react.memo_cache_sentinel")) {
-    t10 = teamName && /* @__PURE__ */ jsx_runtime363.jsx(ThemedBox_default, {
+    t10 = teamName && /* @__PURE__ */ jsx_runtime364.jsx(ThemedBox_default, {
       marginTop: 1,
-      children: /* @__PURE__ */ jsx_runtime363.jsxs(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime364.jsxs(ThemedText, {
         dimColor: true,
         children: [
           "Permission request sent to team ",
@@ -439280,7 +439366,7 @@ function WorkerPendingPermission(t0) {
   }
   let t11;
   if ($[12] !== t7 || $[13] !== t9) {
-    t11 = /* @__PURE__ */ jsx_runtime363.jsxs(ThemedBox_default, {
+    t11 = /* @__PURE__ */ jsx_runtime364.jsxs(ThemedBox_default, {
       flexDirection: "column",
       borderStyle: "round",
       borderColor: "warning",
@@ -439301,14 +439387,14 @@ function WorkerPendingPermission(t0) {
   }
   return t11;
 }
-var import_compiler_runtime286, jsx_runtime363;
+var import_compiler_runtime286, jsx_runtime364;
 var init_WorkerPendingPermission = __esm(() => {
   init_ink2();
   init_teammate();
   init_Spinner2();
   init_WorkerBadge();
   import_compiler_runtime286 = __toESM(require_compiler_runtime(), 1);
-  jsx_runtime363 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime364 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/hooks/useLogMessages.ts
@@ -439777,25 +439863,25 @@ ${codeError}`);
   }, [messageOptions, messages, currentUUID, fileHistory, isFileHistoryEnabled]);
   const canRestoreCode_0 = isFileHistoryEnabled && diffStatsForRestore?.filesChanged && diffStatsForRestore.filesChanged.length > 0;
   const showPickList = !error && !messageToRestore && !preselectedMessage && hasMessagesToSelect;
-  return /* @__PURE__ */ jsx_runtime364.jsxs(ThemedBox_default, {
+  return /* @__PURE__ */ jsx_runtime365.jsxs(ThemedBox_default, {
     flexDirection: "column",
     width: "100%",
     children: [
-      /* @__PURE__ */ jsx_runtime364.jsx(Divider, {
+      /* @__PURE__ */ jsx_runtime365.jsx(Divider, {
         color: "suggestion"
       }),
-      /* @__PURE__ */ jsx_runtime364.jsxs(ThemedBox_default, {
+      /* @__PURE__ */ jsx_runtime365.jsxs(ThemedBox_default, {
         flexDirection: "column",
         marginX: 1,
         gap: 1,
         children: [
-          /* @__PURE__ */ jsx_runtime364.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime365.jsx(ThemedText, {
             bold: true,
             color: "suggestion",
             children: "Rewind"
           }),
-          error && /* @__PURE__ */ jsx_runtime364.jsx(jsx_runtime364.Fragment, {
-            children: /* @__PURE__ */ jsx_runtime364.jsxs(ThemedText, {
+          error && /* @__PURE__ */ jsx_runtime365.jsx(jsx_runtime365.Fragment, {
+            children: /* @__PURE__ */ jsx_runtime365.jsxs(ThemedText, {
               color: "error",
               children: [
                 "Error: ",
@@ -439803,14 +439889,14 @@ ${codeError}`);
               ]
             })
           }),
-          !hasMessagesToSelect && /* @__PURE__ */ jsx_runtime364.jsx(jsx_runtime364.Fragment, {
-            children: /* @__PURE__ */ jsx_runtime364.jsx(ThemedText, {
+          !hasMessagesToSelect && /* @__PURE__ */ jsx_runtime365.jsx(jsx_runtime365.Fragment, {
+            children: /* @__PURE__ */ jsx_runtime365.jsx(ThemedText, {
               children: "Nothing to rewind to yet."
             })
           }),
-          !error && messageToRestore && hasMessagesToSelect && /* @__PURE__ */ jsx_runtime364.jsxs(jsx_runtime364.Fragment, {
+          !error && messageToRestore && hasMessagesToSelect && /* @__PURE__ */ jsx_runtime365.jsxs(jsx_runtime365.Fragment, {
             children: [
-              /* @__PURE__ */ jsx_runtime364.jsxs(ThemedText, {
+              /* @__PURE__ */ jsx_runtime365.jsxs(ThemedText, {
                 children: [
                   "Confirm you want to restore",
                   " ",
@@ -439818,7 +439904,7 @@ ${codeError}`);
                   "to the point before you sent this message:"
                 ]
               }),
-              /* @__PURE__ */ jsx_runtime364.jsxs(ThemedBox_default, {
+              /* @__PURE__ */ jsx_runtime365.jsxs(ThemedBox_default, {
                 flexDirection: "column",
                 paddingLeft: 1,
                 borderStyle: "single",
@@ -439828,12 +439914,12 @@ ${codeError}`);
                 borderLeft: true,
                 borderLeftDimColor: true,
                 children: [
-                  /* @__PURE__ */ jsx_runtime364.jsx(UserMessageOption, {
+                  /* @__PURE__ */ jsx_runtime365.jsx(UserMessageOption, {
                     userMessage: messageToRestore,
                     color: "text",
                     isCurrent: false
                   }),
-                  /* @__PURE__ */ jsx_runtime364.jsxs(ThemedText, {
+                  /* @__PURE__ */ jsx_runtime365.jsxs(ThemedText, {
                     dimColor: true,
                     children: [
                       "(",
@@ -439843,21 +439929,21 @@ ${codeError}`);
                   })
                 ]
               }),
-              /* @__PURE__ */ jsx_runtime364.jsx(RestoreOptionDescription, {
+              /* @__PURE__ */ jsx_runtime365.jsx(RestoreOptionDescription, {
                 selectedRestoreOption,
                 canRestoreCode: !!canRestoreCode_0,
                 diffStatsForRestore
               }),
-              isRestoring && isSummarizeOption(restoringOption) ? /* @__PURE__ */ jsx_runtime364.jsxs(ThemedBox_default, {
+              isRestoring && isSummarizeOption(restoringOption) ? /* @__PURE__ */ jsx_runtime365.jsxs(ThemedBox_default, {
                 flexDirection: "row",
                 gap: 1,
                 children: [
-                  /* @__PURE__ */ jsx_runtime364.jsx(Spinner, {}),
-                  /* @__PURE__ */ jsx_runtime364.jsx(ThemedText, {
+                  /* @__PURE__ */ jsx_runtime365.jsx(Spinner, {}),
+                  /* @__PURE__ */ jsx_runtime365.jsx(ThemedText, {
                     children: "Summarizing\u2026"
                   })
                 ]
-              }) : /* @__PURE__ */ jsx_runtime364.jsx(Select, {
+              }) : /* @__PURE__ */ jsx_runtime365.jsx(Select, {
                 isDisabled: isRestoring,
                 options: getRestoreOptions(!!canRestoreCode_0),
                 defaultFocusValue: canRestoreCode_0 ? "both" : "conversation",
@@ -439865,9 +439951,9 @@ ${codeError}`);
                 onChange: (value_0) => onSelectRestoreOption(value_0),
                 onCancel: () => preselectedMessage ? onClose() : setMessageToRestore(undefined)
               }),
-              canRestoreCode_0 && /* @__PURE__ */ jsx_runtime364.jsx(ThemedBox_default, {
+              canRestoreCode_0 && /* @__PURE__ */ jsx_runtime365.jsx(ThemedBox_default, {
                 marginBottom: 1,
-                children: /* @__PURE__ */ jsx_runtime364.jsxs(ThemedText, {
+                children: /* @__PURE__ */ jsx_runtime365.jsxs(ThemedText, {
                   dimColor: true,
                   children: [
                     figures_default.warning,
@@ -439877,14 +439963,14 @@ ${codeError}`);
               })
             ]
           }),
-          showPickList && /* @__PURE__ */ jsx_runtime364.jsxs(jsx_runtime364.Fragment, {
+          showPickList && /* @__PURE__ */ jsx_runtime365.jsxs(jsx_runtime365.Fragment, {
             children: [
-              isFileHistoryEnabled ? /* @__PURE__ */ jsx_runtime364.jsx(ThemedText, {
+              isFileHistoryEnabled ? /* @__PURE__ */ jsx_runtime365.jsx(ThemedText, {
                 children: "Restore the code and/or conversation to the point before\u2026"
-              }) : /* @__PURE__ */ jsx_runtime364.jsx(ThemedText, {
+              }) : /* @__PURE__ */ jsx_runtime365.jsx(ThemedText, {
                 children: "Restore and fork the conversation to the point before\u2026"
               }),
-              /* @__PURE__ */ jsx_runtime364.jsx(ThemedBox_default, {
+              /* @__PURE__ */ jsx_runtime365.jsx(ThemedBox_default, {
                 width: "100%",
                 flexDirection: "column",
                 children: messageOptions.slice(firstVisibleIndex, firstVisibleIndex + MAX_VISIBLE_MESSAGES).map((msg, visibleOptionIndex) => {
@@ -439894,59 +439980,59 @@ ${codeError}`);
                   const metadataLoaded = optionIndex in fileHistoryMetadata;
                   const metadata = fileHistoryMetadata[optionIndex];
                   const numFilesChanged = metadata?.filesChanged && metadata.filesChanged.length;
-                  return /* @__PURE__ */ jsx_runtime364.jsxs(ThemedBox_default, {
+                  return /* @__PURE__ */ jsx_runtime365.jsxs(ThemedBox_default, {
                     height: isFileHistoryEnabled ? 3 : 2,
                     overflow: "hidden",
                     width: "100%",
                     flexDirection: "row",
                     children: [
-                      /* @__PURE__ */ jsx_runtime364.jsx(ThemedBox_default, {
+                      /* @__PURE__ */ jsx_runtime365.jsx(ThemedBox_default, {
                         width: 2,
                         minWidth: 2,
-                        children: isSelected ? /* @__PURE__ */ jsx_runtime364.jsxs(ThemedText, {
+                        children: isSelected ? /* @__PURE__ */ jsx_runtime365.jsxs(ThemedText, {
                           color: "permission",
                           bold: true,
                           children: [
                             figures_default.pointer,
                             " "
                           ]
-                        }) : /* @__PURE__ */ jsx_runtime364.jsx(ThemedText, {
+                        }) : /* @__PURE__ */ jsx_runtime365.jsx(ThemedText, {
                           children: "  "
                         })
                       }),
-                      /* @__PURE__ */ jsx_runtime364.jsxs(ThemedBox_default, {
+                      /* @__PURE__ */ jsx_runtime365.jsxs(ThemedBox_default, {
                         flexDirection: "column",
                         children: [
-                          /* @__PURE__ */ jsx_runtime364.jsx(ThemedBox_default, {
+                          /* @__PURE__ */ jsx_runtime365.jsx(ThemedBox_default, {
                             flexShrink: 1,
                             height: 1,
                             overflow: "hidden",
-                            children: /* @__PURE__ */ jsx_runtime364.jsx(UserMessageOption, {
+                            children: /* @__PURE__ */ jsx_runtime365.jsx(UserMessageOption, {
                               userMessage: msg,
                               color: isSelected ? "suggestion" : undefined,
                               isCurrent,
                               paddingRight: 10
                             })
                           }),
-                          isFileHistoryEnabled && metadataLoaded && /* @__PURE__ */ jsx_runtime364.jsx(ThemedBox_default, {
+                          isFileHistoryEnabled && metadataLoaded && /* @__PURE__ */ jsx_runtime365.jsx(ThemedBox_default, {
                             height: 1,
                             flexDirection: "row",
-                            children: metadata ? /* @__PURE__ */ jsx_runtime364.jsx(jsx_runtime364.Fragment, {
-                              children: /* @__PURE__ */ jsx_runtime364.jsx(ThemedText, {
+                            children: metadata ? /* @__PURE__ */ jsx_runtime365.jsx(jsx_runtime365.Fragment, {
+                              children: /* @__PURE__ */ jsx_runtime365.jsx(ThemedText, {
                                 dimColor: !isSelected,
                                 color: "inactive",
-                                children: numFilesChanged ? /* @__PURE__ */ jsx_runtime364.jsxs(jsx_runtime364.Fragment, {
+                                children: numFilesChanged ? /* @__PURE__ */ jsx_runtime365.jsxs(jsx_runtime365.Fragment, {
                                   children: [
                                     numFilesChanged === 1 && metadata.filesChanged[0] ? `${path29.basename(metadata.filesChanged[0])} ` : `${numFilesChanged} files changed `,
-                                    /* @__PURE__ */ jsx_runtime364.jsx(DiffStatsText, {
+                                    /* @__PURE__ */ jsx_runtime365.jsx(DiffStatsText, {
                                       diffStats: metadata
                                     })
                                   ]
-                                }) : /* @__PURE__ */ jsx_runtime364.jsx(jsx_runtime364.Fragment, {
+                                }) : /* @__PURE__ */ jsx_runtime365.jsx(jsx_runtime365.Fragment, {
                                   children: "No code changes"
                                 })
                               })
-                            }) : /* @__PURE__ */ jsx_runtime364.jsxs(ThemedText, {
+                            }) : /* @__PURE__ */ jsx_runtime365.jsxs(ThemedText, {
                               dimColor: true,
                               color: "warning",
                               children: [
@@ -439963,16 +440049,16 @@ ${codeError}`);
               })
             ]
           }),
-          !messageToRestore && /* @__PURE__ */ jsx_runtime364.jsx(ThemedText, {
+          !messageToRestore && /* @__PURE__ */ jsx_runtime365.jsx(ThemedText, {
             dimColor: true,
             italic: true,
-            children: exitState.pending ? /* @__PURE__ */ jsx_runtime364.jsxs(jsx_runtime364.Fragment, {
+            children: exitState.pending ? /* @__PURE__ */ jsx_runtime365.jsxs(jsx_runtime365.Fragment, {
               children: [
                 "Press ",
                 exitState.keyName,
                 " again to exit"
               ]
-            }) : /* @__PURE__ */ jsx_runtime364.jsxs(jsx_runtime364.Fragment, {
+            }) : /* @__PURE__ */ jsx_runtime365.jsxs(jsx_runtime365.Fragment, {
               children: [
                 !error && hasMessagesToSelect && "Enter to continue \xB7 ",
                 "Esc to exit"
@@ -440016,7 +440102,7 @@ function RestoreOptionDescription(t0) {
   }
   let t2;
   if ($[2] !== t1) {
-    t2 = /* @__PURE__ */ jsx_runtime364.jsx(ThemedText, {
+    t2 = /* @__PURE__ */ jsx_runtime365.jsx(ThemedText, {
       dimColor: true,
       children: t1
     });
@@ -440027,9 +440113,9 @@ function RestoreOptionDescription(t0) {
   }
   let t3;
   if ($[4] !== diffStatsForRestore || $[5] !== selectedRestoreOption || $[6] !== showCodeRestore) {
-    t3 = !isSummarizeOption(selectedRestoreOption) && (showCodeRestore ? /* @__PURE__ */ jsx_runtime364.jsx(RestoreCodeConfirmation, {
+    t3 = !isSummarizeOption(selectedRestoreOption) && (showCodeRestore ? /* @__PURE__ */ jsx_runtime365.jsx(RestoreCodeConfirmation, {
       diffStatsForRestore
-    }) : /* @__PURE__ */ jsx_runtime364.jsx(ThemedText, {
+    }) : /* @__PURE__ */ jsx_runtime365.jsx(ThemedText, {
       dimColor: true,
       children: "The code will be unchanged."
     }));
@@ -440042,7 +440128,7 @@ function RestoreOptionDescription(t0) {
   }
   let t4;
   if ($[8] !== t2 || $[9] !== t3) {
-    t4 = /* @__PURE__ */ jsx_runtime364.jsxs(ThemedBox_default, {
+    t4 = /* @__PURE__ */ jsx_runtime365.jsxs(ThemedBox_default, {
       flexDirection: "column",
       children: [
         t2,
@@ -440068,7 +440154,7 @@ function RestoreCodeConfirmation(t0) {
   if (!diffStatsForRestore.filesChanged || !diffStatsForRestore.filesChanged[0]) {
     let t1;
     if ($[0] === Symbol.for("react.memo_cache_sentinel")) {
-      t1 = /* @__PURE__ */ jsx_runtime364.jsx(ThemedText, {
+      t1 = /* @__PURE__ */ jsx_runtime365.jsx(ThemedText, {
         dimColor: true,
         children: "The code has not changed (nothing will be restored)."
       });
@@ -440126,7 +440212,7 @@ function RestoreCodeConfirmation(t0) {
   }
   let t1;
   if ($[9] !== diffStatsForRestore) {
-    t1 = /* @__PURE__ */ jsx_runtime364.jsx(DiffStatsText, {
+    t1 = /* @__PURE__ */ jsx_runtime365.jsx(DiffStatsText, {
       diffStats: diffStatsForRestore
     });
     $[9] = diffStatsForRestore;
@@ -440136,8 +440222,8 @@ function RestoreCodeConfirmation(t0) {
   }
   let t2;
   if ($[11] !== fileLabel || $[12] !== t1) {
-    t2 = /* @__PURE__ */ jsx_runtime364.jsx(jsx_runtime364.Fragment, {
-      children: /* @__PURE__ */ jsx_runtime364.jsxs(ThemedText, {
+    t2 = /* @__PURE__ */ jsx_runtime365.jsx(jsx_runtime365.Fragment, {
+      children: /* @__PURE__ */ jsx_runtime365.jsxs(ThemedText, {
         dimColor: true,
         children: [
           "The code will be restored",
@@ -440167,7 +440253,7 @@ function DiffStatsText(t0) {
   }
   let t1;
   if ($[0] !== diffStats.insertions) {
-    t1 = /* @__PURE__ */ jsx_runtime364.jsxs(ThemedText, {
+    t1 = /* @__PURE__ */ jsx_runtime365.jsxs(ThemedText, {
       color: "diffAddedWord",
       children: [
         "+",
@@ -440182,7 +440268,7 @@ function DiffStatsText(t0) {
   }
   let t2;
   if ($[2] !== diffStats.deletions) {
-    t2 = /* @__PURE__ */ jsx_runtime364.jsxs(ThemedText, {
+    t2 = /* @__PURE__ */ jsx_runtime365.jsxs(ThemedText, {
       color: "diffRemovedWord",
       children: [
         "-",
@@ -440196,7 +440282,7 @@ function DiffStatsText(t0) {
   }
   let t3;
   if ($[4] !== t1 || $[5] !== t2) {
-    t3 = /* @__PURE__ */ jsx_runtime364.jsxs(jsx_runtime364.Fragment, {
+    t3 = /* @__PURE__ */ jsx_runtime365.jsxs(jsx_runtime365.Fragment, {
       children: [
         t1,
         t2
@@ -440225,9 +440311,9 @@ function UserMessageOption(t0) {
   if (isCurrent) {
     let t1;
     if ($[0] !== color || $[1] !== dimColor) {
-      t1 = /* @__PURE__ */ jsx_runtime364.jsx(ThemedBox_default, {
+      t1 = /* @__PURE__ */ jsx_runtime365.jsx(ThemedBox_default, {
         width: "100%",
-        children: /* @__PURE__ */ jsx_runtime364.jsx(ThemedText, {
+        children: /* @__PURE__ */ jsx_runtime365.jsx(ThemedText, {
           italic: true,
           color,
           dimColor,
@@ -440260,10 +440346,10 @@ function UserMessageOption(t0) {
       if (isEmptyMessageText(messageText)) {
         let t7;
         if ($[17] !== color || $[18] !== dimColor) {
-          t7 = /* @__PURE__ */ jsx_runtime364.jsx(ThemedBox_default, {
+          t7 = /* @__PURE__ */ jsx_runtime365.jsx(ThemedBox_default, {
             flexDirection: "row",
             width: "100%",
-            children: /* @__PURE__ */ jsx_runtime364.jsx(ThemedText, {
+            children: /* @__PURE__ */ jsx_runtime365.jsx(ThemedText, {
               italic: true,
               color,
               dimColor,
@@ -440284,7 +440370,7 @@ function UserMessageOption(t0) {
         if (input) {
           let t7;
           if ($[20] === Symbol.for("react.memo_cache_sentinel")) {
-            t7 = /* @__PURE__ */ jsx_runtime364.jsx(ThemedText, {
+            t7 = /* @__PURE__ */ jsx_runtime365.jsx(ThemedText, {
               color: "bashBorder",
               children: "!"
             });
@@ -440292,12 +440378,12 @@ function UserMessageOption(t0) {
           } else {
             t7 = $[20];
           }
-          t6 = /* @__PURE__ */ jsx_runtime364.jsxs(ThemedBox_default, {
+          t6 = /* @__PURE__ */ jsx_runtime365.jsxs(ThemedBox_default, {
             flexDirection: "row",
             width: "100%",
             children: [
               t7,
-              /* @__PURE__ */ jsx_runtime364.jsxs(ThemedText, {
+              /* @__PURE__ */ jsx_runtime365.jsxs(ThemedText, {
                 color,
                 dimColor,
                 children: [
@@ -440316,10 +440402,10 @@ function UserMessageOption(t0) {
         const isSkillFormat = extractTag(messageText, "skill-format") === "true";
         if (commandMessage) {
           if (isSkillFormat) {
-            t6 = /* @__PURE__ */ jsx_runtime364.jsx(ThemedBox_default, {
+            t6 = /* @__PURE__ */ jsx_runtime365.jsx(ThemedBox_default, {
               flexDirection: "row",
               width: "100%",
-              children: /* @__PURE__ */ jsx_runtime364.jsxs(ThemedText, {
+              children: /* @__PURE__ */ jsx_runtime365.jsxs(ThemedText, {
                 color,
                 dimColor,
                 children: [
@@ -440331,10 +440417,10 @@ function UserMessageOption(t0) {
             });
             break bb0;
           } else {
-            t6 = /* @__PURE__ */ jsx_runtime364.jsx(ThemedBox_default, {
+            t6 = /* @__PURE__ */ jsx_runtime365.jsx(ThemedBox_default, {
               flexDirection: "row",
               width: "100%",
-              children: /* @__PURE__ */ jsx_runtime364.jsxs(ThemedText, {
+              children: /* @__PURE__ */ jsx_runtime365.jsxs(ThemedText, {
                 color,
                 dimColor,
                 children: [
@@ -440388,7 +440474,7 @@ function UserMessageOption(t0) {
   }
   let t7;
   if ($[21] !== T0 || $[22] !== t1 || $[23] !== t2 || $[24] !== t3) {
-    t7 = /* @__PURE__ */ jsx_runtime364.jsx(T0, {
+    t7 = /* @__PURE__ */ jsx_runtime365.jsx(T0, {
       color: t1,
       dimColor: t2,
       children: t3
@@ -440403,7 +440489,7 @@ function UserMessageOption(t0) {
   }
   let t8;
   if ($[26] !== T1 || $[27] !== t4 || $[28] !== t5 || $[29] !== t7) {
-    t8 = /* @__PURE__ */ jsx_runtime364.jsx(T1, {
+    t8 = /* @__PURE__ */ jsx_runtime365.jsx(T1, {
       flexDirection: t4,
       width: t5,
       children: t7
@@ -440519,7 +440605,7 @@ function messagesAfterAreOnlySynthetic(messages, fromIndex) {
   }
   return true;
 }
-var import_compiler_runtime287, import_react199, jsx_runtime364, MAX_VISIBLE_MESSAGES = 7;
+var import_compiler_runtime287, import_react199, jsx_runtime365, MAX_VISIBLE_MESSAGES = 7;
 var init_MessageSelector = __esm(() => {
   init_figures();
   init_analytics();
@@ -440539,7 +440625,7 @@ var init_MessageSelector = __esm(() => {
   init_Divider();
   import_compiler_runtime287 = __toESM(require_compiler_runtime(), 1);
   import_react199 = __toESM(require_react(), 1);
-  jsx_runtime364 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime365 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/hooks/useIdeLogging.ts
@@ -440614,7 +440700,7 @@ function PreviewBox(props) {
   if (settings.syntaxHighlightingDisabled) {
     let t0;
     if ($[0] !== props) {
-      t0 = /* @__PURE__ */ jsx_runtime365.jsx(PreviewBoxBody, {
+      t0 = /* @__PURE__ */ jsx_runtime366.jsx(PreviewBoxBody, {
         ...props,
         highlight: null
       });
@@ -440627,12 +440713,12 @@ function PreviewBox(props) {
   }
   let t0;
   if ($[2] !== props) {
-    t0 = /* @__PURE__ */ jsx_runtime365.jsx(import_react202.Suspense, {
-      fallback: /* @__PURE__ */ jsx_runtime365.jsx(PreviewBoxBody, {
+    t0 = /* @__PURE__ */ jsx_runtime366.jsx(import_react202.Suspense, {
+      fallback: /* @__PURE__ */ jsx_runtime366.jsx(PreviewBoxBody, {
         ...props,
         highlight: null
       }),
-      children: /* @__PURE__ */ jsx_runtime365.jsx(PreviewBoxWithHighlight, {
+      children: /* @__PURE__ */ jsx_runtime366.jsx(PreviewBoxWithHighlight, {
         ...props
       })
     });
@@ -440655,7 +440741,7 @@ function PreviewBoxWithHighlight(props) {
   const highlight = import_react202.use(t0);
   let t1;
   if ($[1] !== highlight || $[2] !== props) {
-    t1 = /* @__PURE__ */ jsx_runtime365.jsx(PreviewBoxBody, {
+    t1 = /* @__PURE__ */ jsx_runtime366.jsx(PreviewBoxBody, {
       ...props,
       highlight
     });
@@ -440740,7 +440826,7 @@ function PreviewBoxBody(t0) {
     T0 = ThemedBox_default;
     t3 = "column";
     if ($[19] !== topBorder) {
-      t4 = /* @__PURE__ */ jsx_runtime365.jsx(ThemedText, {
+      t4 = /* @__PURE__ */ jsx_runtime366.jsx(ThemedText, {
         dimColor: true,
         children: topBorder
       });
@@ -440755,20 +440841,20 @@ function PreviewBoxBody(t0) {
         const lineWidth = stringWidth(line_0);
         const displayLine = lineWidth > innerWidth ? sliceAnsi(line_0, 0, innerWidth) : line_0;
         const padding = " ".repeat(Math.max(0, innerWidth - stringWidth(displayLine)));
-        return /* @__PURE__ */ jsx_runtime365.jsxs(ThemedBox_default, {
+        return /* @__PURE__ */ jsx_runtime366.jsxs(ThemedBox_default, {
           flexDirection: "row",
           children: [
-            /* @__PURE__ */ jsx_runtime365.jsxs(ThemedText, {
+            /* @__PURE__ */ jsx_runtime366.jsxs(ThemedText, {
               dimColor: true,
               children: [
                 BOX_CHARS.vertical,
                 " "
               ]
             }),
-            /* @__PURE__ */ jsx_runtime365.jsx(Ansi, {
+            /* @__PURE__ */ jsx_runtime366.jsx(Ansi, {
               children: displayLine
             }),
-            /* @__PURE__ */ jsx_runtime365.jsxs(ThemedText, {
+            /* @__PURE__ */ jsx_runtime366.jsxs(ThemedText, {
               dimColor: true,
               children: [
                 padding,
@@ -440806,7 +440892,7 @@ function PreviewBoxBody(t0) {
   }
   let t6;
   if ($[23] !== truncationBar) {
-    t6 = truncationBar && /* @__PURE__ */ jsx_runtime365.jsx(ThemedText, {
+    t6 = truncationBar && /* @__PURE__ */ jsx_runtime366.jsx(ThemedText, {
       color: "warning",
       children: truncationBar
     });
@@ -440817,7 +440903,7 @@ function PreviewBoxBody(t0) {
   }
   let t7;
   if ($[25] !== bottomBorder) {
-    t7 = /* @__PURE__ */ jsx_runtime365.jsx(ThemedText, {
+    t7 = /* @__PURE__ */ jsx_runtime366.jsx(ThemedText, {
       dimColor: true,
       children: bottomBorder
     });
@@ -440828,7 +440914,7 @@ function PreviewBoxBody(t0) {
   }
   let t8;
   if ($[27] !== T0 || $[28] !== t3 || $[29] !== t4 || $[30] !== t5 || $[31] !== t6 || $[32] !== t7) {
-    t8 = /* @__PURE__ */ jsx_runtime365.jsxs(T0, {
+    t8 = /* @__PURE__ */ jsx_runtime366.jsxs(T0, {
       flexDirection: t3,
       children: [
         t4,
@@ -440852,7 +440938,7 @@ function PreviewBoxBody(t0) {
 function _temp158(line) {
   return stringWidth(line);
 }
-var import_compiler_runtime288, import_react202, jsx_runtime365, BOX_CHARS;
+var import_compiler_runtime288, import_react202, jsx_runtime366, BOX_CHARS;
 var init_PreviewBox = __esm(() => {
   init_useSettings();
   init_useTerminalSize();
@@ -440863,7 +440949,7 @@ var init_PreviewBox = __esm(() => {
   init_sliceAnsi();
   import_compiler_runtime288 = __toESM(require_compiler_runtime(), 1);
   import_react202 = __toESM(require_react(), 1);
-  jsx_runtime365 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime366 = __toESM(require_jsx_runtime(), 1);
   BOX_CHARS = {
     topLeft: "\u250C",
     topRight: "\u2510",
@@ -440964,7 +441050,7 @@ function QuestionNavigationBar(t0) {
   const hideArrows = questions.length === 1 && hideSubmitTab;
   let t3;
   if ($[14] !== currentQuestionIndex || $[15] !== hideArrows) {
-    t3 = !hideArrows && /* @__PURE__ */ jsx_runtime366.jsxs(ThemedText, {
+    t3 = !hideArrows && /* @__PURE__ */ jsx_runtime367.jsxs(ThemedText, {
       color: currentQuestionIndex === 0 ? "inactive" : undefined,
       children: [
         "\u2190",
@@ -440986,8 +441072,8 @@ function QuestionNavigationBar(t0) {
         const isAnswered = q_1?.question && !!answers[q_1.question];
         const checkbox = isAnswered ? figures_default.checkboxOn : figures_default.checkboxOff;
         const displayText = tabDisplayTexts[index_2] || q_1?.header || `Q${index_2 + 1}`;
-        return /* @__PURE__ */ jsx_runtime366.jsx(ThemedBox_default, {
-          children: isSelected ? /* @__PURE__ */ jsx_runtime366.jsxs(ThemedText, {
+        return /* @__PURE__ */ jsx_runtime367.jsx(ThemedBox_default, {
+          children: isSelected ? /* @__PURE__ */ jsx_runtime367.jsxs(ThemedText, {
             backgroundColor: "permission",
             color: "inverseText",
             children: [
@@ -440997,7 +441083,7 @@ function QuestionNavigationBar(t0) {
               displayText,
               " "
             ]
-          }) : /* @__PURE__ */ jsx_runtime366.jsxs(ThemedText, {
+          }) : /* @__PURE__ */ jsx_runtime367.jsxs(ThemedText, {
             children: [
               " ",
               checkbox,
@@ -441026,8 +441112,8 @@ function QuestionNavigationBar(t0) {
   }
   let t5;
   if ($[26] !== currentQuestionIndex || $[27] !== hideSubmitTab || $[28] !== questions.length) {
-    t5 = !hideSubmitTab && /* @__PURE__ */ jsx_runtime366.jsx(ThemedBox_default, {
-      children: currentQuestionIndex === questions.length ? /* @__PURE__ */ jsx_runtime366.jsxs(ThemedText, {
+    t5 = !hideSubmitTab && /* @__PURE__ */ jsx_runtime367.jsx(ThemedBox_default, {
+      children: currentQuestionIndex === questions.length ? /* @__PURE__ */ jsx_runtime367.jsxs(ThemedText, {
         backgroundColor: "permission",
         color: "inverseText",
         children: [
@@ -441036,7 +441122,7 @@ function QuestionNavigationBar(t0) {
           " Submit",
           " "
         ]
-      }) : /* @__PURE__ */ jsx_runtime366.jsxs(ThemedText, {
+      }) : /* @__PURE__ */ jsx_runtime367.jsxs(ThemedText, {
         children: [
           " ",
           figures_default.tick,
@@ -441053,7 +441139,7 @@ function QuestionNavigationBar(t0) {
   }
   let t6;
   if ($[30] !== currentQuestionIndex || $[31] !== hideArrows || $[32] !== questions.length) {
-    t6 = !hideArrows && /* @__PURE__ */ jsx_runtime366.jsxs(ThemedText, {
+    t6 = !hideArrows && /* @__PURE__ */ jsx_runtime367.jsxs(ThemedText, {
       color: currentQuestionIndex === questions.length ? "inactive" : undefined,
       children: [
         " ",
@@ -441069,7 +441155,7 @@ function QuestionNavigationBar(t0) {
   }
   let t7;
   if ($[34] !== t3 || $[35] !== t4 || $[36] !== t5 || $[37] !== t6) {
-    t7 = /* @__PURE__ */ jsx_runtime366.jsxs(ThemedBox_default, {
+    t7 = /* @__PURE__ */ jsx_runtime367.jsxs(ThemedBox_default, {
       flexDirection: "row",
       marginBottom: 1,
       children: [
@@ -441098,7 +441184,7 @@ function _temp270(header_0) {
 function _temp159(q_0, index_0) {
   return q_0?.header || `Q${index_0 + 1}`;
 }
-var import_compiler_runtime289, jsx_runtime366;
+var import_compiler_runtime289, jsx_runtime367;
 var init_QuestionNavigationBar = __esm(() => {
   init_figures();
   init_useTerminalSize();
@@ -441106,7 +441192,7 @@ var init_QuestionNavigationBar = __esm(() => {
   init_ink2();
   init_format();
   import_compiler_runtime289 = __toESM(require_compiler_runtime(), 1);
-  jsx_runtime366 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime367 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/permissions/AskUserQuestionPermissionRequest/PreviewQuestionView.tsx
@@ -441287,55 +441373,55 @@ function PreviewQuestionView({
   const previewMaxLines = import_react203.useMemo(() => {
     return minContentHeight ? Math.max(1, minContentHeight - PREVIEW_OVERHEAD) : undefined;
   }, [minContentHeight]);
-  return /* @__PURE__ */ jsx_runtime367.jsxs(ThemedBox_default, {
+  return /* @__PURE__ */ jsx_runtime368.jsxs(ThemedBox_default, {
     flexDirection: "column",
     marginTop: 1,
     tabIndex: 0,
     autoFocus: true,
     onKeyDown: handleKeyDown,
     children: [
-      /* @__PURE__ */ jsx_runtime367.jsx(Divider, {
+      /* @__PURE__ */ jsx_runtime368.jsx(Divider, {
         color: "inactive"
       }),
-      /* @__PURE__ */ jsx_runtime367.jsxs(ThemedBox_default, {
+      /* @__PURE__ */ jsx_runtime368.jsxs(ThemedBox_default, {
         flexDirection: "column",
         paddingTop: 0,
         children: [
-          /* @__PURE__ */ jsx_runtime367.jsx(QuestionNavigationBar, {
+          /* @__PURE__ */ jsx_runtime368.jsx(QuestionNavigationBar, {
             questions,
             currentQuestionIndex,
             answers,
             hideSubmitTab
           }),
-          /* @__PURE__ */ jsx_runtime367.jsx(PermissionRequestTitle, {
+          /* @__PURE__ */ jsx_runtime368.jsx(PermissionRequestTitle, {
             title: question.question,
             color: "text"
           }),
-          /* @__PURE__ */ jsx_runtime367.jsxs(ThemedBox_default, {
+          /* @__PURE__ */ jsx_runtime368.jsxs(ThemedBox_default, {
             flexDirection: "column",
             minHeight: minContentHeight,
             children: [
-              /* @__PURE__ */ jsx_runtime367.jsxs(ThemedBox_default, {
+              /* @__PURE__ */ jsx_runtime368.jsxs(ThemedBox_default, {
                 marginTop: 1,
                 flexDirection: "row",
                 gap: 4,
                 children: [
-                  /* @__PURE__ */ jsx_runtime367.jsx(ThemedBox_default, {
+                  /* @__PURE__ */ jsx_runtime368.jsx(ThemedBox_default, {
                     flexDirection: "column",
                     width: 30,
                     children: allOptions.map((option_0, index_0) => {
                       const isFocused = focusedIndex === index_0;
                       const isSelected = selectedValue === option_0.label;
-                      return /* @__PURE__ */ jsx_runtime367.jsxs(ThemedBox_default, {
+                      return /* @__PURE__ */ jsx_runtime368.jsxs(ThemedBox_default, {
                         flexDirection: "row",
                         children: [
-                          isFocused ? /* @__PURE__ */ jsx_runtime367.jsx(ThemedText, {
+                          isFocused ? /* @__PURE__ */ jsx_runtime368.jsx(ThemedText, {
                             color: "suggestion",
                             children: figures_default.pointer
-                          }) : /* @__PURE__ */ jsx_runtime367.jsx(ThemedText, {
+                          }) : /* @__PURE__ */ jsx_runtime368.jsx(ThemedText, {
                             children: " "
                           }),
-                          /* @__PURE__ */ jsx_runtime367.jsxs(ThemedText, {
+                          /* @__PURE__ */ jsx_runtime368.jsxs(ThemedText, {
                             dimColor: true,
                             children: [
                               " ",
@@ -441343,7 +441429,7 @@ function PreviewQuestionView({
                               "."
                             ]
                           }),
-                          /* @__PURE__ */ jsx_runtime367.jsxs(ThemedText, {
+                          /* @__PURE__ */ jsx_runtime368.jsxs(ThemedText, {
                             color: isSelected ? "success" : isFocused ? "suggestion" : undefined,
                             bold: isFocused,
                             children: [
@@ -441351,7 +441437,7 @@ function PreviewQuestionView({
                               option_0.label
                             ]
                           }),
-                          isSelected && /* @__PURE__ */ jsx_runtime367.jsxs(ThemedText, {
+                          isSelected && /* @__PURE__ */ jsx_runtime368.jsxs(ThemedText, {
                             color: "success",
                             children: [
                               " ",
@@ -441362,26 +441448,26 @@ function PreviewQuestionView({
                       }, option_0.label);
                     })
                   }),
-                  /* @__PURE__ */ jsx_runtime367.jsxs(ThemedBox_default, {
+                  /* @__PURE__ */ jsx_runtime368.jsxs(ThemedBox_default, {
                     flexDirection: "column",
                     flexGrow: 1,
                     children: [
-                      /* @__PURE__ */ jsx_runtime367.jsx(PreviewBox, {
+                      /* @__PURE__ */ jsx_runtime368.jsx(PreviewBox, {
                         content: previewContent || "No preview available",
                         maxLines: previewMaxLines,
                         minWidth: minContentWidth,
                         maxWidth: previewMaxWidth
                       }),
-                      /* @__PURE__ */ jsx_runtime367.jsxs(ThemedBox_default, {
+                      /* @__PURE__ */ jsx_runtime368.jsxs(ThemedBox_default, {
                         marginTop: 1,
                         flexDirection: "row",
                         gap: 1,
                         children: [
-                          /* @__PURE__ */ jsx_runtime367.jsx(ThemedText, {
+                          /* @__PURE__ */ jsx_runtime368.jsx(ThemedText, {
                             color: "suggestion",
                             children: "Notes:"
                           }),
-                          isInNotesInput ? /* @__PURE__ */ jsx_runtime367.jsx(TextInput, {
+                          isInNotesInput ? /* @__PURE__ */ jsx_runtime368.jsx(TextInput, {
                             value: notesValue,
                             placeholder: "Add notes on this design\u2026",
                             onChange: (value) => {
@@ -441396,7 +441482,7 @@ function PreviewQuestionView({
                             columns: 60,
                             cursorOffset,
                             onChangeCursorOffset: setCursorOffset
-                          }) : /* @__PURE__ */ jsx_runtime367.jsx(ThemedText, {
+                          }) : /* @__PURE__ */ jsx_runtime368.jsx(ThemedText, {
                             dimColor: true,
                             italic: true,
                             children: notesValue || "press n to add notes"
@@ -441407,40 +441493,40 @@ function PreviewQuestionView({
                   })
                 ]
               }),
-              /* @__PURE__ */ jsx_runtime367.jsxs(ThemedBox_default, {
+              /* @__PURE__ */ jsx_runtime368.jsxs(ThemedBox_default, {
                 flexDirection: "column",
                 marginTop: 1,
                 children: [
-                  /* @__PURE__ */ jsx_runtime367.jsx(Divider, {
+                  /* @__PURE__ */ jsx_runtime368.jsx(Divider, {
                     color: "inactive"
                   }),
-                  /* @__PURE__ */ jsx_runtime367.jsxs(ThemedBox_default, {
+                  /* @__PURE__ */ jsx_runtime368.jsxs(ThemedBox_default, {
                     flexDirection: "row",
                     gap: 1,
                     children: [
-                      isFooterFocused && footerIndex === 0 ? /* @__PURE__ */ jsx_runtime367.jsx(ThemedText, {
+                      isFooterFocused && footerIndex === 0 ? /* @__PURE__ */ jsx_runtime368.jsx(ThemedText, {
                         color: "suggestion",
                         children: figures_default.pointer
-                      }) : /* @__PURE__ */ jsx_runtime367.jsx(ThemedText, {
+                      }) : /* @__PURE__ */ jsx_runtime368.jsx(ThemedText, {
                         children: " "
                       }),
-                      /* @__PURE__ */ jsx_runtime367.jsx(ThemedText, {
+                      /* @__PURE__ */ jsx_runtime368.jsx(ThemedText, {
                         color: isFooterFocused && footerIndex === 0 ? "suggestion" : undefined,
                         children: "Chat about this"
                       })
                     ]
                   }),
-                  isInPlanMode && /* @__PURE__ */ jsx_runtime367.jsxs(ThemedBox_default, {
+                  isInPlanMode && /* @__PURE__ */ jsx_runtime368.jsxs(ThemedBox_default, {
                     flexDirection: "row",
                     gap: 1,
                     children: [
-                      isFooterFocused && footerIndex === 1 ? /* @__PURE__ */ jsx_runtime367.jsx(ThemedText, {
+                      isFooterFocused && footerIndex === 1 ? /* @__PURE__ */ jsx_runtime368.jsx(ThemedText, {
                         color: "suggestion",
                         children: figures_default.pointer
-                      }) : /* @__PURE__ */ jsx_runtime367.jsx(ThemedText, {
+                      }) : /* @__PURE__ */ jsx_runtime368.jsx(ThemedText, {
                         children: " "
                       }),
-                      /* @__PURE__ */ jsx_runtime367.jsx(ThemedText, {
+                      /* @__PURE__ */ jsx_runtime368.jsx(ThemedText, {
                         color: isFooterFocused && footerIndex === 1 ? "suggestion" : undefined,
                         children: "Skip interview and plan immediately"
                       })
@@ -441448,9 +441534,9 @@ function PreviewQuestionView({
                   })
                 ]
               }),
-              /* @__PURE__ */ jsx_runtime367.jsx(ThemedBox_default, {
+              /* @__PURE__ */ jsx_runtime368.jsx(ThemedBox_default, {
                 marginTop: 1,
-                children: /* @__PURE__ */ jsx_runtime367.jsxs(ThemedText, {
+                children: /* @__PURE__ */ jsx_runtime368.jsxs(ThemedText, {
                   color: "inactive",
                   dimColor: true,
                   children: [
@@ -441459,10 +441545,10 @@ function PreviewQuestionView({
                     "/",
                     figures_default.arrowDown,
                     " to navigate \xB7 n to add notes",
-                    questions.length > 1 && /* @__PURE__ */ jsx_runtime367.jsx(jsx_runtime367.Fragment, {
+                    questions.length > 1 && /* @__PURE__ */ jsx_runtime368.jsx(jsx_runtime368.Fragment, {
                       children: " \xB7 Tab to switch questions"
                     }),
-                    isInNotesInput && editorName && /* @__PURE__ */ jsx_runtime367.jsxs(jsx_runtime367.Fragment, {
+                    isInNotesInput && editorName && /* @__PURE__ */ jsx_runtime368.jsxs(jsx_runtime368.Fragment, {
                       children: [
                         " \xB7 ctrl+g to edit in ",
                         editorName
@@ -441480,7 +441566,7 @@ function PreviewQuestionView({
     ]
   });
 }
-var import_react203, jsx_runtime367;
+var import_react203, jsx_runtime368;
 var init_PreviewQuestionView = __esm(() => {
   init_figures();
   init_useTerminalSize();
@@ -441496,7 +441582,7 @@ var init_PreviewQuestionView = __esm(() => {
   init_PreviewBox();
   init_QuestionNavigationBar();
   import_react203 = __toESM(require_react(), 1);
-  jsx_runtime367 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime368 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/permissions/AskUserQuestionPermissionRequest/QuestionView.tsx
@@ -441696,7 +441782,7 @@ function QuestionView(t0) {
   if (hasAnyPreview) {
     let t8;
     if ($[30] !== answers || $[31] !== currentQuestionIndex || $[32] !== hideSubmitTab || $[33] !== minContentHeight || $[34] !== minContentWidth || $[35] !== onAnswer || $[36] !== onCancel || $[37] !== onFinishPlanInterview || $[38] !== onRespondToClaude || $[39] !== onTabNext || $[40] !== onTabPrev || $[41] !== onTextInputFocus || $[42] !== onUpdateQuestionState || $[43] !== question || $[44] !== questionStates || $[45] !== questions) {
-      t8 = /* @__PURE__ */ jsx_runtime368.jsx(PreviewQuestionView, {
+      t8 = /* @__PURE__ */ jsx_runtime369.jsx(PreviewQuestionView, {
         question,
         questions,
         currentQuestionIndex,
@@ -441738,18 +441824,18 @@ function QuestionView(t0) {
   }
   let t8;
   if ($[47] !== isInPlanMode || $[48] !== planFilePath) {
-    t8 = isInPlanMode && planFilePath && /* @__PURE__ */ jsx_runtime368.jsxs(ThemedBox_default, {
+    t8 = isInPlanMode && planFilePath && /* @__PURE__ */ jsx_runtime369.jsxs(ThemedBox_default, {
       flexDirection: "column",
       gap: 0,
       children: [
-        /* @__PURE__ */ jsx_runtime368.jsx(Divider, {
+        /* @__PURE__ */ jsx_runtime369.jsx(Divider, {
           color: "inactive"
         }),
-        /* @__PURE__ */ jsx_runtime368.jsxs(ThemedText, {
+        /* @__PURE__ */ jsx_runtime369.jsxs(ThemedText, {
           color: "inactive",
           children: [
             "Planning: ",
-            /* @__PURE__ */ jsx_runtime368.jsx(FilePathLink, {
+            /* @__PURE__ */ jsx_runtime369.jsx(FilePathLink, {
               filePath: planFilePath
             })
           ]
@@ -441764,9 +441850,9 @@ function QuestionView(t0) {
   }
   let t9;
   if ($[50] === Symbol.for("react.memo_cache_sentinel")) {
-    t9 = /* @__PURE__ */ jsx_runtime368.jsx(ThemedBox_default, {
+    t9 = /* @__PURE__ */ jsx_runtime369.jsx(ThemedBox_default, {
       marginTop: -1,
-      children: /* @__PURE__ */ jsx_runtime368.jsx(Divider, {
+      children: /* @__PURE__ */ jsx_runtime369.jsx(Divider, {
         color: "inactive"
       })
     });
@@ -441776,7 +441862,7 @@ function QuestionView(t0) {
   }
   let t10;
   if ($[51] !== answers || $[52] !== currentQuestionIndex || $[53] !== hideSubmitTab || $[54] !== questions) {
-    t10 = /* @__PURE__ */ jsx_runtime368.jsx(QuestionNavigationBar, {
+    t10 = /* @__PURE__ */ jsx_runtime369.jsx(QuestionNavigationBar, {
       questions,
       currentQuestionIndex,
       answers,
@@ -441792,7 +441878,7 @@ function QuestionView(t0) {
   }
   let t11;
   if ($[56] !== question.question) {
-    t11 = /* @__PURE__ */ jsx_runtime368.jsx(PermissionRequestTitle, {
+    t11 = /* @__PURE__ */ jsx_runtime369.jsx(PermissionRequestTitle, {
       title: question.question,
       color: "text"
     });
@@ -441803,9 +441889,9 @@ function QuestionView(t0) {
   }
   let t12;
   if ($[58] !== currentQuestionIndex || $[59] !== handleFocus || $[60] !== handleOpenEditor || $[61] !== isFooterFocused || $[62] !== onAnswer || $[63] !== onCancel || $[64] !== onImagePaste || $[65] !== onRemoveImage || $[66] !== onSubmit || $[67] !== onUpdateQuestionState || $[68] !== options || $[69] !== pastedContents || $[70] !== question.multiSelect || $[71] !== question.question || $[72] !== questionStates || $[73] !== questionText || $[74] !== questions.length) {
-    t12 = /* @__PURE__ */ jsx_runtime368.jsx(ThemedBox_default, {
+    t12 = /* @__PURE__ */ jsx_runtime369.jsx(ThemedBox_default, {
       marginTop: 1,
-      children: question.multiSelect ? /* @__PURE__ */ jsx_runtime368.jsx(SelectMulti, {
+      children: question.multiSelect ? /* @__PURE__ */ jsx_runtime369.jsx(SelectMulti, {
         options,
         defaultValue: questionStates[question.question]?.selectedValue,
         onChange: (values) => {
@@ -441826,7 +441912,7 @@ function QuestionView(t0) {
         onImagePaste,
         pastedContents,
         onRemoveImage
-      }, question.question) : /* @__PURE__ */ jsx_runtime368.jsx(Select, {
+      }, question.question) : /* @__PURE__ */ jsx_runtime369.jsx(Select, {
         options,
         defaultValue: questionStates[question.question]?.selectedValue,
         onChange: (value_1) => {
@@ -441870,7 +441956,7 @@ function QuestionView(t0) {
   }
   let t13;
   if ($[76] === Symbol.for("react.memo_cache_sentinel")) {
-    t13 = /* @__PURE__ */ jsx_runtime368.jsx(Divider, {
+    t13 = /* @__PURE__ */ jsx_runtime369.jsx(Divider, {
       color: "inactive"
     });
     $[76] = t13;
@@ -441879,10 +441965,10 @@ function QuestionView(t0) {
   }
   let t14;
   if ($[77] !== footerIndex || $[78] !== isFooterFocused) {
-    t14 = isFooterFocused && footerIndex === 0 ? /* @__PURE__ */ jsx_runtime368.jsx(ThemedText, {
+    t14 = isFooterFocused && footerIndex === 0 ? /* @__PURE__ */ jsx_runtime369.jsx(ThemedText, {
       color: "suggestion",
       children: figures_default.pointer
-    }) : /* @__PURE__ */ jsx_runtime368.jsx(ThemedText, {
+    }) : /* @__PURE__ */ jsx_runtime369.jsx(ThemedText, {
       children: " "
     });
     $[77] = footerIndex;
@@ -441895,7 +441981,7 @@ function QuestionView(t0) {
   const t16 = options.length + 1;
   let t17;
   if ($[80] !== t15 || $[81] !== t16) {
-    t17 = /* @__PURE__ */ jsx_runtime368.jsxs(ThemedText, {
+    t17 = /* @__PURE__ */ jsx_runtime369.jsxs(ThemedText, {
       color: t15,
       children: [
         t16,
@@ -441910,7 +441996,7 @@ function QuestionView(t0) {
   }
   let t18;
   if ($[83] !== t14 || $[84] !== t17) {
-    t18 = /* @__PURE__ */ jsx_runtime368.jsxs(ThemedBox_default, {
+    t18 = /* @__PURE__ */ jsx_runtime369.jsxs(ThemedBox_default, {
       flexDirection: "row",
       gap: 1,
       children: [
@@ -441926,17 +442012,17 @@ function QuestionView(t0) {
   }
   let t19;
   if ($[86] !== footerIndex || $[87] !== isFooterFocused || $[88] !== isInPlanMode || $[89] !== options.length) {
-    t19 = isInPlanMode && /* @__PURE__ */ jsx_runtime368.jsxs(ThemedBox_default, {
+    t19 = isInPlanMode && /* @__PURE__ */ jsx_runtime369.jsxs(ThemedBox_default, {
       flexDirection: "row",
       gap: 1,
       children: [
-        isFooterFocused && footerIndex === 1 ? /* @__PURE__ */ jsx_runtime368.jsx(ThemedText, {
+        isFooterFocused && footerIndex === 1 ? /* @__PURE__ */ jsx_runtime369.jsx(ThemedText, {
           color: "suggestion",
           children: figures_default.pointer
-        }) : /* @__PURE__ */ jsx_runtime368.jsx(ThemedText, {
+        }) : /* @__PURE__ */ jsx_runtime369.jsx(ThemedText, {
           children: " "
         }),
-        /* @__PURE__ */ jsx_runtime368.jsxs(ThemedText, {
+        /* @__PURE__ */ jsx_runtime369.jsxs(ThemedText, {
           color: isFooterFocused && footerIndex === 1 ? "suggestion" : undefined,
           children: [
             options.length + 2,
@@ -441955,7 +442041,7 @@ function QuestionView(t0) {
   }
   let t20;
   if ($[91] !== t18 || $[92] !== t19) {
-    t20 = /* @__PURE__ */ jsx_runtime368.jsxs(ThemedBox_default, {
+    t20 = /* @__PURE__ */ jsx_runtime369.jsxs(ThemedBox_default, {
       flexDirection: "column",
       children: [
         t13,
@@ -441971,7 +442057,7 @@ function QuestionView(t0) {
   }
   let t21;
   if ($[94] !== questions.length) {
-    t21 = questions.length === 1 ? /* @__PURE__ */ jsx_runtime368.jsxs(jsx_runtime368.Fragment, {
+    t21 = questions.length === 1 ? /* @__PURE__ */ jsx_runtime369.jsxs(jsx_runtime369.Fragment, {
       children: [
         figures_default.arrowUp,
         "/",
@@ -441986,7 +442072,7 @@ function QuestionView(t0) {
   }
   let t22;
   if ($[96] !== isOtherFocused) {
-    t22 = isOtherFocused && editorName && /* @__PURE__ */ jsx_runtime368.jsxs(jsx_runtime368.Fragment, {
+    t22 = isOtherFocused && editorName && /* @__PURE__ */ jsx_runtime369.jsxs(jsx_runtime369.Fragment, {
       children: [
         " \xB7 ctrl+g to edit in ",
         editorName
@@ -441999,9 +442085,9 @@ function QuestionView(t0) {
   }
   let t23;
   if ($[98] !== t21 || $[99] !== t22) {
-    t23 = /* @__PURE__ */ jsx_runtime368.jsx(ThemedBox_default, {
+    t23 = /* @__PURE__ */ jsx_runtime369.jsx(ThemedBox_default, {
       marginTop: 1,
-      children: /* @__PURE__ */ jsx_runtime368.jsxs(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime369.jsxs(ThemedText, {
         color: "inactive",
         dimColor: true,
         children: [
@@ -442022,7 +442108,7 @@ function QuestionView(t0) {
   }
   let t24;
   if ($[101] !== minContentHeight || $[102] !== t12 || $[103] !== t20 || $[104] !== t23) {
-    t24 = /* @__PURE__ */ jsx_runtime368.jsxs(ThemedBox_default, {
+    t24 = /* @__PURE__ */ jsx_runtime369.jsxs(ThemedBox_default, {
       flexDirection: "column",
       minHeight: minContentHeight,
       children: [
@@ -442041,7 +442127,7 @@ function QuestionView(t0) {
   }
   let t25;
   if ($[106] !== t10 || $[107] !== t11 || $[108] !== t24) {
-    t25 = /* @__PURE__ */ jsx_runtime368.jsxs(ThemedBox_default, {
+    t25 = /* @__PURE__ */ jsx_runtime369.jsxs(ThemedBox_default, {
       flexDirection: "column",
       paddingTop: 0,
       children: [
@@ -442059,7 +442145,7 @@ function QuestionView(t0) {
   }
   let t26;
   if ($[110] !== handleKeyDown || $[111] !== t25 || $[112] !== t8) {
-    t26 = /* @__PURE__ */ jsx_runtime368.jsxs(ThemedBox_default, {
+    t26 = /* @__PURE__ */ jsx_runtime369.jsxs(ThemedBox_default, {
       flexDirection: "column",
       marginTop: 0,
       tabIndex: 0,
@@ -442097,7 +442183,7 @@ function _temp271(opt) {
 function _temp160(s) {
   return s.toolPermissionContext.mode;
 }
-var import_compiler_runtime290, import_react204, jsx_runtime368;
+var import_compiler_runtime290, import_react204, jsx_runtime369;
 var init_QuestionView = __esm(() => {
   init_figures();
   init_ink2();
@@ -442113,7 +442199,7 @@ var init_QuestionView = __esm(() => {
   init_QuestionNavigationBar();
   import_compiler_runtime290 = __toESM(require_compiler_runtime(), 1);
   import_react204 = __toESM(require_react(), 1);
-  jsx_runtime368 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime369 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/permissions/PermissionRuleExplanation.tsx
@@ -442176,11 +442262,11 @@ function PermissionRuleExplanation(t0) {
   const themeColor = strings.themeColor ?? (permissionResult?.decisionReason?.type === "hook" && permissionMode === "auto" ? "warning" : undefined);
   let t3;
   if ($[3] !== strings.reasonString || $[4] !== themeColor) {
-    t3 = themeColor ? /* @__PURE__ */ jsx_runtime369.jsx(ThemedText, {
+    t3 = themeColor ? /* @__PURE__ */ jsx_runtime370.jsx(ThemedText, {
       color: themeColor,
       children: strings.reasonString
-    }) : /* @__PURE__ */ jsx_runtime369.jsx(ThemedText, {
-      children: /* @__PURE__ */ jsx_runtime369.jsx(Ansi, {
+    }) : /* @__PURE__ */ jsx_runtime370.jsx(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime370.jsx(Ansi, {
         children: strings.reasonString
       })
     });
@@ -442192,7 +442278,7 @@ function PermissionRuleExplanation(t0) {
   }
   let t4;
   if ($[6] !== strings.configString) {
-    t4 = strings.configString && /* @__PURE__ */ jsx_runtime369.jsx(ThemedText, {
+    t4 = strings.configString && /* @__PURE__ */ jsx_runtime370.jsx(ThemedText, {
       dimColor: true,
       children: strings.configString
     });
@@ -442203,7 +442289,7 @@ function PermissionRuleExplanation(t0) {
   }
   let t5;
   if ($[8] !== t3 || $[9] !== t4) {
-    t5 = /* @__PURE__ */ jsx_runtime369.jsxs(ThemedBox_default, {
+    t5 = /* @__PURE__ */ jsx_runtime370.jsxs(ThemedBox_default, {
       marginBottom: 1,
       flexDirection: "column",
       children: [
@@ -442222,7 +442308,7 @@ function PermissionRuleExplanation(t0) {
 function _temp161(s) {
   return s.toolPermissionContext.mode;
 }
-var import_compiler_runtime291, jsx_runtime369;
+var import_compiler_runtime291, jsx_runtime370;
 var init_PermissionRuleExplanation = __esm(() => {
   init_source();
   init_ink2();
@@ -442230,7 +442316,7 @@ var init_PermissionRuleExplanation = __esm(() => {
   init_permissionRuleParser();
   init_ThemedText();
   import_compiler_runtime291 = __toESM(require_compiler_runtime(), 1);
-  jsx_runtime369 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime370 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/permissions/AskUserQuestionPermissionRequest/SubmitQuestionsView.tsx
@@ -442247,7 +442333,7 @@ function SubmitQuestionsView(t0) {
   } = t0;
   let t1;
   if ($[0] === Symbol.for("react.memo_cache_sentinel")) {
-    t1 = /* @__PURE__ */ jsx_runtime370.jsx(Divider, {
+    t1 = /* @__PURE__ */ jsx_runtime371.jsx(Divider, {
       color: "inactive"
     });
     $[0] = t1;
@@ -442256,7 +442342,7 @@ function SubmitQuestionsView(t0) {
   }
   let t2;
   if ($[1] !== answers || $[2] !== currentQuestionIndex || $[3] !== questions) {
-    t2 = /* @__PURE__ */ jsx_runtime370.jsx(QuestionNavigationBar, {
+    t2 = /* @__PURE__ */ jsx_runtime371.jsx(QuestionNavigationBar, {
       questions,
       currentQuestionIndex,
       answers
@@ -442270,7 +442356,7 @@ function SubmitQuestionsView(t0) {
   }
   let t3;
   if ($[5] === Symbol.for("react.memo_cache_sentinel")) {
-    t3 = /* @__PURE__ */ jsx_runtime370.jsx(PermissionRequestTitle, {
+    t3 = /* @__PURE__ */ jsx_runtime371.jsx(PermissionRequestTitle, {
       title: "Review your answers",
       color: "text"
     });
@@ -442280,9 +442366,9 @@ function SubmitQuestionsView(t0) {
   }
   let t4;
   if ($[6] !== allQuestionsAnswered) {
-    t4 = !allQuestionsAnswered && /* @__PURE__ */ jsx_runtime370.jsx(ThemedBox_default, {
+    t4 = !allQuestionsAnswered && /* @__PURE__ */ jsx_runtime371.jsx(ThemedBox_default, {
       marginBottom: 1,
-      children: /* @__PURE__ */ jsx_runtime370.jsxs(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime371.jsxs(ThemedText, {
         color: "warning",
         children: [
           figures_default.warning,
@@ -442297,25 +442383,25 @@ function SubmitQuestionsView(t0) {
   }
   let t5;
   if ($[8] !== answers || $[9] !== questions) {
-    t5 = Object.keys(answers).length > 0 && /* @__PURE__ */ jsx_runtime370.jsx(ThemedBox_default, {
+    t5 = Object.keys(answers).length > 0 && /* @__PURE__ */ jsx_runtime371.jsx(ThemedBox_default, {
       flexDirection: "column",
       marginBottom: 1,
       children: questions.filter((q) => q?.question && answers[q.question]).map((q_0) => {
         const answer = answers[q_0?.question];
-        return /* @__PURE__ */ jsx_runtime370.jsxs(ThemedBox_default, {
+        return /* @__PURE__ */ jsx_runtime371.jsxs(ThemedBox_default, {
           flexDirection: "column",
           marginLeft: 1,
           children: [
-            /* @__PURE__ */ jsx_runtime370.jsxs(ThemedText, {
+            /* @__PURE__ */ jsx_runtime371.jsxs(ThemedText, {
               children: [
                 figures_default.bullet,
                 " ",
                 q_0?.question || "Question"
               ]
             }),
-            /* @__PURE__ */ jsx_runtime370.jsx(ThemedBox_default, {
+            /* @__PURE__ */ jsx_runtime371.jsx(ThemedBox_default, {
               marginLeft: 2,
-              children: /* @__PURE__ */ jsx_runtime370.jsxs(ThemedText, {
+              children: /* @__PURE__ */ jsx_runtime371.jsxs(ThemedText, {
                 color: "success",
                 children: [
                   figures_default.arrowRight,
@@ -442336,7 +442422,7 @@ function SubmitQuestionsView(t0) {
   }
   let t6;
   if ($[11] !== permissionResult) {
-    t6 = /* @__PURE__ */ jsx_runtime370.jsx(PermissionRuleExplanation, {
+    t6 = /* @__PURE__ */ jsx_runtime371.jsx(PermissionRuleExplanation, {
       permissionResult,
       toolType: "tool"
     });
@@ -442347,7 +442433,7 @@ function SubmitQuestionsView(t0) {
   }
   let t7;
   if ($[13] === Symbol.for("react.memo_cache_sentinel")) {
-    t7 = /* @__PURE__ */ jsx_runtime370.jsx(ThemedText, {
+    t7 = /* @__PURE__ */ jsx_runtime371.jsx(ThemedText, {
       color: "inactive",
       children: "Ready to submit your answers?"
     });
@@ -442379,9 +442465,9 @@ function SubmitQuestionsView(t0) {
   }
   let t10;
   if ($[16] !== onFinalResponse) {
-    t10 = /* @__PURE__ */ jsx_runtime370.jsx(ThemedBox_default, {
+    t10 = /* @__PURE__ */ jsx_runtime371.jsx(ThemedBox_default, {
       marginTop: 1,
-      children: /* @__PURE__ */ jsx_runtime370.jsx(Select, {
+      children: /* @__PURE__ */ jsx_runtime371.jsx(Select, {
         options: t9,
         onChange: (value) => onFinalResponse(value),
         onCancel: () => onFinalResponse("cancel")
@@ -442394,7 +442480,7 @@ function SubmitQuestionsView(t0) {
   }
   let t11;
   if ($[18] !== minContentHeight || $[19] !== t10 || $[20] !== t4 || $[21] !== t5 || $[22] !== t6) {
-    t11 = /* @__PURE__ */ jsx_runtime370.jsxs(ThemedBox_default, {
+    t11 = /* @__PURE__ */ jsx_runtime371.jsxs(ThemedBox_default, {
       flexDirection: "column",
       marginTop: 1,
       minHeight: minContentHeight,
@@ -442417,12 +442503,12 @@ function SubmitQuestionsView(t0) {
   }
   let t12;
   if ($[24] !== t11 || $[25] !== t2) {
-    t12 = /* @__PURE__ */ jsx_runtime370.jsxs(ThemedBox_default, {
+    t12 = /* @__PURE__ */ jsx_runtime371.jsxs(ThemedBox_default, {
       flexDirection: "column",
       marginTop: 1,
       children: [
         t1,
-        /* @__PURE__ */ jsx_runtime370.jsxs(ThemedBox_default, {
+        /* @__PURE__ */ jsx_runtime371.jsxs(ThemedBox_default, {
           flexDirection: "column",
           borderTop: true,
           borderColor: "inactive",
@@ -442443,7 +442529,7 @@ function SubmitQuestionsView(t0) {
   }
   return t12;
 }
-var import_compiler_runtime292, jsx_runtime370;
+var import_compiler_runtime292, jsx_runtime371;
 var init_SubmitQuestionsView = __esm(() => {
   init_figures();
   init_ink2();
@@ -442453,7 +442539,7 @@ var init_SubmitQuestionsView = __esm(() => {
   init_PermissionRuleExplanation();
   init_QuestionNavigationBar();
   import_compiler_runtime292 = __toESM(require_compiler_runtime(), 1);
-  jsx_runtime370 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime371 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/permissions/AskUserQuestionPermissionRequest/use-multiple-choice-state.ts
@@ -442566,7 +442652,7 @@ function AskUserQuestionPermissionRequest(props) {
   if (settings.syntaxHighlightingDisabled) {
     let t0;
     if ($[0] !== props) {
-      t0 = /* @__PURE__ */ jsx_runtime371.jsx(AskUserQuestionPermissionRequestBody, {
+      t0 = /* @__PURE__ */ jsx_runtime372.jsx(AskUserQuestionPermissionRequestBody, {
         ...props,
         highlight: null
       });
@@ -442579,12 +442665,12 @@ function AskUserQuestionPermissionRequest(props) {
   }
   let t0;
   if ($[2] !== props) {
-    t0 = /* @__PURE__ */ jsx_runtime371.jsx(import_react206.Suspense, {
-      fallback: /* @__PURE__ */ jsx_runtime371.jsx(AskUserQuestionPermissionRequestBody, {
+    t0 = /* @__PURE__ */ jsx_runtime372.jsx(import_react206.Suspense, {
+      fallback: /* @__PURE__ */ jsx_runtime372.jsx(AskUserQuestionPermissionRequestBody, {
         ...props,
         highlight: null
       }),
-      children: /* @__PURE__ */ jsx_runtime371.jsx(AskUserQuestionWithHighlight, {
+      children: /* @__PURE__ */ jsx_runtime372.jsx(AskUserQuestionWithHighlight, {
         ...props
       })
     });
@@ -442607,7 +442693,7 @@ function AskUserQuestionWithHighlight(props) {
   const highlight = import_react206.use(t0);
   let t1;
   if ($[1] !== highlight || $[2] !== props) {
-    t1 = /* @__PURE__ */ jsx_runtime371.jsx(AskUserQuestionPermissionRequestBody, {
+    t1 = /* @__PURE__ */ jsx_runtime372.jsx(AskUserQuestionPermissionRequestBody, {
       ...props,
       highlight
     });
@@ -443118,8 +443204,8 @@ ${questionsWithAnswers_0}`;
     }
     let t26;
     if ($[85] !== answers || $[86] !== currentQuestion || $[87] !== currentQuestionIndex || $[88] !== globalContentHeight || $[89] !== globalContentWidth || $[90] !== handleCancel || $[91] !== handleFinishPlanInterview || $[92] !== handleQuestionAnswer || $[93] !== handleRespondToClaude || $[94] !== handleTabNext || $[95] !== handleTabPrev || $[96] !== hideSubmitTab || $[97] !== nextQuestion || $[98] !== planFilePath || $[99] !== questionStates || $[100] !== questions || $[101] !== setTextInputMode || $[102] !== t23 || $[103] !== t24 || $[104] !== t25 || $[105] !== updateQuestionState) {
-      t26 = /* @__PURE__ */ jsx_runtime371.jsx(jsx_runtime371.Fragment, {
-        children: /* @__PURE__ */ jsx_runtime371.jsx(QuestionView, {
+      t26 = /* @__PURE__ */ jsx_runtime372.jsx(jsx_runtime372.Fragment, {
+        children: /* @__PURE__ */ jsx_runtime372.jsx(QuestionView, {
           question: currentQuestion,
           questions,
           currentQuestionIndex,
@@ -443173,8 +443259,8 @@ ${questionsWithAnswers_0}`;
   if (isInSubmitView) {
     let t23;
     if ($[107] !== allQuestionsAnswered || $[108] !== answers || $[109] !== currentQuestionIndex || $[110] !== globalContentHeight || $[111] !== handleFinalResponse || $[112] !== questions || $[113] !== toolUseConfirm.permissionResult) {
-      t23 = /* @__PURE__ */ jsx_runtime371.jsx(jsx_runtime371.Fragment, {
-        children: /* @__PURE__ */ jsx_runtime371.jsx(SubmitQuestionsView, {
+      t23 = /* @__PURE__ */ jsx_runtime372.jsx(jsx_runtime372.Fragment, {
+        children: /* @__PURE__ */ jsx_runtime372.jsx(SubmitQuestionsView, {
           questions,
           currentQuestionIndex,
           answers,
@@ -443233,7 +443319,7 @@ async function convertImagesToBlocks(images) {
     return resized.block;
   }));
 }
-var import_compiler_runtime293, import_react206, jsx_runtime371, MIN_CONTENT_HEIGHT = 12, MIN_CONTENT_WIDTH = 40, CONTENT_CHROME_OVERHEAD = 15;
+var import_compiler_runtime293, import_react206, jsx_runtime372, MIN_CONTENT_HEIGHT = 12, MIN_CONTENT_WIDTH = 40, CONTENT_CHROME_OVERHEAD = 15;
 var init_AskUserQuestionPermissionRequest = __esm(() => {
   init_useSettings();
   init_useTerminalSize();
@@ -443255,7 +443341,7 @@ var init_AskUserQuestionPermissionRequest = __esm(() => {
   init_use_multiple_choice_state();
   import_compiler_runtime293 = __toESM(require_compiler_runtime(), 1);
   import_react206 = __toESM(require_react(), 1);
-  jsx_runtime371 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime372 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/tools/BashTool/destructiveCommandWarning.ts
@@ -443977,24 +444063,24 @@ function PermissionDecisionInfoItem(t0) {
     t1 = function formatDecisionReason() {
       switch (decisionReason.type) {
         case "subcommandResults": {
-          return /* @__PURE__ */ jsx_runtime372.jsx(ThemedBox_default, {
+          return /* @__PURE__ */ jsx_runtime373.jsx(ThemedBox_default, {
             flexDirection: "column",
             children: Array.from(decisionReason.reasons.entries()).map((t2) => {
               const [subcommand, result] = t2;
               const icon = result.behavior === "allow" ? color("success", theme)(figures_default.tick) : color("error", theme)(figures_default.cross);
-              return /* @__PURE__ */ jsx_runtime372.jsxs(ThemedBox_default, {
+              return /* @__PURE__ */ jsx_runtime373.jsxs(ThemedBox_default, {
                 flexDirection: "column",
                 children: [
-                  /* @__PURE__ */ jsx_runtime372.jsxs(ThemedText, {
+                  /* @__PURE__ */ jsx_runtime373.jsxs(ThemedText, {
                     children: [
                       icon,
                       " ",
                       subcommand
                     ]
                   }),
-                  result.decisionReason !== undefined && result.decisionReason.type !== "subcommandResults" && /* @__PURE__ */ jsx_runtime372.jsxs(ThemedText, {
+                  result.decisionReason !== undefined && result.decisionReason.type !== "subcommandResults" && /* @__PURE__ */ jsx_runtime373.jsxs(ThemedText, {
                     children: [
-                      /* @__PURE__ */ jsx_runtime372.jsxs(ThemedText, {
+                      /* @__PURE__ */ jsx_runtime373.jsxs(ThemedText, {
                         dimColor: true,
                         children: [
                           "  ",
@@ -444002,12 +444088,12 @@ function PermissionDecisionInfoItem(t0) {
                           "  "
                         ]
                       }),
-                      /* @__PURE__ */ jsx_runtime372.jsx(Ansi, {
+                      /* @__PURE__ */ jsx_runtime373.jsx(Ansi, {
                         children: decisionReasonDisplayString(result.decisionReason)
                       })
                     ]
                   }),
-                  result.behavior === "ask" && /* @__PURE__ */ jsx_runtime372.jsx(SuggestedRules, {
+                  result.behavior === "ask" && /* @__PURE__ */ jsx_runtime373.jsx(SuggestedRules, {
                     suggestions: result.suggestions
                   })
                 ]
@@ -444016,8 +444102,8 @@ function PermissionDecisionInfoItem(t0) {
           });
         }
         default: {
-          return /* @__PURE__ */ jsx_runtime372.jsx(ThemedText, {
-            children: /* @__PURE__ */ jsx_runtime372.jsx(Ansi, {
+          return /* @__PURE__ */ jsx_runtime373.jsx(ThemedText, {
+            children: /* @__PURE__ */ jsx_runtime373.jsx(Ansi, {
               children: decisionReasonDisplayString(decisionReason)
             })
           });
@@ -444033,7 +444119,7 @@ function PermissionDecisionInfoItem(t0) {
   const formatDecisionReason = t1;
   let t2;
   if ($[3] !== title) {
-    t2 = title && /* @__PURE__ */ jsx_runtime372.jsx(ThemedText, {
+    t2 = title && /* @__PURE__ */ jsx_runtime373.jsx(ThemedText, {
       children: title
     });
     $[3] = title;
@@ -444051,7 +444137,7 @@ function PermissionDecisionInfoItem(t0) {
   }
   let t4;
   if ($[7] !== t2 || $[8] !== t3) {
-    t4 = /* @__PURE__ */ jsx_runtime372.jsxs(ThemedBox_default, {
+    t4 = /* @__PURE__ */ jsx_runtime373.jsxs(ThemedBox_default, {
       flexDirection: "column",
       children: [
         t2,
@@ -444088,7 +444174,7 @@ function SuggestedRules(t0) {
       }
       T1 = ThemedText;
       if ($[8] === Symbol.for("react.memo_cache_sentinel")) {
-        t2 = /* @__PURE__ */ jsx_runtime372.jsxs(ThemedText, {
+        t2 = /* @__PURE__ */ jsx_runtime373.jsxs(ThemedText, {
           dimColor: true,
           children: [
             "  ",
@@ -444127,7 +444213,7 @@ function SuggestedRules(t0) {
   }
   let t6;
   if ($[9] !== T0 || $[10] !== t1) {
-    t6 = /* @__PURE__ */ jsx_runtime372.jsx(T0, {
+    t6 = /* @__PURE__ */ jsx_runtime373.jsx(T0, {
       children: t1
     });
     $[9] = T0;
@@ -444138,7 +444224,7 @@ function SuggestedRules(t0) {
   }
   let t7;
   if ($[12] !== T1 || $[13] !== t2 || $[14] !== t3 || $[15] !== t4 || $[16] !== t6) {
-    t7 = /* @__PURE__ */ jsx_runtime372.jsxs(T1, {
+    t7 = /* @__PURE__ */ jsx_runtime373.jsxs(T1, {
       children: [
         t2,
         t3,
@@ -444187,7 +444273,7 @@ function SuggestionDisplay(t0) {
   if (!suggestions || suggestions.length === 0) {
     let t1;
     if ($[0] === Symbol.for("react.memo_cache_sentinel")) {
-      t1 = /* @__PURE__ */ jsx_runtime372.jsx(ThemedText, {
+      t1 = /* @__PURE__ */ jsx_runtime373.jsx(ThemedText, {
         dimColor: true,
         children: "Suggestions "
       });
@@ -444197,7 +444283,7 @@ function SuggestionDisplay(t0) {
     }
     let t2;
     if ($[1] !== width) {
-      t2 = /* @__PURE__ */ jsx_runtime372.jsx(ThemedBox_default, {
+      t2 = /* @__PURE__ */ jsx_runtime373.jsx(ThemedBox_default, {
         justifyContent: "flex-end",
         minWidth: width,
         children: t1
@@ -444209,7 +444295,7 @@ function SuggestionDisplay(t0) {
     }
     let t3;
     if ($[3] === Symbol.for("react.memo_cache_sentinel")) {
-      t3 = /* @__PURE__ */ jsx_runtime372.jsx(ThemedText, {
+      t3 = /* @__PURE__ */ jsx_runtime373.jsx(ThemedText, {
         children: "None"
       });
       $[3] = t3;
@@ -444218,7 +444304,7 @@ function SuggestionDisplay(t0) {
     }
     let t4;
     if ($[4] !== t2) {
-      t4 = /* @__PURE__ */ jsx_runtime372.jsxs(ThemedBox_default, {
+      t4 = /* @__PURE__ */ jsx_runtime373.jsxs(ThemedBox_default, {
         flexDirection: "row",
         children: [
           t2,
@@ -444243,7 +444329,7 @@ function SuggestionDisplay(t0) {
       if (rules.length === 0 && directories.length === 0 && !mode) {
         let t3;
         if ($[10] === Symbol.for("react.memo_cache_sentinel")) {
-          t3 = /* @__PURE__ */ jsx_runtime372.jsx(ThemedText, {
+          t3 = /* @__PURE__ */ jsx_runtime373.jsx(ThemedText, {
             dimColor: true,
             children: "Suggestion "
           });
@@ -444253,7 +444339,7 @@ function SuggestionDisplay(t0) {
         }
         let t4;
         if ($[11] !== width) {
-          t4 = /* @__PURE__ */ jsx_runtime372.jsx(ThemedBox_default, {
+          t4 = /* @__PURE__ */ jsx_runtime373.jsx(ThemedBox_default, {
             justifyContent: "flex-end",
             minWidth: width,
             children: t3
@@ -444265,7 +444351,7 @@ function SuggestionDisplay(t0) {
         }
         let t5;
         if ($[13] === Symbol.for("react.memo_cache_sentinel")) {
-          t5 = /* @__PURE__ */ jsx_runtime372.jsx(ThemedText, {
+          t5 = /* @__PURE__ */ jsx_runtime373.jsx(ThemedText, {
             children: "None"
           });
           $[13] = t5;
@@ -444274,7 +444360,7 @@ function SuggestionDisplay(t0) {
         }
         let t6;
         if ($[14] !== t4) {
-          t6 = /* @__PURE__ */ jsx_runtime372.jsxs(ThemedBox_default, {
+          t6 = /* @__PURE__ */ jsx_runtime373.jsxs(ThemedBox_default, {
             flexDirection: "row",
             children: [
               t4,
@@ -444291,7 +444377,7 @@ function SuggestionDisplay(t0) {
       }
       let t3;
       if ($[16] === Symbol.for("react.memo_cache_sentinel")) {
-        t3 = /* @__PURE__ */ jsx_runtime372.jsx(ThemedText, {
+        t3 = /* @__PURE__ */ jsx_runtime373.jsx(ThemedText, {
           dimColor: true,
           children: "Suggestions "
         });
@@ -444301,7 +444387,7 @@ function SuggestionDisplay(t0) {
       }
       let t4;
       if ($[17] !== width) {
-        t4 = /* @__PURE__ */ jsx_runtime372.jsx(ThemedBox_default, {
+        t4 = /* @__PURE__ */ jsx_runtime373.jsx(ThemedBox_default, {
           justifyContent: "flex-end",
           minWidth: width,
           children: t3
@@ -444313,7 +444399,7 @@ function SuggestionDisplay(t0) {
       }
       let t5;
       if ($[19] === Symbol.for("react.memo_cache_sentinel")) {
-        t5 = /* @__PURE__ */ jsx_runtime372.jsx(ThemedText, {
+        t5 = /* @__PURE__ */ jsx_runtime373.jsx(ThemedText, {
           children: " "
         });
         $[19] = t5;
@@ -444322,7 +444408,7 @@ function SuggestionDisplay(t0) {
       }
       let t6;
       if ($[20] !== t4) {
-        t6 = /* @__PURE__ */ jsx_runtime372.jsxs(ThemedBox_default, {
+        t6 = /* @__PURE__ */ jsx_runtime373.jsxs(ThemedBox_default, {
           flexDirection: "row",
           children: [
             t4,
@@ -444334,56 +444420,56 @@ function SuggestionDisplay(t0) {
       } else {
         t6 = $[21];
       }
-      t1 = /* @__PURE__ */ jsx_runtime372.jsxs(ThemedBox_default, {
+      t1 = /* @__PURE__ */ jsx_runtime373.jsxs(ThemedBox_default, {
         flexDirection: "column",
         children: [
           t6,
-          rules.length > 0 && /* @__PURE__ */ jsx_runtime372.jsxs(ThemedBox_default, {
+          rules.length > 0 && /* @__PURE__ */ jsx_runtime373.jsxs(ThemedBox_default, {
             flexDirection: "row",
             children: [
-              /* @__PURE__ */ jsx_runtime372.jsx(ThemedBox_default, {
+              /* @__PURE__ */ jsx_runtime373.jsx(ThemedBox_default, {
                 justifyContent: "flex-end",
                 minWidth: width,
-                children: /* @__PURE__ */ jsx_runtime372.jsx(ThemedText, {
+                children: /* @__PURE__ */ jsx_runtime373.jsx(ThemedText, {
                   dimColor: true,
                   children: " Rules "
                 })
               }),
-              /* @__PURE__ */ jsx_runtime372.jsx(ThemedBox_default, {
+              /* @__PURE__ */ jsx_runtime373.jsx(ThemedBox_default, {
                 flexDirection: "column",
                 children: rules.map(_temp273)
               })
             ]
           }),
-          directories.length > 0 && /* @__PURE__ */ jsx_runtime372.jsxs(ThemedBox_default, {
+          directories.length > 0 && /* @__PURE__ */ jsx_runtime373.jsxs(ThemedBox_default, {
             flexDirection: "row",
             children: [
-              /* @__PURE__ */ jsx_runtime372.jsx(ThemedBox_default, {
+              /* @__PURE__ */ jsx_runtime373.jsx(ThemedBox_default, {
                 justifyContent: "flex-end",
                 minWidth: width,
-                children: /* @__PURE__ */ jsx_runtime372.jsx(ThemedText, {
+                children: /* @__PURE__ */ jsx_runtime373.jsx(ThemedText, {
                   dimColor: true,
                   children: " Directories "
                 })
               }),
-              /* @__PURE__ */ jsx_runtime372.jsx(ThemedBox_default, {
+              /* @__PURE__ */ jsx_runtime373.jsx(ThemedBox_default, {
                 flexDirection: "column",
                 children: directories.map(_temp349)
               })
             ]
           }),
-          mode && /* @__PURE__ */ jsx_runtime372.jsxs(ThemedBox_default, {
+          mode && /* @__PURE__ */ jsx_runtime373.jsxs(ThemedBox_default, {
             flexDirection: "row",
             children: [
-              /* @__PURE__ */ jsx_runtime372.jsx(ThemedBox_default, {
+              /* @__PURE__ */ jsx_runtime373.jsx(ThemedBox_default, {
                 justifyContent: "flex-end",
                 minWidth: width,
-                children: /* @__PURE__ */ jsx_runtime372.jsx(ThemedText, {
+                children: /* @__PURE__ */ jsx_runtime373.jsx(ThemedText, {
                   dimColor: true,
                   children: " Mode "
                 })
               }),
-              /* @__PURE__ */ jsx_runtime372.jsx(ThemedText, {
+              /* @__PURE__ */ jsx_runtime373.jsx(ThemedText, {
                 children: permissionModeTitle(mode)
               })
             ]
@@ -444405,7 +444491,7 @@ function SuggestionDisplay(t0) {
   return t1;
 }
 function _temp349(dir, index_0) {
-  return /* @__PURE__ */ jsx_runtime372.jsxs(ThemedText, {
+  return /* @__PURE__ */ jsx_runtime373.jsxs(ThemedText, {
     children: [
       figures_default.bullet,
       " ",
@@ -444414,7 +444500,7 @@ function _temp349(dir, index_0) {
   }, index_0);
 }
 function _temp273(rule, index) {
-  return /* @__PURE__ */ jsx_runtime372.jsxs(ThemedText, {
+  return /* @__PURE__ */ jsx_runtime373.jsxs(ThemedText, {
     children: [
       figures_default.bullet,
       " ",
@@ -444467,10 +444553,10 @@ function PermissionDecisionDebugInfo(t0) {
   const unreachableRules = t1;
   let t2;
   if ($[6] === Symbol.for("react.memo_cache_sentinel")) {
-    t2 = /* @__PURE__ */ jsx_runtime372.jsx(ThemedBox_default, {
+    t2 = /* @__PURE__ */ jsx_runtime373.jsx(ThemedBox_default, {
       justifyContent: "flex-end",
       minWidth: 10,
-      children: /* @__PURE__ */ jsx_runtime372.jsx(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime373.jsx(ThemedText, {
         dimColor: true,
         children: "Behavior "
       })
@@ -444481,11 +444567,11 @@ function PermissionDecisionDebugInfo(t0) {
   }
   let t3;
   if ($[7] !== permissionResult.behavior) {
-    t3 = /* @__PURE__ */ jsx_runtime372.jsxs(ThemedBox_default, {
+    t3 = /* @__PURE__ */ jsx_runtime373.jsxs(ThemedBox_default, {
       flexDirection: "row",
       children: [
         t2,
-        /* @__PURE__ */ jsx_runtime372.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime373.jsx(ThemedText, {
           children: permissionResult.behavior
         })
       ]
@@ -444497,18 +444583,18 @@ function PermissionDecisionDebugInfo(t0) {
   }
   let t4;
   if ($[9] !== permissionResult.behavior || $[10] !== permissionResult.message) {
-    t4 = permissionResult.behavior !== "allow" && /* @__PURE__ */ jsx_runtime372.jsxs(ThemedBox_default, {
+    t4 = permissionResult.behavior !== "allow" && /* @__PURE__ */ jsx_runtime373.jsxs(ThemedBox_default, {
       flexDirection: "row",
       children: [
-        /* @__PURE__ */ jsx_runtime372.jsx(ThemedBox_default, {
+        /* @__PURE__ */ jsx_runtime373.jsx(ThemedBox_default, {
           justifyContent: "flex-end",
           minWidth: 10,
-          children: /* @__PURE__ */ jsx_runtime372.jsx(ThemedText, {
+          children: /* @__PURE__ */ jsx_runtime373.jsx(ThemedText, {
             dimColor: true,
             children: "Message "
           })
         }),
-        /* @__PURE__ */ jsx_runtime372.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime373.jsx(ThemedText, {
           children: permissionResult.message
         })
       ]
@@ -444521,10 +444607,10 @@ function PermissionDecisionDebugInfo(t0) {
   }
   let t5;
   if ($[12] === Symbol.for("react.memo_cache_sentinel")) {
-    t5 = /* @__PURE__ */ jsx_runtime372.jsx(ThemedBox_default, {
+    t5 = /* @__PURE__ */ jsx_runtime373.jsx(ThemedBox_default, {
       justifyContent: "flex-end",
       minWidth: 10,
-      children: /* @__PURE__ */ jsx_runtime372.jsx(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime373.jsx(ThemedText, {
         dimColor: true,
         children: "Reason "
       })
@@ -444535,13 +444621,13 @@ function PermissionDecisionDebugInfo(t0) {
   }
   let t6;
   if ($[13] !== decisionReason) {
-    t6 = /* @__PURE__ */ jsx_runtime372.jsxs(ThemedBox_default, {
+    t6 = /* @__PURE__ */ jsx_runtime373.jsxs(ThemedBox_default, {
       flexDirection: "row",
       children: [
         t5,
-        decisionReason === undefined ? /* @__PURE__ */ jsx_runtime372.jsx(ThemedText, {
+        decisionReason === undefined ? /* @__PURE__ */ jsx_runtime373.jsx(ThemedText, {
           children: "undefined"
-        }) : /* @__PURE__ */ jsx_runtime372.jsx(PermissionDecisionInfoItem, {
+        }) : /* @__PURE__ */ jsx_runtime373.jsx(PermissionDecisionInfoItem, {
           decisionReason
         })
       ]
@@ -444553,7 +444639,7 @@ function PermissionDecisionDebugInfo(t0) {
   }
   let t7;
   if ($[15] !== suggestions) {
-    t7 = /* @__PURE__ */ jsx_runtime372.jsx(SuggestionDisplay, {
+    t7 = /* @__PURE__ */ jsx_runtime373.jsx(SuggestionDisplay, {
       suggestions,
       width: 10
     });
@@ -444564,11 +444650,11 @@ function PermissionDecisionDebugInfo(t0) {
   }
   let t8;
   if ($[17] !== unreachableRules) {
-    t8 = unreachableRules.length > 0 && /* @__PURE__ */ jsx_runtime372.jsxs(ThemedBox_default, {
+    t8 = unreachableRules.length > 0 && /* @__PURE__ */ jsx_runtime373.jsxs(ThemedBox_default, {
       flexDirection: "column",
       marginTop: 1,
       children: [
-        /* @__PURE__ */ jsx_runtime372.jsxs(ThemedText, {
+        /* @__PURE__ */ jsx_runtime373.jsxs(ThemedText, {
           color: "warning",
           children: [
             figures_default.warning,
@@ -444587,7 +444673,7 @@ function PermissionDecisionDebugInfo(t0) {
   }
   let t9;
   if ($[19] !== t3 || $[20] !== t4 || $[21] !== t6 || $[22] !== t7 || $[23] !== t8) {
-    t9 = /* @__PURE__ */ jsx_runtime372.jsxs(ThemedBox_default, {
+    t9 = /* @__PURE__ */ jsx_runtime373.jsxs(ThemedBox_default, {
       flexDirection: "column",
       children: [
         t3,
@@ -444609,22 +444695,22 @@ function PermissionDecisionDebugInfo(t0) {
   return t9;
 }
 function _temp527(u_1, i) {
-  return /* @__PURE__ */ jsx_runtime372.jsxs(ThemedBox_default, {
+  return /* @__PURE__ */ jsx_runtime373.jsxs(ThemedBox_default, {
     flexDirection: "column",
     marginLeft: 2,
     children: [
-      /* @__PURE__ */ jsx_runtime372.jsx(ThemedText, {
+      /* @__PURE__ */ jsx_runtime373.jsx(ThemedText, {
         color: "warning",
         children: permissionRuleValueToString(u_1.rule.ruleValue)
       }),
-      /* @__PURE__ */ jsx_runtime372.jsxs(ThemedText, {
+      /* @__PURE__ */ jsx_runtime373.jsxs(ThemedText, {
         dimColor: true,
         children: [
           "  ",
           u_1.reason
         ]
       }),
-      /* @__PURE__ */ jsx_runtime372.jsxs(ThemedText, {
+      /* @__PURE__ */ jsx_runtime373.jsxs(ThemedText, {
         dimColor: true,
         children: [
           "  ",
@@ -444638,7 +444724,7 @@ function _temp527(u_1, i) {
 function _temp437(s) {
   return s.toolPermissionContext;
 }
-var import_compiler_runtime294, jsx_runtime372;
+var import_compiler_runtime294, jsx_runtime373;
 var init_PermissionDecisionDebugInfo = __esm(() => {
   init_source();
   init_figures();
@@ -444651,7 +444737,7 @@ var init_PermissionDecisionDebugInfo = __esm(() => {
   init_sandbox_adapter();
   init_constants2();
   import_compiler_runtime294 = __toESM(require_compiler_runtime(), 1);
-  jsx_runtime372 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime373 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/utils/permissions/permissionExplainer.ts
@@ -444822,7 +444908,7 @@ function ShimmerLoadingText() {
   const [ref, glimmerIndex] = useShimmerAnimation("responding", LOADING_MESSAGE, false);
   let t0;
   if ($[0] !== glimmerIndex) {
-    t0 = LOADING_MESSAGE.split("").map((char, index) => /* @__PURE__ */ jsx_runtime373.jsx(ShimmerChar, {
+    t0 = LOADING_MESSAGE.split("").map((char, index) => /* @__PURE__ */ jsx_runtime374.jsx(ShimmerChar, {
       char,
       index,
       glimmerIndex,
@@ -444836,7 +444922,7 @@ function ShimmerLoadingText() {
   }
   let t1;
   if ($[2] !== t0) {
-    t1 = /* @__PURE__ */ jsx_runtime373.jsx(ThemedText, {
+    t1 = /* @__PURE__ */ jsx_runtime374.jsx(ThemedText, {
       children: t0
     });
     $[2] = t0;
@@ -444846,7 +444932,7 @@ function ShimmerLoadingText() {
   }
   let t2;
   if ($[4] !== ref || $[5] !== t1) {
-    t2 = /* @__PURE__ */ jsx_runtime373.jsx(ThemedBox_default, {
+    t2 = /* @__PURE__ */ jsx_runtime374.jsx(ThemedBox_default, {
       ref,
       children: t1
     });
@@ -444955,9 +445041,9 @@ function ExplanationResult(t0) {
   if (!explanation) {
     let t1;
     if ($[0] === Symbol.for("react.memo_cache_sentinel")) {
-      t1 = /* @__PURE__ */ jsx_runtime373.jsx(ThemedBox_default, {
+      t1 = /* @__PURE__ */ jsx_runtime374.jsx(ThemedBox_default, {
         marginTop: 1,
-        children: /* @__PURE__ */ jsx_runtime373.jsx(ThemedText, {
+        children: /* @__PURE__ */ jsx_runtime374.jsx(ThemedText, {
           dimColor: true,
           children: "Explanation unavailable"
         })
@@ -444970,7 +445056,7 @@ function ExplanationResult(t0) {
   }
   let t1;
   if ($[1] !== explanation.explanation) {
-    t1 = /* @__PURE__ */ jsx_runtime373.jsx(ThemedText, {
+    t1 = /* @__PURE__ */ jsx_runtime374.jsx(ThemedText, {
       children: explanation.explanation
     });
     $[1] = explanation.explanation;
@@ -444980,9 +445066,9 @@ function ExplanationResult(t0) {
   }
   let t2;
   if ($[3] !== explanation.reasoning) {
-    t2 = /* @__PURE__ */ jsx_runtime373.jsx(ThemedBox_default, {
+    t2 = /* @__PURE__ */ jsx_runtime374.jsx(ThemedBox_default, {
       marginTop: 1,
-      children: /* @__PURE__ */ jsx_runtime373.jsx(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime374.jsx(ThemedText, {
         children: explanation.reasoning
       })
     });
@@ -445009,7 +445095,7 @@ function ExplanationResult(t0) {
   }
   let t5;
   if ($[9] !== t3 || $[10] !== t4) {
-    t5 = /* @__PURE__ */ jsx_runtime373.jsxs(ThemedText, {
+    t5 = /* @__PURE__ */ jsx_runtime374.jsxs(ThemedText, {
       color: t3,
       children: [
         t4,
@@ -445024,7 +445110,7 @@ function ExplanationResult(t0) {
   }
   let t6;
   if ($[12] !== explanation.risk) {
-    t6 = /* @__PURE__ */ jsx_runtime373.jsxs(ThemedText, {
+    t6 = /* @__PURE__ */ jsx_runtime374.jsxs(ThemedText, {
       children: [
         " ",
         explanation.risk
@@ -445037,9 +445123,9 @@ function ExplanationResult(t0) {
   }
   let t7;
   if ($[14] !== t5 || $[15] !== t6) {
-    t7 = /* @__PURE__ */ jsx_runtime373.jsx(ThemedBox_default, {
+    t7 = /* @__PURE__ */ jsx_runtime374.jsx(ThemedBox_default, {
       marginTop: 1,
-      children: /* @__PURE__ */ jsx_runtime373.jsxs(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime374.jsxs(ThemedText, {
         children: [
           t5,
           t6
@@ -445054,7 +445140,7 @@ function ExplanationResult(t0) {
   }
   let t8;
   if ($[17] !== t1 || $[18] !== t2 || $[19] !== t7) {
-    t8 = /* @__PURE__ */ jsx_runtime373.jsxs(ThemedBox_default, {
+    t8 = /* @__PURE__ */ jsx_runtime374.jsxs(ThemedBox_default, {
       flexDirection: "column",
       marginTop: 1,
       children: [
@@ -445083,9 +445169,9 @@ function PermissionExplainerContent(t0) {
   }
   let t1;
   if ($[0] === Symbol.for("react.memo_cache_sentinel")) {
-    t1 = /* @__PURE__ */ jsx_runtime373.jsx(ThemedBox_default, {
+    t1 = /* @__PURE__ */ jsx_runtime374.jsx(ThemedBox_default, {
       marginTop: 1,
-      children: /* @__PURE__ */ jsx_runtime373.jsx(ShimmerLoadingText, {})
+      children: /* @__PURE__ */ jsx_runtime374.jsx(ShimmerLoadingText, {})
     });
     $[0] = t1;
   } else {
@@ -445093,9 +445179,9 @@ function PermissionExplainerContent(t0) {
   }
   let t2;
   if ($[1] !== promise) {
-    t2 = /* @__PURE__ */ jsx_runtime373.jsx(import_react208.Suspense, {
+    t2 = /* @__PURE__ */ jsx_runtime374.jsx(import_react208.Suspense, {
       fallback: t1,
-      children: /* @__PURE__ */ jsx_runtime373.jsx(ExplanationResult, {
+      children: /* @__PURE__ */ jsx_runtime374.jsx(ExplanationResult, {
         promise
       })
     });
@@ -445106,7 +445192,7 @@ function PermissionExplainerContent(t0) {
   }
   return t2;
 }
-var import_compiler_runtime295, import_react208, jsx_runtime373, LOADING_MESSAGE = "Loading explanation\u2026";
+var import_compiler_runtime295, import_react208, jsx_runtime374, LOADING_MESSAGE = "Loading explanation\u2026";
 var init_PermissionExplanation = __esm(() => {
   init_ink2();
   init_useKeybinding();
@@ -445116,7 +445202,7 @@ var init_PermissionExplanation = __esm(() => {
   init_useShimmerAnimation();
   import_compiler_runtime295 = __toESM(require_compiler_runtime(), 1);
   import_react208 = __toESM(require_react(), 1);
-  jsx_runtime373 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime374 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/FileEditToolDiff.tsx
@@ -445134,7 +445220,7 @@ function FileEditToolDiff(props) {
   const [dataPromise] = import_react209.useState(t0);
   let t1;
   if ($[3] === Symbol.for("react.memo_cache_sentinel")) {
-    t1 = /* @__PURE__ */ jsx_runtime374.jsx(DiffFrame, {
+    t1 = /* @__PURE__ */ jsx_runtime375.jsx(DiffFrame, {
       placeholder: true
     });
     $[3] = t1;
@@ -445143,9 +445229,9 @@ function FileEditToolDiff(props) {
   }
   let t2;
   if ($[4] !== dataPromise || $[5] !== props.file_path) {
-    t2 = /* @__PURE__ */ jsx_runtime374.jsx(import_react209.Suspense, {
+    t2 = /* @__PURE__ */ jsx_runtime375.jsx(import_react209.Suspense, {
       fallback: t1,
-      children: /* @__PURE__ */ jsx_runtime374.jsx(DiffBody, {
+      children: /* @__PURE__ */ jsx_runtime375.jsx(DiffBody, {
         promise: dataPromise,
         file_path: props.file_path
       })
@@ -445174,8 +445260,8 @@ function DiffBody(t0) {
   } = useTerminalSize();
   let t1;
   if ($[0] !== columns || $[1] !== fileContent || $[2] !== file_path || $[3] !== firstLine || $[4] !== patch) {
-    t1 = /* @__PURE__ */ jsx_runtime374.jsx(DiffFrame, {
-      children: /* @__PURE__ */ jsx_runtime374.jsx(StructuredDiffList, {
+    t1 = /* @__PURE__ */ jsx_runtime375.jsx(DiffFrame, {
+      children: /* @__PURE__ */ jsx_runtime375.jsx(StructuredDiffList, {
         hunks: patch,
         dim: false,
         width: columns,
@@ -445203,7 +445289,7 @@ function DiffFrame(t0) {
   } = t0;
   let t1;
   if ($[0] !== children2 || $[1] !== placeholder) {
-    t1 = placeholder ? /* @__PURE__ */ jsx_runtime374.jsx(ThemedText, {
+    t1 = placeholder ? /* @__PURE__ */ jsx_runtime375.jsx(ThemedText, {
       dimColor: true,
       children: "\u2026"
     }) : children2;
@@ -445215,9 +445301,9 @@ function DiffFrame(t0) {
   }
   let t2;
   if ($[3] !== t1) {
-    t2 = /* @__PURE__ */ jsx_runtime374.jsx(ThemedBox_default, {
+    t2 = /* @__PURE__ */ jsx_runtime375.jsx(ThemedBox_default, {
       flexDirection: "column",
-      children: /* @__PURE__ */ jsx_runtime374.jsx(ThemedBox_default, {
+      children: /* @__PURE__ */ jsx_runtime375.jsx(ThemedBox_default, {
         borderColor: "subtle",
         borderStyle: "dashed",
         flexDirection: "column",
@@ -445302,7 +445388,7 @@ function normalizeEdit(fileContent, edit) {
     new_string: actualNew
   };
 }
-var import_compiler_runtime296, import_react209, jsx_runtime374;
+var import_compiler_runtime296, import_react209, jsx_runtime375;
 var init_FileEditToolDiff = __esm(() => {
   init_useTerminalSize();
   init_ink2();
@@ -445314,7 +445400,7 @@ var init_FileEditToolDiff = __esm(() => {
   init_StructuredDiffList();
   import_compiler_runtime296 = __toESM(require_compiler_runtime(), 1);
   import_react209 = __toESM(require_react(), 1);
-  jsx_runtime374 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime375 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/hooks/useDiffInIDE.ts
@@ -445532,7 +445618,7 @@ function ShowInIDEPrompt(t0) {
   } = t0;
   let t1;
   if ($[0] !== ideName) {
-    t1 = /* @__PURE__ */ jsx_runtime375.jsxs(ThemedText, {
+    t1 = /* @__PURE__ */ jsx_runtime376.jsxs(ThemedText, {
       bold: true,
       color: "permission",
       children: [
@@ -445548,7 +445634,7 @@ function ShowInIDEPrompt(t0) {
   }
   let t2;
   if ($[2] !== symlinkTarget) {
-    t2 = symlinkTarget && /* @__PURE__ */ jsx_runtime375.jsx(ThemedText, {
+    t2 = symlinkTarget && /* @__PURE__ */ jsx_runtime376.jsx(ThemedText, {
       color: "warning",
       children: relative28(getCwd(), symlinkTarget).startsWith("..") ? `This will modify ${symlinkTarget} (outside working directory) via a symlink` : `Symlink target: ${symlinkTarget}`
     });
@@ -445559,7 +445645,7 @@ function ShowInIDEPrompt(t0) {
   }
   let t3;
   if ($[4] === Symbol.for("react.memo_cache_sentinel")) {
-    t3 = isSupportedVSCodeTerminal() && /* @__PURE__ */ jsx_runtime375.jsx(ThemedText, {
+    t3 = isSupportedVSCodeTerminal() && /* @__PURE__ */ jsx_runtime376.jsx(ThemedText, {
       dimColor: true,
       children: "Save file to continue\u2026"
     });
@@ -445577,11 +445663,11 @@ function ShowInIDEPrompt(t0) {
   }
   let t5;
   if ($[7] !== t4) {
-    t5 = /* @__PURE__ */ jsx_runtime375.jsxs(ThemedText, {
+    t5 = /* @__PURE__ */ jsx_runtime376.jsxs(ThemedText, {
       children: [
         "Do you want to make this edit to",
         " ",
-        /* @__PURE__ */ jsx_runtime375.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime376.jsx(ThemedText, {
           bold: true,
           children: t4
         }),
@@ -445641,7 +445727,7 @@ function ShowInIDEPrompt(t0) {
   }
   let t9;
   if ($[20] !== onInputModeToggle || $[21] !== options || $[22] !== t6 || $[23] !== t7 || $[24] !== t8) {
-    t9 = /* @__PURE__ */ jsx_runtime375.jsx(Select, {
+    t9 = /* @__PURE__ */ jsx_runtime376.jsx(Select, {
       options,
       inlineDescriptions: true,
       onChange: t6,
@@ -445660,7 +445746,7 @@ function ShowInIDEPrompt(t0) {
   }
   let t10;
   if ($[26] !== t5 || $[27] !== t9) {
-    t10 = /* @__PURE__ */ jsx_runtime375.jsxs(ThemedBox_default, {
+    t10 = /* @__PURE__ */ jsx_runtime376.jsxs(ThemedBox_default, {
       flexDirection: "column",
       children: [
         t5,
@@ -445676,9 +445762,9 @@ function ShowInIDEPrompt(t0) {
   const t11 = (focusedOption === "yes" && !yesInputMode || focusedOption === "no" && !noInputMode) && " \xB7 Tab to amend";
   let t12;
   if ($[29] !== t11) {
-    t12 = /* @__PURE__ */ jsx_runtime375.jsx(ThemedBox_default, {
+    t12 = /* @__PURE__ */ jsx_runtime376.jsx(ThemedBox_default, {
       marginTop: 1,
-      children: /* @__PURE__ */ jsx_runtime375.jsxs(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime376.jsxs(ThemedText, {
         dimColor: true,
         children: [
           "Esc to cancel",
@@ -445693,9 +445779,9 @@ function ShowInIDEPrompt(t0) {
   }
   let t13;
   if ($[31] !== t1 || $[32] !== t10 || $[33] !== t12 || $[34] !== t2) {
-    t13 = /* @__PURE__ */ jsx_runtime375.jsx(Pane, {
+    t13 = /* @__PURE__ */ jsx_runtime376.jsx(Pane, {
       color: "permission",
-      children: /* @__PURE__ */ jsx_runtime375.jsxs(ThemedBox_default, {
+      children: /* @__PURE__ */ jsx_runtime376.jsxs(ThemedBox_default, {
         flexDirection: "column",
         gap: 1,
         children: [
@@ -445717,7 +445803,7 @@ function ShowInIDEPrompt(t0) {
   }
   return t13;
 }
-var import_compiler_runtime297, jsx_runtime375;
+var import_compiler_runtime297, jsx_runtime376;
 var init_ShowInIDEPrompt = __esm(() => {
   init_ink2();
   init_cwd2();
@@ -445725,7 +445811,7 @@ var init_ShowInIDEPrompt = __esm(() => {
   init_CustomSelect();
   init_Pane();
   import_compiler_runtime297 = __toESM(require_compiler_runtime(), 1);
-  jsx_runtime375 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime376 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/permissions/FilePermissionDialog/permissionOptions.tsx
@@ -445795,11 +445881,11 @@ function getFilePermissionOptions({
       if (operationType === "read") {
         sessionLabel = "Yes, during this session";
       } else {
-        sessionLabel = /* @__PURE__ */ jsx_runtime376.jsxs(ThemedText, {
+        sessionLabel = /* @__PURE__ */ jsx_runtime377.jsxs(ThemedText, {
           children: [
             "Yes, allow all edits during this session",
             " ",
-            /* @__PURE__ */ jsx_runtime376.jsxs(ThemedText, {
+            /* @__PURE__ */ jsx_runtime377.jsxs(ThemedText, {
               bold: true,
               children: [
                 "(",
@@ -445814,10 +445900,10 @@ function getFilePermissionOptions({
       const dirPath = getDirectoryForPath(filePath);
       const dirName = basename45(dirPath) || "this directory";
       if (operationType === "read") {
-        sessionLabel = /* @__PURE__ */ jsx_runtime376.jsxs(ThemedText, {
+        sessionLabel = /* @__PURE__ */ jsx_runtime377.jsxs(ThemedText, {
           children: [
             "Yes, allow reading from ",
-            /* @__PURE__ */ jsx_runtime376.jsxs(ThemedText, {
+            /* @__PURE__ */ jsx_runtime377.jsxs(ThemedText, {
               bold: true,
               children: [
                 dirName,
@@ -445828,10 +445914,10 @@ function getFilePermissionOptions({
           ]
         });
       } else {
-        sessionLabel = /* @__PURE__ */ jsx_runtime376.jsxs(ThemedText, {
+        sessionLabel = /* @__PURE__ */ jsx_runtime377.jsxs(ThemedText, {
           children: [
             "Yes, allow all edits in ",
-            /* @__PURE__ */ jsx_runtime376.jsxs(ThemedText, {
+            /* @__PURE__ */ jsx_runtime377.jsxs(ThemedText, {
               bold: true,
               children: [
                 dirName,
@@ -445839,7 +445925,7 @@ function getFilePermissionOptions({
               ]
             }),
             " during this session ",
-            /* @__PURE__ */ jsx_runtime376.jsxs(ThemedText, {
+            /* @__PURE__ */ jsx_runtime377.jsxs(ThemedText, {
               bold: true,
               children: [
                 "(",
@@ -445882,14 +445968,14 @@ function getFilePermissionOptions({
   }
   return options;
 }
-var jsx_runtime376;
+var jsx_runtime377;
 var init_permissionOptions = __esm(() => {
   init_state();
   init_ink2();
   init_shortcutFormat();
   init_path2();
   init_filesystem();
-  jsx_runtime376 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime377 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/permissions/FilePermissionDialog/usePermissionHandler.ts
@@ -446208,7 +446294,7 @@ function FilePermissionDialog({
     fileDialogResult.onChange(option_0, parsedInput, feedback?.trim());
   };
   if (showingDiffInIDE && ideDiffConfig && path) {
-    return /* @__PURE__ */ jsx_runtime377.jsx(ShowInIDEPrompt, {
+    return /* @__PURE__ */ jsx_runtime378.jsx(ShowInIDEPrompt, {
       onChange: (option_1, _input, feedback_0) => onChange(option_1, feedback_0),
       options,
       filePath: path,
@@ -446225,17 +446311,17 @@ function FilePermissionDialog({
     });
   }
   const isSymlinkOutsideCwd = symlinkTarget != null && relative29(getCwd(), symlinkTarget).startsWith("..");
-  const symlinkWarning = symlinkTarget ? /* @__PURE__ */ jsx_runtime377.jsx(ThemedBox_default, {
+  const symlinkWarning = symlinkTarget ? /* @__PURE__ */ jsx_runtime378.jsx(ThemedBox_default, {
     paddingX: 1,
     marginBottom: 1,
-    children: /* @__PURE__ */ jsx_runtime377.jsx(ThemedText, {
+    children: /* @__PURE__ */ jsx_runtime378.jsx(ThemedText, {
       color: "warning",
       children: isSymlinkOutsideCwd ? `This will modify ${symlinkTarget} (outside working directory) via a symlink` : `Symlink target: ${symlinkTarget}`
     })
   }) : null;
-  return /* @__PURE__ */ jsx_runtime377.jsxs(jsx_runtime377.Fragment, {
+  return /* @__PURE__ */ jsx_runtime378.jsxs(jsx_runtime378.Fragment, {
     children: [
-      /* @__PURE__ */ jsx_runtime377.jsxs(PermissionDialog, {
+      /* @__PURE__ */ jsx_runtime378.jsxs(PermissionDialog, {
         title,
         subtitle,
         innerPaddingX: 0,
@@ -446243,14 +446329,14 @@ function FilePermissionDialog({
         children: [
           symlinkWarning,
           content,
-          /* @__PURE__ */ jsx_runtime377.jsxs(ThemedBox_default, {
+          /* @__PURE__ */ jsx_runtime378.jsxs(ThemedBox_default, {
             flexDirection: "column",
             paddingX: 1,
             children: [
-              typeof question === "string" ? /* @__PURE__ */ jsx_runtime377.jsx(ThemedText, {
+              typeof question === "string" ? /* @__PURE__ */ jsx_runtime378.jsx(ThemedText, {
                 children: question
               }) : question,
-              /* @__PURE__ */ jsx_runtime377.jsx(Select, {
+              /* @__PURE__ */ jsx_runtime378.jsx(Select, {
                 options,
                 inlineDescriptions: true,
                 onChange: (value) => {
@@ -446279,10 +446365,10 @@ function FilePermissionDialog({
           })
         ]
       }),
-      /* @__PURE__ */ jsx_runtime377.jsx(ThemedBox_default, {
+      /* @__PURE__ */ jsx_runtime378.jsx(ThemedBox_default, {
         paddingX: 1,
         marginTop: 1,
-        children: /* @__PURE__ */ jsx_runtime377.jsxs(ThemedText, {
+        children: /* @__PURE__ */ jsx_runtime378.jsxs(ThemedText, {
           dimColor: true,
           children: [
             "Esc to cancel",
@@ -446293,7 +446379,7 @@ function FilePermissionDialog({
     ]
   });
 }
-var import_react212, jsx_runtime377;
+var import_react212, jsx_runtime378;
 var init_FilePermissionDialog = __esm(() => {
   init_useDiffInIDE();
   init_ink2();
@@ -446307,7 +446393,7 @@ var init_FilePermissionDialog = __esm(() => {
   init_PermissionDialog();
   init_useFilePermissionDialog();
   import_react212 = __toESM(require_react(), 1);
-  jsx_runtime377 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime378 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/permissions/SedEditPermissionRequest/SedEditPermissionRequest.tsx
@@ -446353,9 +446439,9 @@ function SedEditPermissionRequest(t0) {
   const contentPromise = t1;
   let t2;
   if ($[5] !== contentPromise || $[6] !== props || $[7] !== sedInfo) {
-    t2 = /* @__PURE__ */ jsx_runtime378.jsx(import_react213.Suspense, {
+    t2 = /* @__PURE__ */ jsx_runtime379.jsx(import_react213.Suspense, {
       fallback: null,
-      children: /* @__PURE__ */ jsx_runtime378.jsx(SedEditPermissionRequestInner, {
+      children: /* @__PURE__ */ jsx_runtime379.jsx(SedEditPermissionRequestInner, {
         sedInfo,
         contentPromise,
         ...props
@@ -446495,11 +446581,11 @@ function SedEditPermissionRequestInner(t0) {
   }
   let t11;
   if ($[18] !== t10) {
-    t11 = /* @__PURE__ */ jsx_runtime378.jsxs(ThemedText, {
+    t11 = /* @__PURE__ */ jsx_runtime379.jsxs(ThemedText, {
       children: [
         "Do you want to make this edit to",
         " ",
-        /* @__PURE__ */ jsx_runtime378.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime379.jsx(ThemedText, {
           bold: true,
           children: t10
         }),
@@ -446513,10 +446599,10 @@ function SedEditPermissionRequestInner(t0) {
   }
   let t12;
   if ($[20] !== edits || $[21] !== filePath || $[22] !== noChangesMessage) {
-    t12 = edits.length > 0 ? /* @__PURE__ */ jsx_runtime378.jsx(FileEditToolDiff, {
+    t12 = edits.length > 0 ? /* @__PURE__ */ jsx_runtime379.jsx(FileEditToolDiff, {
       file_path: filePath,
       edits
-    }) : /* @__PURE__ */ jsx_runtime378.jsx(ThemedText, {
+    }) : /* @__PURE__ */ jsx_runtime379.jsx(ThemedText, {
       dimColor: true,
       children: noChangesMessage
     });
@@ -446529,7 +446615,7 @@ function SedEditPermissionRequestInner(t0) {
   }
   let t13;
   if ($[24] !== filePath || $[25] !== parseInput || $[26] !== props.onDone || $[27] !== props.onReject || $[28] !== props.toolUseConfirm || $[29] !== props.toolUseContext || $[30] !== props.workerBadge || $[31] !== t11 || $[32] !== t12 || $[33] !== t9) {
-    t13 = /* @__PURE__ */ jsx_runtime378.jsx(FilePermissionDialog, {
+    t13 = /* @__PURE__ */ jsx_runtime379.jsx(FilePermissionDialog, {
       toolUseConfirm: t5,
       toolUseContext: t6,
       onDone: t7,
@@ -446559,7 +446645,7 @@ function SedEditPermissionRequestInner(t0) {
   }
   return t13;
 }
-var import_compiler_runtime298, import_react213, jsx_runtime378;
+var import_compiler_runtime298, import_react213, jsx_runtime379;
 var init_SedEditPermissionRequest = __esm(() => {
   init_FileEditToolDiff();
   init_cwd2();
@@ -446572,7 +446658,7 @@ var init_SedEditPermissionRequest = __esm(() => {
   init_FilePermissionDialog();
   import_compiler_runtime298 = __toESM(require_compiler_runtime(), 1);
   import_react213 = __toESM(require_react(), 1);
-  jsx_runtime378 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime379 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/permissions/utils.ts
@@ -446705,34 +446791,34 @@ function commandListDisplay(commands) {
     case 0:
       return "";
     case 1:
-      return /* @__PURE__ */ jsx_runtime379.jsx(ThemedText, {
+      return /* @__PURE__ */ jsx_runtime380.jsx(ThemedText, {
         bold: true,
         children: commands[0]
       });
     case 2:
-      return /* @__PURE__ */ jsx_runtime379.jsxs(ThemedText, {
+      return /* @__PURE__ */ jsx_runtime380.jsxs(ThemedText, {
         children: [
-          /* @__PURE__ */ jsx_runtime379.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime380.jsx(ThemedText, {
             bold: true,
             children: commands[0]
           }),
           " and ",
-          /* @__PURE__ */ jsx_runtime379.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime380.jsx(ThemedText, {
             bold: true,
             children: commands[1]
           })
         ]
       });
     default:
-      return /* @__PURE__ */ jsx_runtime379.jsxs(ThemedText, {
+      return /* @__PURE__ */ jsx_runtime380.jsxs(ThemedText, {
         children: [
-          /* @__PURE__ */ jsx_runtime379.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime380.jsx(ThemedText, {
             bold: true,
             children: commands.slice(0, -1).join(", ")
           }),
           ", and",
           " ",
-          /* @__PURE__ */ jsx_runtime379.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime380.jsx(ThemedText, {
             bold: true,
             children: commands.slice(-1)[0]
           })
@@ -446752,9 +446838,9 @@ function formatPathList(paths) {
     return "";
   const names = paths.map((p) => basename47(p) || p);
   if (names.length === 1) {
-    return /* @__PURE__ */ jsx_runtime379.jsxs(ThemedText, {
+    return /* @__PURE__ */ jsx_runtime380.jsxs(ThemedText, {
       children: [
-        /* @__PURE__ */ jsx_runtime379.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime380.jsx(ThemedText, {
           bold: true,
           children: names[0]
         }),
@@ -446763,15 +446849,15 @@ function formatPathList(paths) {
     });
   }
   if (names.length === 2) {
-    return /* @__PURE__ */ jsx_runtime379.jsxs(ThemedText, {
+    return /* @__PURE__ */ jsx_runtime380.jsxs(ThemedText, {
       children: [
-        /* @__PURE__ */ jsx_runtime379.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime380.jsx(ThemedText, {
           bold: true,
           children: names[0]
         }),
         sep36,
         " and ",
-        /* @__PURE__ */ jsx_runtime379.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime380.jsx(ThemedText, {
           bold: true,
           children: names[1]
         }),
@@ -446779,15 +446865,15 @@ function formatPathList(paths) {
       ]
     });
   }
-  return /* @__PURE__ */ jsx_runtime379.jsxs(ThemedText, {
+  return /* @__PURE__ */ jsx_runtime380.jsxs(ThemedText, {
     children: [
-      /* @__PURE__ */ jsx_runtime379.jsx(ThemedText, {
+      /* @__PURE__ */ jsx_runtime380.jsx(ThemedText, {
         bold: true,
         children: names[0]
       }),
       sep36,
       ", ",
-      /* @__PURE__ */ jsx_runtime379.jsx(ThemedText, {
+      /* @__PURE__ */ jsx_runtime380.jsx(ThemedText, {
         bold: true,
         children: names[1]
       }),
@@ -446817,10 +446903,10 @@ function generateShellSuggestionsLabel(suggestions, shellToolName, commandTransf
     if (readPaths.length === 1) {
       const firstPath = readPaths[0];
       const dirName = basename47(firstPath) || firstPath;
-      return /* @__PURE__ */ jsx_runtime379.jsxs(ThemedText, {
+      return /* @__PURE__ */ jsx_runtime380.jsxs(ThemedText, {
         children: [
           "Yes, allow reading from ",
-          /* @__PURE__ */ jsx_runtime379.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime380.jsx(ThemedText, {
             bold: true,
             children: dirName
           }),
@@ -446829,7 +446915,7 @@ function generateShellSuggestionsLabel(suggestions, shellToolName, commandTransf
         ]
       });
     }
-    return /* @__PURE__ */ jsx_runtime379.jsxs(ThemedText, {
+    return /* @__PURE__ */ jsx_runtime380.jsxs(ThemedText, {
       children: [
         "Yes, allow reading from ",
         formatPathList(readPaths),
@@ -446841,10 +446927,10 @@ function generateShellSuggestionsLabel(suggestions, shellToolName, commandTransf
     if (directories.length === 1) {
       const firstDir = directories[0];
       const dirName = basename47(firstDir) || firstDir;
-      return /* @__PURE__ */ jsx_runtime379.jsxs(ThemedText, {
+      return /* @__PURE__ */ jsx_runtime380.jsxs(ThemedText, {
         children: [
           "Yes, and always allow access to ",
-          /* @__PURE__ */ jsx_runtime379.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime380.jsx(ThemedText, {
             bold: true,
             children: dirName
           }),
@@ -446853,7 +446939,7 @@ function generateShellSuggestionsLabel(suggestions, shellToolName, commandTransf
         ]
       });
     }
-    return /* @__PURE__ */ jsx_runtime379.jsxs(ThemedText, {
+    return /* @__PURE__ */ jsx_runtime380.jsxs(ThemedText, {
       children: [
         "Yes, and always allow access to ",
         formatPathList(directories),
@@ -446862,13 +446948,13 @@ function generateShellSuggestionsLabel(suggestions, shellToolName, commandTransf
     });
   }
   if (hasCommands && !hasDirectories && !hasReadPaths) {
-    return /* @__PURE__ */ jsx_runtime379.jsxs(ThemedText, {
+    return /* @__PURE__ */ jsx_runtime380.jsxs(ThemedText, {
       children: [
         "Yes, and don't ask again for ",
         commandListDisplayTruncated(shellCommands),
         " commands in",
         " ",
-        /* @__PURE__ */ jsx_runtime379.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime380.jsx(ThemedText, {
           bold: true,
           children: getOriginalCwd()
         })
@@ -446878,7 +446964,7 @@ function generateShellSuggestionsLabel(suggestions, shellToolName, commandTransf
   if ((hasDirectories || hasReadPaths) && !hasCommands) {
     const allPaths = [...directories, ...readPaths];
     if (hasDirectories && hasReadPaths) {
-      return /* @__PURE__ */ jsx_runtime379.jsxs(ThemedText, {
+      return /* @__PURE__ */ jsx_runtime380.jsxs(ThemedText, {
         children: [
           "Yes, and always allow access to ",
           formatPathList(allPaths),
@@ -446890,7 +446976,7 @@ function generateShellSuggestionsLabel(suggestions, shellToolName, commandTransf
   if ((hasDirectories || hasReadPaths) && hasCommands) {
     const allPaths = [...directories, ...readPaths];
     if (allPaths.length === 1 && shellCommands.length === 1) {
-      return /* @__PURE__ */ jsx_runtime379.jsxs(ThemedText, {
+      return /* @__PURE__ */ jsx_runtime380.jsxs(ThemedText, {
         children: [
           "Yes, and allow access to ",
           formatPathList(allPaths),
@@ -446901,7 +446987,7 @@ function generateShellSuggestionsLabel(suggestions, shellToolName, commandTransf
         ]
       });
     }
-    return /* @__PURE__ */ jsx_runtime379.jsxs(ThemedText, {
+    return /* @__PURE__ */ jsx_runtime380.jsxs(ThemedText, {
       children: [
         "Yes, and allow ",
         formatPathList(allPaths),
@@ -446914,12 +447000,12 @@ function generateShellSuggestionsLabel(suggestions, shellToolName, commandTransf
   }
   return null;
 }
-var jsx_runtime379;
+var jsx_runtime380;
 var init_shellPermissionHelpers = __esm(() => {
   init_state();
   init_ink2();
   init_shellRuleMatching();
-  jsx_runtime379 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime380 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/permissions/BashPermissionRequest/bashToolUseOptions.tsx
@@ -447043,7 +447129,7 @@ function BashPermissionRequest(props) {
   if (sedInfo) {
     let t1;
     if ($[4] !== onDone || $[5] !== onReject || $[6] !== sedInfo || $[7] !== toolUseConfirm || $[8] !== toolUseContext || $[9] !== verbose || $[10] !== workerBadge) {
-      t1 = /* @__PURE__ */ jsx_runtime380.jsx(SedEditPermissionRequest, {
+      t1 = /* @__PURE__ */ jsx_runtime381.jsx(SedEditPermissionRequest, {
         toolUseConfirm,
         toolUseContext,
         onDone,
@@ -447067,7 +447153,7 @@ function BashPermissionRequest(props) {
   }
   let t1;
   if ($[12] !== command || $[13] !== description || $[14] !== onDone || $[15] !== onReject || $[16] !== toolUseConfirm || $[17] !== toolUseContext || $[18] !== verbose || $[19] !== workerBadge) {
-    t1 = /* @__PURE__ */ jsx_runtime380.jsx(BashPermissionRequestInner, {
+    t1 = /* @__PURE__ */ jsx_runtime381.jsx(BashPermissionRequestInner, {
       toolUseConfirm,
       toolUseContext,
       onDone,
@@ -447298,17 +447384,17 @@ function BashPermissionRequestInner({
     }
   }
   const classifierSubtitle = undefined;
-  return /* @__PURE__ */ jsx_runtime380.jsxs(PermissionDialog, {
+  return /* @__PURE__ */ jsx_runtime381.jsxs(PermissionDialog, {
     workerBadge,
     title: sandboxingEnabled_0 && !isSandboxed_0 ? "Bash command (unsandboxed)" : "Bash command",
     subtitle: classifierSubtitle,
     children: [
-      /* @__PURE__ */ jsx_runtime380.jsxs(ThemedBox_default, {
+      /* @__PURE__ */ jsx_runtime381.jsxs(ThemedBox_default, {
         flexDirection: "column",
         paddingX: 2,
         paddingY: 1,
         children: [
-          /* @__PURE__ */ jsx_runtime380.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime381.jsx(ThemedText, {
             dimColor: explainerState.visible,
             children: BashTool.renderToolUseMessage({
               command,
@@ -447318,53 +447404,53 @@ function BashPermissionRequestInner({
               verbose: true
             })
           }),
-          !explainerState.visible && /* @__PURE__ */ jsx_runtime380.jsx(ThemedText, {
+          !explainerState.visible && /* @__PURE__ */ jsx_runtime381.jsx(ThemedText, {
             dimColor: true,
             children: toolUseConfirm.description
           }),
-          /* @__PURE__ */ jsx_runtime380.jsx(PermissionExplainerContent, {
+          /* @__PURE__ */ jsx_runtime381.jsx(PermissionExplainerContent, {
             visible: explainerState.visible,
             promise: explainerState.promise
           })
         ]
       }),
-      showPermissionDebug ? /* @__PURE__ */ jsx_runtime380.jsxs(jsx_runtime380.Fragment, {
+      showPermissionDebug ? /* @__PURE__ */ jsx_runtime381.jsxs(jsx_runtime381.Fragment, {
         children: [
-          /* @__PURE__ */ jsx_runtime380.jsx(PermissionDecisionDebugInfo, {
+          /* @__PURE__ */ jsx_runtime381.jsx(PermissionDecisionDebugInfo, {
             permissionResult: toolUseConfirm.permissionResult,
             toolName: "Bash"
           }),
-          toolUseContext.options.debug && /* @__PURE__ */ jsx_runtime380.jsx(ThemedBox_default, {
+          toolUseContext.options.debug && /* @__PURE__ */ jsx_runtime381.jsx(ThemedBox_default, {
             justifyContent: "flex-end",
             marginTop: 1,
-            children: /* @__PURE__ */ jsx_runtime380.jsx(ThemedText, {
+            children: /* @__PURE__ */ jsx_runtime381.jsx(ThemedText, {
               dimColor: true,
               children: "Ctrl-D to hide debug info"
             })
           })
         ]
-      }) : /* @__PURE__ */ jsx_runtime380.jsxs(jsx_runtime380.Fragment, {
+      }) : /* @__PURE__ */ jsx_runtime381.jsxs(jsx_runtime381.Fragment, {
         children: [
-          /* @__PURE__ */ jsx_runtime380.jsxs(ThemedBox_default, {
+          /* @__PURE__ */ jsx_runtime381.jsxs(ThemedBox_default, {
             flexDirection: "column",
             children: [
-              /* @__PURE__ */ jsx_runtime380.jsx(PermissionRuleExplanation, {
+              /* @__PURE__ */ jsx_runtime381.jsx(PermissionRuleExplanation, {
                 permissionResult: toolUseConfirm.permissionResult,
                 toolType: "command"
               }),
-              destructiveWarning_0 && /* @__PURE__ */ jsx_runtime380.jsx(ThemedBox_default, {
+              destructiveWarning_0 && /* @__PURE__ */ jsx_runtime381.jsx(ThemedBox_default, {
                 marginBottom: 1,
-                children: /* @__PURE__ */ jsx_runtime380.jsx(ThemedText, {
+                children: /* @__PURE__ */ jsx_runtime381.jsx(ThemedText, {
                   color: "warning",
                   dimColor: false,
                   children: destructiveWarning_0
                 })
               }),
-              /* @__PURE__ */ jsx_runtime380.jsx(ThemedText, {
+              /* @__PURE__ */ jsx_runtime381.jsx(ThemedText, {
                 dimColor: false,
                 children: "Do you want to proceed?"
               }),
-              /* @__PURE__ */ jsx_runtime380.jsx(Select, {
+              /* @__PURE__ */ jsx_runtime381.jsx(Select, {
                 options,
                 isDisabled: false,
                 inlineDescriptions: true,
@@ -447375,11 +447461,11 @@ function BashPermissionRequestInner({
               })
             ]
           }),
-          /* @__PURE__ */ jsx_runtime380.jsxs(ThemedBox_default, {
+          /* @__PURE__ */ jsx_runtime381.jsxs(ThemedBox_default, {
             justifyContent: "space-between",
             marginTop: 1,
             children: [
-              /* @__PURE__ */ jsx_runtime380.jsxs(ThemedText, {
+              /* @__PURE__ */ jsx_runtime381.jsxs(ThemedText, {
                 dimColor: true,
                 children: [
                   "Esc to cancel",
@@ -447387,7 +447473,7 @@ function BashPermissionRequestInner({
                   explainerState.enabled && ` \xB7 ctrl+e to ${explainerState.visible ? "hide" : "explain"}`
                 ]
               }),
-              toolUseContext.options.debug && /* @__PURE__ */ jsx_runtime380.jsx(ThemedText, {
+              toolUseContext.options.debug && /* @__PURE__ */ jsx_runtime381.jsx(ThemedText, {
                 dimColor: true,
                 children: "Ctrl+d to show debug info"
               })
@@ -447398,7 +447484,7 @@ function BashPermissionRequestInner({
     ]
   });
 }
-var import_compiler_runtime299, import_react215, jsx_runtime380;
+var import_compiler_runtime299, import_react215, jsx_runtime381;
 var init_BashPermissionRequest = __esm(() => {
   init_ink2();
   init_useKeybinding();
@@ -447428,7 +447514,7 @@ var init_BashPermissionRequest = __esm(() => {
   init_bashToolUseOptions();
   import_compiler_runtime299 = __toESM(require_compiler_runtime(), 1);
   import_react215 = __toESM(require_react(), 1);
-  jsx_runtime380 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime381 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/permissions/EnterPlanModePermissionRequest/EnterPlanModePermissionRequest.tsx
@@ -447473,7 +447559,7 @@ function EnterPlanModePermissionRequest(t0) {
   const handleResponse = t1;
   let t2;
   if ($[5] === Symbol.for("react.memo_cache_sentinel")) {
-    t2 = /* @__PURE__ */ jsx_runtime381.jsx(ThemedText, {
+    t2 = /* @__PURE__ */ jsx_runtime382.jsx(ThemedText, {
       children: "Claude wants to enter plan mode to explore and design an implementation approach."
     });
     $[5] = t2;
@@ -447482,27 +447568,27 @@ function EnterPlanModePermissionRequest(t0) {
   }
   let t3;
   if ($[6] === Symbol.for("react.memo_cache_sentinel")) {
-    t3 = /* @__PURE__ */ jsx_runtime381.jsxs(ThemedBox_default, {
+    t3 = /* @__PURE__ */ jsx_runtime382.jsxs(ThemedBox_default, {
       marginTop: 1,
       flexDirection: "column",
       children: [
-        /* @__PURE__ */ jsx_runtime381.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime382.jsx(ThemedText, {
           dimColor: true,
           children: "In plan mode, Claude will:"
         }),
-        /* @__PURE__ */ jsx_runtime381.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime382.jsx(ThemedText, {
           dimColor: true,
           children: " \xB7 Explore the codebase thoroughly"
         }),
-        /* @__PURE__ */ jsx_runtime381.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime382.jsx(ThemedText, {
           dimColor: true,
           children: " \xB7 Identify existing patterns"
         }),
-        /* @__PURE__ */ jsx_runtime381.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime382.jsx(ThemedText, {
           dimColor: true,
           children: " \xB7 Design an implementation strategy"
         }),
-        /* @__PURE__ */ jsx_runtime381.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime382.jsx(ThemedText, {
           dimColor: true,
           children: " \xB7 Present a plan for your approval"
         })
@@ -447514,9 +447600,9 @@ function EnterPlanModePermissionRequest(t0) {
   }
   let t4;
   if ($[7] === Symbol.for("react.memo_cache_sentinel")) {
-    t4 = /* @__PURE__ */ jsx_runtime381.jsx(ThemedBox_default, {
+    t4 = /* @__PURE__ */ jsx_runtime382.jsx(ThemedBox_default, {
       marginTop: 1,
-      children: /* @__PURE__ */ jsx_runtime381.jsx(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime382.jsx(ThemedText, {
         dimColor: true,
         children: "No code changes will be made until you approve the plan."
       })
@@ -447555,7 +447641,7 @@ function EnterPlanModePermissionRequest(t0) {
   }
   let t8;
   if ($[12] !== handleResponse || $[13] !== t7) {
-    t8 = /* @__PURE__ */ jsx_runtime381.jsxs(ThemedBox_default, {
+    t8 = /* @__PURE__ */ jsx_runtime382.jsxs(ThemedBox_default, {
       flexDirection: "column",
       marginTop: 1,
       paddingX: 1,
@@ -447563,9 +447649,9 @@ function EnterPlanModePermissionRequest(t0) {
         t2,
         t3,
         t4,
-        /* @__PURE__ */ jsx_runtime381.jsx(ThemedBox_default, {
+        /* @__PURE__ */ jsx_runtime382.jsx(ThemedBox_default, {
           marginTop: 1,
-          children: /* @__PURE__ */ jsx_runtime381.jsx(Select, {
+          children: /* @__PURE__ */ jsx_runtime382.jsx(Select, {
             options: t6,
             onChange: handleResponse,
             onCancel: t7
@@ -447581,7 +447667,7 @@ function EnterPlanModePermissionRequest(t0) {
   }
   let t9;
   if ($[15] !== t8 || $[16] !== workerBadge) {
-    t9 = /* @__PURE__ */ jsx_runtime381.jsx(PermissionDialog, {
+    t9 = /* @__PURE__ */ jsx_runtime382.jsx(PermissionDialog, {
       color: "planMode",
       title: "Enter plan mode?",
       workerBadge,
@@ -447598,7 +447684,7 @@ function EnterPlanModePermissionRequest(t0) {
 function _temp167(s) {
   return s.toolPermissionContext.mode;
 }
-var import_compiler_runtime300, jsx_runtime381;
+var import_compiler_runtime300, jsx_runtime382;
 var init_EnterPlanModePermissionRequest = __esm(() => {
   init_state();
   init_ink2();
@@ -447608,7 +447694,7 @@ var init_EnterPlanModePermissionRequest = __esm(() => {
   init_CustomSelect();
   init_PermissionDialog();
   import_compiler_runtime300 = __toESM(require_compiler_runtime(), 1);
-  jsx_runtime381 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime382 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/permissions/ExitPlanModePermissionRequest/ExitPlanModePermissionRequest.tsx
@@ -447960,7 +448046,7 @@ ${currentPlan}${verificationInstruction}${transcriptHint}${teamHint}${feedbackSu
   import_react216.useLayoutEffect(() => {
     if (!useStickyFooter)
       return;
-    setStickyFooter(/* @__PURE__ */ jsx_runtime382.jsxs(ThemedBox_default, {
+    setStickyFooter(/* @__PURE__ */ jsx_runtime383.jsxs(ThemedBox_default, {
       flexDirection: "column",
       borderStyle: "round",
       borderColor: "planMode",
@@ -447969,13 +448055,13 @@ ${currentPlan}${verificationInstruction}${transcriptHint}${teamHint}${feedbackSu
       borderBottom: false,
       paddingX: 1,
       children: [
-        /* @__PURE__ */ jsx_runtime382.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime383.jsx(ThemedText, {
           dimColor: true,
           children: "Would you like to proceed?"
         }),
-        /* @__PURE__ */ jsx_runtime382.jsx(ThemedBox_default, {
+        /* @__PURE__ */ jsx_runtime383.jsx(ThemedBox_default, {
           marginTop: 1,
-          children: /* @__PURE__ */ jsx_runtime382.jsx(Select, {
+          children: /* @__PURE__ */ jsx_runtime383.jsx(Select, {
             options,
             onChange: (v) => void handleResponseRef.current(v),
             onCancel: () => handleCancelRef.current?.(),
@@ -447984,34 +448070,34 @@ ${currentPlan}${verificationInstruction}${transcriptHint}${teamHint}${feedbackSu
             onRemoveImage
           })
         }),
-        editorName && /* @__PURE__ */ jsx_runtime382.jsxs(ThemedBox_default, {
+        editorName && /* @__PURE__ */ jsx_runtime383.jsxs(ThemedBox_default, {
           flexDirection: "row",
           gap: 1,
           marginTop: 1,
           children: [
-            /* @__PURE__ */ jsx_runtime382.jsx(ThemedText, {
+            /* @__PURE__ */ jsx_runtime383.jsx(ThemedText, {
               dimColor: true,
               children: "ctrl-g to edit in "
             }),
-            /* @__PURE__ */ jsx_runtime382.jsx(ThemedText, {
+            /* @__PURE__ */ jsx_runtime383.jsx(ThemedText, {
               bold: true,
               dimColor: true,
               children: editorName
             }),
-            isV2 && planFilePath && /* @__PURE__ */ jsx_runtime382.jsxs(ThemedText, {
+            isV2 && planFilePath && /* @__PURE__ */ jsx_runtime383.jsxs(ThemedText, {
               dimColor: true,
               children: [
                 " \xB7 ",
                 getDisplayPath(planFilePath)
               ]
             }),
-            showSaveMessage && /* @__PURE__ */ jsx_runtime382.jsxs(jsx_runtime382.Fragment, {
+            showSaveMessage && /* @__PURE__ */ jsx_runtime383.jsxs(jsx_runtime383.Fragment, {
               children: [
-                /* @__PURE__ */ jsx_runtime382.jsx(ThemedText, {
+                /* @__PURE__ */ jsx_runtime383.jsx(ThemedText, {
                   dimColor: true,
                   children: " \xB7 "
                 }),
-                /* @__PURE__ */ jsx_runtime382.jsxs(ThemedText, {
+                /* @__PURE__ */ jsx_runtime383.jsxs(ThemedText, {
                   color: "success",
                   children: [
                     figures_default.tick,
@@ -448056,21 +448142,21 @@ ${currentPlan}${verificationInstruction}${transcriptHint}${teamHint}${feedbackSu
         toolUseConfirm.onReject();
       }
     };
-    return /* @__PURE__ */ jsx_runtime382.jsx(PermissionDialog, {
+    return /* @__PURE__ */ jsx_runtime383.jsx(PermissionDialog, {
       color: "planMode",
       title: "Exit plan mode?",
       workerBadge,
-      children: /* @__PURE__ */ jsx_runtime382.jsxs(ThemedBox_default, {
+      children: /* @__PURE__ */ jsx_runtime383.jsxs(ThemedBox_default, {
         flexDirection: "column",
         paddingX: 1,
         marginTop: 1,
         children: [
-          /* @__PURE__ */ jsx_runtime382.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime383.jsx(ThemedText, {
             children: "Claude wants to exit plan mode"
           }),
-          /* @__PURE__ */ jsx_runtime382.jsx(ThemedBox_default, {
+          /* @__PURE__ */ jsx_runtime383.jsx(ThemedBox_default, {
             marginTop: 1,
-            children: /* @__PURE__ */ jsx_runtime382.jsx(Select, {
+            children: /* @__PURE__ */ jsx_runtime383.jsx(Select, {
               options: [{
                 label: "Yes",
                 value: "yes"
@@ -448096,29 +448182,29 @@ ${currentPlan}${verificationInstruction}${transcriptHint}${teamHint}${feedbackSu
       })
     });
   }
-  return /* @__PURE__ */ jsx_runtime382.jsxs(ThemedBox_default, {
+  return /* @__PURE__ */ jsx_runtime383.jsxs(ThemedBox_default, {
     flexDirection: "column",
     tabIndex: 0,
     autoFocus: true,
     onKeyDown: handleKeyDown,
     children: [
-      /* @__PURE__ */ jsx_runtime382.jsx(PermissionDialog, {
+      /* @__PURE__ */ jsx_runtime383.jsx(PermissionDialog, {
         color: "planMode",
         title: "Ready to code?",
         innerPaddingX: 0,
         workerBadge,
-        children: /* @__PURE__ */ jsx_runtime382.jsxs(ThemedBox_default, {
+        children: /* @__PURE__ */ jsx_runtime383.jsxs(ThemedBox_default, {
           flexDirection: "column",
           marginTop: 1,
           children: [
-            /* @__PURE__ */ jsx_runtime382.jsx(ThemedBox_default, {
+            /* @__PURE__ */ jsx_runtime383.jsx(ThemedBox_default, {
               paddingX: 1,
               flexDirection: "column",
-              children: /* @__PURE__ */ jsx_runtime382.jsx(ThemedText, {
+              children: /* @__PURE__ */ jsx_runtime383.jsx(ThemedText, {
                 children: "Here is Claude's plan:"
               })
             }),
-            /* @__PURE__ */ jsx_runtime382.jsx(ThemedBox_default, {
+            /* @__PURE__ */ jsx_runtime383.jsx(ThemedBox_default, {
               borderColor: "subtle",
               borderStyle: "dashed",
               flexDirection: "column",
@@ -448127,27 +448213,27 @@ ${currentPlan}${verificationInstruction}${transcriptHint}${teamHint}${feedbackSu
               paddingX: 1,
               marginBottom: 1,
               overflow: "hidden",
-              children: /* @__PURE__ */ jsx_runtime382.jsx(Markdown, {
+              children: /* @__PURE__ */ jsx_runtime383.jsx(Markdown, {
                 children: currentPlan
               })
             }),
-            /* @__PURE__ */ jsx_runtime382.jsxs(ThemedBox_default, {
+            /* @__PURE__ */ jsx_runtime383.jsxs(ThemedBox_default, {
               flexDirection: "column",
               paddingX: 1,
               children: [
-                /* @__PURE__ */ jsx_runtime382.jsx(PermissionRuleExplanation, {
+                /* @__PURE__ */ jsx_runtime383.jsx(PermissionRuleExplanation, {
                   permissionResult: toolUseConfirm.permissionResult,
                   toolType: "tool"
                 }),
-                isClassifierPermissionsEnabled() && allowedPrompts && allowedPrompts.length > 0 && /* @__PURE__ */ jsx_runtime382.jsxs(ThemedBox_default, {
+                isClassifierPermissionsEnabled() && allowedPrompts && allowedPrompts.length > 0 && /* @__PURE__ */ jsx_runtime383.jsxs(ThemedBox_default, {
                   flexDirection: "column",
                   marginBottom: 1,
                   children: [
-                    /* @__PURE__ */ jsx_runtime382.jsx(ThemedText, {
+                    /* @__PURE__ */ jsx_runtime383.jsx(ThemedText, {
                       bold: true,
                       children: "Requested permissions:"
                     }),
-                    allowedPrompts.map((p, i) => /* @__PURE__ */ jsx_runtime382.jsxs(ThemedText, {
+                    allowedPrompts.map((p, i) => /* @__PURE__ */ jsx_runtime383.jsxs(ThemedText, {
                       dimColor: true,
                       children: [
                         "  ",
@@ -448162,15 +448248,15 @@ ${currentPlan}${verificationInstruction}${transcriptHint}${teamHint}${feedbackSu
                     }, i))
                   ]
                 }),
-                !useStickyFooter && /* @__PURE__ */ jsx_runtime382.jsxs(jsx_runtime382.Fragment, {
+                !useStickyFooter && /* @__PURE__ */ jsx_runtime383.jsxs(jsx_runtime383.Fragment, {
                   children: [
-                    /* @__PURE__ */ jsx_runtime382.jsx(ThemedText, {
+                    /* @__PURE__ */ jsx_runtime383.jsx(ThemedText, {
                       dimColor: true,
                       children: "Claude has written up a plan and is ready to execute. Would you like to proceed?"
                     }),
-                    /* @__PURE__ */ jsx_runtime382.jsx(ThemedBox_default, {
+                    /* @__PURE__ */ jsx_runtime383.jsx(ThemedBox_default, {
                       marginTop: 1,
-                      children: /* @__PURE__ */ jsx_runtime382.jsx(Select, {
+                      children: /* @__PURE__ */ jsx_runtime383.jsx(Select, {
                         options,
                         onChange: handleResponse,
                         onCancel: () => handleCancelRef.current?.(),
@@ -448186,24 +448272,24 @@ ${currentPlan}${verificationInstruction}${transcriptHint}${teamHint}${feedbackSu
           ]
         })
       }),
-      !useStickyFooter && editorName && /* @__PURE__ */ jsx_runtime382.jsxs(ThemedBox_default, {
+      !useStickyFooter && editorName && /* @__PURE__ */ jsx_runtime383.jsxs(ThemedBox_default, {
         flexDirection: "row",
         gap: 1,
         paddingX: 1,
         marginTop: 1,
         children: [
-          /* @__PURE__ */ jsx_runtime382.jsxs(ThemedBox_default, {
+          /* @__PURE__ */ jsx_runtime383.jsxs(ThemedBox_default, {
             children: [
-              /* @__PURE__ */ jsx_runtime382.jsx(ThemedText, {
+              /* @__PURE__ */ jsx_runtime383.jsx(ThemedText, {
                 dimColor: true,
                 children: "ctrl-g to edit in "
               }),
-              /* @__PURE__ */ jsx_runtime382.jsx(ThemedText, {
+              /* @__PURE__ */ jsx_runtime383.jsx(ThemedText, {
                 bold: true,
                 dimColor: true,
                 children: editorName
               }),
-              isV2 && planFilePath && /* @__PURE__ */ jsx_runtime382.jsxs(ThemedText, {
+              isV2 && planFilePath && /* @__PURE__ */ jsx_runtime383.jsxs(ThemedText, {
                 dimColor: true,
                 children: [
                   " \xB7 ",
@@ -448212,13 +448298,13 @@ ${currentPlan}${verificationInstruction}${transcriptHint}${teamHint}${feedbackSu
               })
             ]
           }),
-          showSaveMessage && /* @__PURE__ */ jsx_runtime382.jsxs(ThemedBox_default, {
+          showSaveMessage && /* @__PURE__ */ jsx_runtime383.jsxs(ThemedBox_default, {
             children: [
-              /* @__PURE__ */ jsx_runtime382.jsx(ThemedText, {
+              /* @__PURE__ */ jsx_runtime383.jsx(ThemedText, {
                 dimColor: true,
                 children: " \xB7 "
               }),
-              /* @__PURE__ */ jsx_runtime382.jsxs(ThemedText, {
+              /* @__PURE__ */ jsx_runtime383.jsxs(ThemedText, {
                 color: "success",
                 children: [
                   figures_default.tick,
@@ -448304,7 +448390,7 @@ function getContextUsedPercent(usage, permissionMode) {
   }, contextWindowSize);
   return used;
 }
-var import_react216, jsx_runtime382;
+var import_react216, jsx_runtime383;
 var init_ExitPlanModePermissionRequest = __esm(() => {
   init_figures();
   init_notifications();
@@ -448338,7 +448424,7 @@ var init_ExitPlanModePermissionRequest = __esm(() => {
   init_imageResizer();
   init_imageStore();
   import_react216 = __toESM(require_react(), 1);
-  jsx_runtime382 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime383 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/permissions/PermissionPrompt.tsx
@@ -448564,7 +448650,7 @@ function PermissionPrompt(t0) {
   const handleCancel = t7;
   let t8;
   if ($[34] !== question) {
-    t8 = typeof question === "string" ? /* @__PURE__ */ jsx_runtime383.jsx(ThemedText, {
+    t8 = typeof question === "string" ? /* @__PURE__ */ jsx_runtime384.jsx(ThemedText, {
       children: question
     }) : question;
     $[34] = question;
@@ -448595,7 +448681,7 @@ function PermissionPrompt(t0) {
   }
   let t10;
   if ($[42] !== handleCancel || $[43] !== handleInputModeToggle || $[44] !== handleSelect || $[45] !== selectOptions || $[46] !== t9) {
-    t10 = /* @__PURE__ */ jsx_runtime383.jsx(Select, {
+    t10 = /* @__PURE__ */ jsx_runtime384.jsx(Select, {
       options: selectOptions,
       inlineDescriptions: true,
       onChange: handleSelect,
@@ -448615,9 +448701,9 @@ function PermissionPrompt(t0) {
   const t11 = showTabHint && " \xB7 Tab to amend";
   let t12;
   if ($[48] !== t11) {
-    t12 = /* @__PURE__ */ jsx_runtime383.jsx(ThemedBox_default, {
+    t12 = /* @__PURE__ */ jsx_runtime384.jsx(ThemedBox_default, {
       marginTop: 1,
-      children: /* @__PURE__ */ jsx_runtime383.jsxs(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime384.jsxs(ThemedText, {
         dimColor: true,
         children: [
           "Esc to cancel",
@@ -448632,7 +448718,7 @@ function PermissionPrompt(t0) {
   }
   let t13;
   if ($[50] !== t10 || $[51] !== t12 || $[52] !== t8) {
-    t13 = /* @__PURE__ */ jsx_runtime383.jsxs(ThemedBox_default, {
+    t13 = /* @__PURE__ */ jsx_runtime384.jsxs(ThemedBox_default, {
       flexDirection: "column",
       children: [
         t8,
@@ -448658,7 +448744,7 @@ function _temp168(prev) {
     }
   };
 }
-var import_compiler_runtime301, import_react217, jsx_runtime383, DEFAULT_PLACEHOLDERS;
+var import_compiler_runtime301, import_react217, jsx_runtime384, DEFAULT_PLACEHOLDERS;
 var init_PermissionPrompt = __esm(() => {
   init_ink2();
   init_useKeybinding();
@@ -448667,7 +448753,7 @@ var init_PermissionPrompt = __esm(() => {
   init_select();
   import_compiler_runtime301 = __toESM(require_compiler_runtime(), 1);
   import_react217 = __toESM(require_react(), 1);
-  jsx_runtime383 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime384 = __toESM(require_jsx_runtime(), 1);
   DEFAULT_PLACEHOLDERS = {
     accept: "tell Claude what to do next",
     reject: "tell Claude what to do differently"
@@ -448831,13 +448917,13 @@ function FallbackPermissionRequest(t0) {
   if ($[16] !== userFacingName) {
     result = [t7];
     if (showAlwaysAllowOptions) {
-      const t8 = /* @__PURE__ */ jsx_runtime384.jsx(ThemedText, {
+      const t8 = /* @__PURE__ */ jsx_runtime385.jsx(ThemedText, {
         bold: true,
         children: userFacingName
       });
       let t9;
       if ($[18] === Symbol.for("react.memo_cache_sentinel")) {
-        t9 = /* @__PURE__ */ jsx_runtime384.jsx(ThemedText, {
+        t9 = /* @__PURE__ */ jsx_runtime385.jsx(ThemedText, {
           bold: true,
           children: originalCwd
         });
@@ -448848,7 +448934,7 @@ function FallbackPermissionRequest(t0) {
       let t10;
       if ($[19] !== t8) {
         t10 = {
-          label: /* @__PURE__ */ jsx_runtime384.jsxs(ThemedText, {
+          label: /* @__PURE__ */ jsx_runtime385.jsxs(ThemedText, {
             children: [
               "Yes, and don't ask again for ",
               t8,
@@ -448923,7 +449009,7 @@ function FallbackPermissionRequest(t0) {
   }
   let t12;
   if ($[31] !== originalUserFacingName) {
-    t12 = originalUserFacingName.endsWith(" (MCP)") ? /* @__PURE__ */ jsx_runtime384.jsx(ThemedText, {
+    t12 = originalUserFacingName.endsWith(" (MCP)") ? /* @__PURE__ */ jsx_runtime385.jsx(ThemedText, {
       dimColor: true,
       children: " (MCP)"
     }) : "";
@@ -448934,7 +449020,7 @@ function FallbackPermissionRequest(t0) {
   }
   let t13;
   if ($[33] !== t11 || $[34] !== t12 || $[35] !== userFacingName) {
-    t13 = /* @__PURE__ */ jsx_runtime384.jsxs(ThemedText, {
+    t13 = /* @__PURE__ */ jsx_runtime385.jsxs(ThemedText, {
       children: [
         userFacingName,
         "(",
@@ -448960,7 +449046,7 @@ function FallbackPermissionRequest(t0) {
   }
   let t15;
   if ($[39] !== t14) {
-    t15 = /* @__PURE__ */ jsx_runtime384.jsx(ThemedText, {
+    t15 = /* @__PURE__ */ jsx_runtime385.jsx(ThemedText, {
       dimColor: true,
       children: t14
     });
@@ -448971,7 +449057,7 @@ function FallbackPermissionRequest(t0) {
   }
   let t16;
   if ($[41] !== t13 || $[42] !== t15) {
-    t16 = /* @__PURE__ */ jsx_runtime384.jsxs(ThemedBox_default, {
+    t16 = /* @__PURE__ */ jsx_runtime385.jsxs(ThemedBox_default, {
       flexDirection: "column",
       paddingX: 2,
       paddingY: 1,
@@ -448988,7 +449074,7 @@ function FallbackPermissionRequest(t0) {
   }
   let t17;
   if ($[44] !== toolUseConfirm.permissionResult) {
-    t17 = /* @__PURE__ */ jsx_runtime384.jsx(PermissionRuleExplanation, {
+    t17 = /* @__PURE__ */ jsx_runtime385.jsx(PermissionRuleExplanation, {
       permissionResult: toolUseConfirm.permissionResult,
       toolType: "tool"
     });
@@ -448999,7 +449085,7 @@ function FallbackPermissionRequest(t0) {
   }
   let t18;
   if ($[46] !== handleCancel || $[47] !== handleSelect || $[48] !== options || $[49] !== toolAnalyticsContext) {
-    t18 = /* @__PURE__ */ jsx_runtime384.jsx(PermissionPrompt, {
+    t18 = /* @__PURE__ */ jsx_runtime385.jsx(PermissionPrompt, {
       options,
       onSelect: handleSelect,
       onCancel: handleCancel,
@@ -449015,7 +449101,7 @@ function FallbackPermissionRequest(t0) {
   }
   let t19;
   if ($[51] !== t17 || $[52] !== t18) {
-    t19 = /* @__PURE__ */ jsx_runtime384.jsxs(ThemedBox_default, {
+    t19 = /* @__PURE__ */ jsx_runtime385.jsxs(ThemedBox_default, {
       flexDirection: "column",
       children: [
         t17,
@@ -449030,7 +449116,7 @@ function FallbackPermissionRequest(t0) {
   }
   let t20;
   if ($[54] !== t16 || $[55] !== t19 || $[56] !== workerBadge) {
-    t20 = /* @__PURE__ */ jsx_runtime384.jsxs(PermissionDialog, {
+    t20 = /* @__PURE__ */ jsx_runtime385.jsxs(PermissionDialog, {
       title: "Tool use",
       workerBadge,
       children: [
@@ -449047,7 +449133,7 @@ function FallbackPermissionRequest(t0) {
   }
   return t20;
 }
-var import_compiler_runtime302, jsx_runtime384;
+var import_compiler_runtime302, jsx_runtime385;
 var init_FallbackPermissionRequest = __esm(() => {
   init_state();
   init_ink2();
@@ -449061,7 +449147,7 @@ var init_FallbackPermissionRequest = __esm(() => {
   init_PermissionPrompt();
   init_PermissionRuleExplanation();
   import_compiler_runtime302 = __toESM(require_compiler_runtime(), 1);
-  jsx_runtime384 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime385 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/permissions/FilePermissionDialog/ideDiffConfig.ts
@@ -449169,7 +449255,7 @@ function FileEditPermissionRequest(props) {
   }
   let t11;
   if ($[23] !== T0 || $[24] !== t0 || $[25] !== t1) {
-    t11 = /* @__PURE__ */ jsx_runtime385.jsx(T0, {
+    t11 = /* @__PURE__ */ jsx_runtime386.jsx(T0, {
       bold: t0,
       children: t1
     });
@@ -449182,7 +449268,7 @@ function FileEditPermissionRequest(props) {
   }
   let t12;
   if ($[27] !== T1 || $[28] !== t11 || $[29] !== t2 || $[30] !== t3) {
-    t12 = /* @__PURE__ */ jsx_runtime385.jsxs(T1, {
+    t12 = /* @__PURE__ */ jsx_runtime386.jsxs(T1, {
       children: [
         t2,
         t3,
@@ -449215,7 +449301,7 @@ function FileEditPermissionRequest(props) {
   }
   let t15;
   if ($[36] !== file_path || $[37] !== t14) {
-    t15 = /* @__PURE__ */ jsx_runtime385.jsx(FileEditToolDiff, {
+    t15 = /* @__PURE__ */ jsx_runtime386.jsx(FileEditToolDiff, {
       file_path,
       edits: t14
     });
@@ -449227,7 +449313,7 @@ function FileEditPermissionRequest(props) {
   }
   let t16;
   if ($[39] !== T2 || $[40] !== file_path || $[41] !== t10 || $[42] !== t12 || $[43] !== t15 || $[44] !== t4 || $[45] !== t5 || $[46] !== t6 || $[47] !== t7 || $[48] !== t8 || $[49] !== t9) {
-    t16 = /* @__PURE__ */ jsx_runtime385.jsx(T2, {
+    t16 = /* @__PURE__ */ jsx_runtime386.jsx(T2, {
       toolUseConfirm: t4,
       toolUseContext: t5,
       onDone: t6,
@@ -449262,7 +449348,7 @@ function FileEditPermissionRequest(props) {
 function _temp169(input) {
   return FileEditTool.inputSchema.parse(input);
 }
-var import_compiler_runtime303, jsx_runtime385, ideDiffSupport;
+var import_compiler_runtime303, jsx_runtime386, ideDiffSupport;
 var init_FileEditPermissionRequest = __esm(() => {
   init_FileEditToolDiff();
   init_cwd2();
@@ -449270,7 +449356,7 @@ var init_FileEditPermissionRequest = __esm(() => {
   init_FileEditTool();
   init_FilePermissionDialog();
   import_compiler_runtime303 = __toESM(require_compiler_runtime(), 1);
-  jsx_runtime385 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime386 = __toESM(require_jsx_runtime(), 1);
   ideDiffSupport = {
     getConfig: (input) => createSingleEditDiffConfig(input.file_path, input.old_string, input.new_string, input.replace_all),
     applyChanges: (input, modifiedEdits) => {
@@ -449337,7 +449423,7 @@ function FilesystemPermissionRequest(t0) {
   if (!path) {
     let t3;
     if ($[5] !== onDone || $[6] !== onReject || $[7] !== toolUseConfirm || $[8] !== toolUseContext || $[9] !== verbose || $[10] !== workerBadge) {
-      t3 = /* @__PURE__ */ jsx_runtime386.jsx(FallbackPermissionRequest, {
+      t3 = /* @__PURE__ */ jsx_runtime387.jsx(FallbackPermissionRequest, {
         toolUseConfirm,
         toolUseContext,
         onDone,
@@ -449373,11 +449459,11 @@ function FilesystemPermissionRequest(t0) {
   }
   let t4;
   if ($[17] !== t3 || $[18] !== userFacingName) {
-    t4 = /* @__PURE__ */ jsx_runtime386.jsx(ThemedBox_default, {
+    t4 = /* @__PURE__ */ jsx_runtime387.jsx(ThemedBox_default, {
       flexDirection: "column",
       paddingX: 2,
       paddingY: 1,
-      children: /* @__PURE__ */ jsx_runtime386.jsxs(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime387.jsxs(ThemedText, {
         children: [
           userFacingName,
           "(",
@@ -449396,7 +449482,7 @@ function FilesystemPermissionRequest(t0) {
   const t5 = isReadOnly ? "read" : "write";
   let t6;
   if ($[20] !== content || $[21] !== onDone || $[22] !== onReject || $[23] !== path || $[24] !== t5 || $[25] !== title || $[26] !== toolUseConfirm || $[27] !== toolUseContext || $[28] !== workerBadge) {
-    t6 = /* @__PURE__ */ jsx_runtime386.jsx(FilePermissionDialog, {
+    t6 = /* @__PURE__ */ jsx_runtime387.jsx(FilePermissionDialog, {
       toolUseConfirm,
       toolUseContext,
       onDone,
@@ -449427,13 +449513,13 @@ function FilesystemPermissionRequest(t0) {
 function _temp170(input) {
   return input;
 }
-var import_compiler_runtime304, jsx_runtime386;
+var import_compiler_runtime304, jsx_runtime387;
 var init_FilesystemPermissionRequest = __esm(() => {
   init_ink2();
   init_FallbackPermissionRequest();
   init_FilePermissionDialog();
   import_compiler_runtime304 = __toESM(require_compiler_runtime(), 1);
-  jsx_runtime386 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime387 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/permissions/FileWritePermissionRequest/FileWriteToolDiff.tsx
@@ -449487,14 +449573,14 @@ function FileWriteToolDiff(t0) {
   const firstLine = t2;
   let t3;
   if ($[6] !== columns || $[7] !== content || $[8] !== file_path || $[9] !== firstLine || $[10] !== hunks || $[11] !== oldContent) {
-    t3 = hunks ? intersperse(hunks.map((_) => /* @__PURE__ */ jsx_runtime387.jsx(StructuredDiff, {
+    t3 = hunks ? intersperse(hunks.map((_) => /* @__PURE__ */ jsx_runtime388.jsx(StructuredDiff, {
       patch: _,
       dim: false,
       filePath: file_path,
       firstLine,
       fileContent: oldContent,
       width: columns - 2
-    }, _.newStart)), _temp171) : /* @__PURE__ */ jsx_runtime387.jsx(HighlightedCode, {
+    }, _.newStart)), _temp171) : /* @__PURE__ */ jsx_runtime388.jsx(HighlightedCode, {
       code: content || "(No content)",
       filePath: file_path
     });
@@ -449510,9 +449596,9 @@ function FileWriteToolDiff(t0) {
   }
   let t4;
   if ($[13] !== t3) {
-    t4 = /* @__PURE__ */ jsx_runtime387.jsx(ThemedBox_default, {
+    t4 = /* @__PURE__ */ jsx_runtime388.jsx(ThemedBox_default, {
       flexDirection: "column",
-      children: /* @__PURE__ */ jsx_runtime387.jsx(ThemedBox_default, {
+      children: /* @__PURE__ */ jsx_runtime388.jsx(ThemedBox_default, {
         borderColor: "subtle",
         borderStyle: "dashed",
         flexDirection: "column",
@@ -449530,15 +449616,15 @@ function FileWriteToolDiff(t0) {
   return t4;
 }
 function _temp171(i) {
-  return /* @__PURE__ */ jsx_runtime387.jsx(NoSelect, {
+  return /* @__PURE__ */ jsx_runtime388.jsx(NoSelect, {
     fromLeftEdge: true,
-    children: /* @__PURE__ */ jsx_runtime387.jsx(ThemedText, {
+    children: /* @__PURE__ */ jsx_runtime388.jsx(ThemedText, {
       dimColor: true,
       children: "..."
     })
   }, `ellipsis-${i}`);
 }
-var import_compiler_runtime305, jsx_runtime387;
+var import_compiler_runtime305, jsx_runtime388;
 var init_FileWriteToolDiff = __esm(() => {
   init_useTerminalSize();
   init_ink2();
@@ -449546,7 +449632,7 @@ var init_FileWriteToolDiff = __esm(() => {
   init_HighlightedCode();
   init_StructuredDiff();
   import_compiler_runtime305 = __toESM(require_compiler_runtime(), 1);
-  jsx_runtime387 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime388 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/permissions/FileWritePermissionRequest/FileWritePermissionRequest.tsx
@@ -449625,7 +449711,7 @@ function FileWritePermissionRequest(props) {
   }
   let t10;
   if ($[9] !== t9) {
-    t10 = /* @__PURE__ */ jsx_runtime388.jsx(ThemedText, {
+    t10 = /* @__PURE__ */ jsx_runtime389.jsx(ThemedText, {
       bold: true,
       children: t9
     });
@@ -449636,7 +449722,7 @@ function FileWritePermissionRequest(props) {
   }
   let t11;
   if ($[11] !== actionText || $[12] !== t10) {
-    t11 = /* @__PURE__ */ jsx_runtime388.jsxs(ThemedText, {
+    t11 = /* @__PURE__ */ jsx_runtime389.jsxs(ThemedText, {
       children: [
         "Do you want to ",
         actionText,
@@ -449653,7 +449739,7 @@ function FileWritePermissionRequest(props) {
   }
   let t12;
   if ($[14] !== content || $[15] !== fileExists || $[16] !== file_path || $[17] !== oldContent) {
-    t12 = /* @__PURE__ */ jsx_runtime388.jsx(FileWriteToolDiff, {
+    t12 = /* @__PURE__ */ jsx_runtime389.jsx(FileWriteToolDiff, {
       file_path,
       content,
       fileExists,
@@ -449669,7 +449755,7 @@ function FileWritePermissionRequest(props) {
   }
   let t13;
   if ($[19] !== file_path || $[20] !== props.onDone || $[21] !== props.onReject || $[22] !== props.toolUseConfirm || $[23] !== props.toolUseContext || $[24] !== props.workerBadge || $[25] !== t11 || $[26] !== t12 || $[27] !== t7 || $[28] !== t8) {
-    t13 = /* @__PURE__ */ jsx_runtime388.jsx(FilePermissionDialog, {
+    t13 = /* @__PURE__ */ jsx_runtime389.jsx(FilePermissionDialog, {
       toolUseConfirm: t2,
       toolUseContext: t3,
       onDone: t4,
@@ -449703,7 +449789,7 @@ function FileWritePermissionRequest(props) {
 function _temp173(input) {
   return FileWriteTool.inputSchema.parse(input);
 }
-var import_compiler_runtime306, jsx_runtime388, ideDiffSupport2;
+var import_compiler_runtime306, jsx_runtime389, ideDiffSupport2;
 var init_FileWritePermissionRequest = __esm(() => {
   init_ink2();
   init_FileWriteTool();
@@ -449713,7 +449799,7 @@ var init_FileWritePermissionRequest = __esm(() => {
   init_FilePermissionDialog();
   init_FileWriteToolDiff();
   import_compiler_runtime306 = __toESM(require_compiler_runtime(), 1);
-  jsx_runtime388 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime389 = __toESM(require_jsx_runtime(), 1);
   ideDiffSupport2 = {
     getConfig: (input) => {
       let oldContent;
@@ -449756,9 +449842,9 @@ function NotebookEditToolDiff(props) {
   const notebookDataPromise = t0;
   let t1;
   if ($[2] !== notebookDataPromise || $[3] !== props) {
-    t1 = /* @__PURE__ */ jsx_runtime389.jsx(import_react218.Suspense, {
+    t1 = /* @__PURE__ */ jsx_runtime390.jsx(import_react218.Suspense, {
       fallback: null,
-      children: /* @__PURE__ */ jsx_runtime389.jsx(NotebookEditToolDiffInner, {
+      children: /* @__PURE__ */ jsx_runtime390.jsx(NotebookEditToolDiffInner, {
         ...props,
         promise: notebookDataPromise
       })
@@ -449892,7 +449978,7 @@ function NotebookEditToolDiffInner(t0) {
   }
   let t5;
   if ($[14] !== t4) {
-    t5 = /* @__PURE__ */ jsx_runtime389.jsx(ThemedText, {
+    t5 = /* @__PURE__ */ jsx_runtime390.jsx(ThemedText, {
       bold: true,
       children: t4
     });
@@ -449904,7 +449990,7 @@ function NotebookEditToolDiffInner(t0) {
   const t6 = cell_type ? ` (${cell_type})` : "";
   let t7;
   if ($[16] !== cell_id || $[17] !== editTypeDescription || $[18] !== t6) {
-    t7 = /* @__PURE__ */ jsx_runtime389.jsxs(ThemedText, {
+    t7 = /* @__PURE__ */ jsx_runtime390.jsxs(ThemedText, {
       dimColor: true,
       children: [
         editTypeDescription,
@@ -449922,7 +450008,7 @@ function NotebookEditToolDiffInner(t0) {
   }
   let t8;
   if ($[20] !== t5 || $[21] !== t7) {
-    t8 = /* @__PURE__ */ jsx_runtime389.jsxs(ThemedBox_default, {
+    t8 = /* @__PURE__ */ jsx_runtime390.jsxs(ThemedBox_default, {
       paddingBottom: 1,
       flexDirection: "column",
       children: [
@@ -449938,21 +450024,21 @@ function NotebookEditToolDiffInner(t0) {
   }
   let t9;
   if ($[23] !== cell_type || $[24] !== edit_mode || $[25] !== hunks || $[26] !== new_source || $[27] !== notebook_path || $[28] !== oldSource || $[29] !== width) {
-    t9 = edit_mode === "delete" ? /* @__PURE__ */ jsx_runtime389.jsx(ThemedBox_default, {
+    t9 = edit_mode === "delete" ? /* @__PURE__ */ jsx_runtime390.jsx(ThemedBox_default, {
       flexDirection: "column",
       paddingLeft: 2,
-      children: /* @__PURE__ */ jsx_runtime389.jsx(HighlightedCode, {
+      children: /* @__PURE__ */ jsx_runtime390.jsx(HighlightedCode, {
         code: oldSource,
         filePath: notebook_path
       })
-    }) : edit_mode === "insert" ? /* @__PURE__ */ jsx_runtime389.jsx(ThemedBox_default, {
+    }) : edit_mode === "insert" ? /* @__PURE__ */ jsx_runtime390.jsx(ThemedBox_default, {
       flexDirection: "column",
       paddingLeft: 2,
-      children: /* @__PURE__ */ jsx_runtime389.jsx(HighlightedCode, {
+      children: /* @__PURE__ */ jsx_runtime390.jsx(HighlightedCode, {
         code: new_source,
         filePath: cell_type === "markdown" ? "file.md" : notebook_path
       })
-    }) : hunks ? intersperse(hunks.map((_) => /* @__PURE__ */ jsx_runtime389.jsx(StructuredDiff, {
+    }) : hunks ? intersperse(hunks.map((_) => /* @__PURE__ */ jsx_runtime390.jsx(StructuredDiff, {
       patch: _,
       dim: false,
       width,
@@ -449960,7 +450046,7 @@ function NotebookEditToolDiffInner(t0) {
       firstLine: new_source.split(`
 `)[0] ?? null,
       fileContent: oldSource
-    }, _.newStart)), _temp350) : /* @__PURE__ */ jsx_runtime389.jsx(HighlightedCode, {
+    }, _.newStart)), _temp350) : /* @__PURE__ */ jsx_runtime390.jsx(HighlightedCode, {
       code: new_source,
       filePath: cell_type === "markdown" ? "file.md" : notebook_path
     });
@@ -449977,9 +450063,9 @@ function NotebookEditToolDiffInner(t0) {
   }
   let t10;
   if ($[31] !== t8 || $[32] !== t9) {
-    t10 = /* @__PURE__ */ jsx_runtime389.jsx(ThemedBox_default, {
+    t10 = /* @__PURE__ */ jsx_runtime390.jsx(ThemedBox_default, {
       flexDirection: "column",
-      children: /* @__PURE__ */ jsx_runtime389.jsxs(ThemedBox_default, {
+      children: /* @__PURE__ */ jsx_runtime390.jsxs(ThemedBox_default, {
         borderStyle: "round",
         flexDirection: "column",
         paddingX: 1,
@@ -449998,15 +450084,15 @@ function NotebookEditToolDiffInner(t0) {
   return t10;
 }
 function _temp350(i) {
-  return /* @__PURE__ */ jsx_runtime389.jsx(NoSelect, {
+  return /* @__PURE__ */ jsx_runtime390.jsx(NoSelect, {
     fromLeftEdge: true,
-    children: /* @__PURE__ */ jsx_runtime389.jsx(ThemedText, {
+    children: /* @__PURE__ */ jsx_runtime390.jsx(ThemedText, {
       dimColor: true,
       children: "..."
     })
   }, `ellipsis-${i}`);
 }
-var import_compiler_runtime307, import_react218, jsx_runtime389;
+var import_compiler_runtime307, import_react218, jsx_runtime390;
 var init_NotebookEditToolDiff = __esm(() => {
   init_ink2();
   init_cwd2();
@@ -450018,7 +450104,7 @@ var init_NotebookEditToolDiff = __esm(() => {
   init_StructuredDiff();
   import_compiler_runtime307 = __toESM(require_compiler_runtime(), 1);
   import_react218 = __toESM(require_react(), 1);
-  jsx_runtime389 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime390 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/permissions/NotebookEditPermissionRequest/NotebookEditPermissionRequest.tsx
@@ -450110,7 +450196,7 @@ function NotebookEditPermissionRequest(props) {
   }
   let t11;
   if ($[22] !== T0 || $[23] !== t0 || $[24] !== t1) {
-    t11 = /* @__PURE__ */ jsx_runtime390.jsx(T0, {
+    t11 = /* @__PURE__ */ jsx_runtime391.jsx(T0, {
       bold: t0,
       children: t1
     });
@@ -450123,7 +450209,7 @@ function NotebookEditPermissionRequest(props) {
   }
   let t12;
   if ($[26] !== T1 || $[27] !== t11 || $[28] !== t2 || $[29] !== t3 || $[30] !== t4) {
-    t12 = /* @__PURE__ */ jsx_runtime390.jsxs(T1, {
+    t12 = /* @__PURE__ */ jsx_runtime391.jsxs(T1, {
       children: [
         t2,
         t3,
@@ -450144,7 +450230,7 @@ function NotebookEditPermissionRequest(props) {
   const t13 = props.verbose ? 120 : 80;
   let t14;
   if ($[32] !== parsed.cell_id || $[33] !== parsed.cell_type || $[34] !== parsed.edit_mode || $[35] !== parsed.new_source || $[36] !== parsed.notebook_path || $[37] !== props.verbose || $[38] !== t13) {
-    t14 = /* @__PURE__ */ jsx_runtime390.jsx(NotebookEditToolDiff, {
+    t14 = /* @__PURE__ */ jsx_runtime391.jsx(NotebookEditToolDiff, {
       notebook_path: parsed.notebook_path,
       cell_id: parsed.cell_id,
       new_source: parsed.new_source,
@@ -450166,7 +450252,7 @@ function NotebookEditPermissionRequest(props) {
   }
   let t15;
   if ($[40] !== T2 || $[41] !== language || $[42] !== notebook_path || $[43] !== t10 || $[44] !== t12 || $[45] !== t14 || $[46] !== t5 || $[47] !== t6 || $[48] !== t7 || $[49] !== t8 || $[50] !== t9) {
-    t15 = /* @__PURE__ */ jsx_runtime390.jsx(T2, {
+    t15 = /* @__PURE__ */ jsx_runtime391.jsx(T2, {
       toolUseConfirm: t5,
       toolUseContext: t6,
       onDone: t7,
@@ -450209,7 +450295,7 @@ function _temp175(input) {
   }
   return result.data;
 }
-var import_compiler_runtime308, jsx_runtime390;
+var import_compiler_runtime308, jsx_runtime391;
 var init_NotebookEditPermissionRequest = __esm(() => {
   init_ink2();
   init_NotebookEditTool();
@@ -450217,7 +450303,7 @@ var init_NotebookEditPermissionRequest = __esm(() => {
   init_FilePermissionDialog();
   init_NotebookEditToolDiff();
   import_compiler_runtime308 = __toESM(require_compiler_runtime(), 1);
-  jsx_runtime390 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime391 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/tools/PowerShellTool/destructiveCommandWarning.ts
@@ -450649,16 +450735,16 @@ function PowerShellPermissionRequest(props) {
       }
     }
   }
-  return /* @__PURE__ */ jsx_runtime391.jsxs(PermissionDialog, {
+  return /* @__PURE__ */ jsx_runtime392.jsxs(PermissionDialog, {
     workerBadge,
     title: "PowerShell command",
     children: [
-      /* @__PURE__ */ jsx_runtime391.jsxs(ThemedBox_default, {
+      /* @__PURE__ */ jsx_runtime392.jsxs(ThemedBox_default, {
         flexDirection: "column",
         paddingX: 2,
         paddingY: 1,
         children: [
-          /* @__PURE__ */ jsx_runtime391.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime392.jsx(ThemedText, {
             dimColor: explainerState.visible,
             children: PowerShellTool.renderToolUseMessage({
               command,
@@ -450668,51 +450754,51 @@ function PowerShellPermissionRequest(props) {
               verbose: true
             })
           }),
-          !explainerState.visible && /* @__PURE__ */ jsx_runtime391.jsx(ThemedText, {
+          !explainerState.visible && /* @__PURE__ */ jsx_runtime392.jsx(ThemedText, {
             dimColor: true,
             children: toolUseConfirm.description
           }),
-          /* @__PURE__ */ jsx_runtime391.jsx(PermissionExplainerContent, {
+          /* @__PURE__ */ jsx_runtime392.jsx(PermissionExplainerContent, {
             visible: explainerState.visible,
             promise: explainerState.promise
           })
         ]
       }),
-      showPermissionDebug ? /* @__PURE__ */ jsx_runtime391.jsxs(jsx_runtime391.Fragment, {
+      showPermissionDebug ? /* @__PURE__ */ jsx_runtime392.jsxs(jsx_runtime392.Fragment, {
         children: [
-          /* @__PURE__ */ jsx_runtime391.jsx(PermissionDecisionDebugInfo, {
+          /* @__PURE__ */ jsx_runtime392.jsx(PermissionDecisionDebugInfo, {
             permissionResult: toolUseConfirm.permissionResult,
             toolName: "PowerShell"
           }),
-          toolUseContext.options.debug && /* @__PURE__ */ jsx_runtime391.jsx(ThemedBox_default, {
+          toolUseContext.options.debug && /* @__PURE__ */ jsx_runtime392.jsx(ThemedBox_default, {
             justifyContent: "flex-end",
             marginTop: 1,
-            children: /* @__PURE__ */ jsx_runtime391.jsx(ThemedText, {
+            children: /* @__PURE__ */ jsx_runtime392.jsx(ThemedText, {
               dimColor: true,
               children: "Ctrl-D to hide debug info"
             })
           })
         ]
-      }) : /* @__PURE__ */ jsx_runtime391.jsxs(jsx_runtime391.Fragment, {
+      }) : /* @__PURE__ */ jsx_runtime392.jsxs(jsx_runtime392.Fragment, {
         children: [
-          /* @__PURE__ */ jsx_runtime391.jsxs(ThemedBox_default, {
+          /* @__PURE__ */ jsx_runtime392.jsxs(ThemedBox_default, {
             flexDirection: "column",
             children: [
-              /* @__PURE__ */ jsx_runtime391.jsx(PermissionRuleExplanation, {
+              /* @__PURE__ */ jsx_runtime392.jsx(PermissionRuleExplanation, {
                 permissionResult: toolUseConfirm.permissionResult,
                 toolType: "command"
               }),
-              destructiveWarning && /* @__PURE__ */ jsx_runtime391.jsx(ThemedBox_default, {
+              destructiveWarning && /* @__PURE__ */ jsx_runtime392.jsx(ThemedBox_default, {
                 marginBottom: 1,
-                children: /* @__PURE__ */ jsx_runtime391.jsx(ThemedText, {
+                children: /* @__PURE__ */ jsx_runtime392.jsx(ThemedText, {
                   color: "warning",
                   children: destructiveWarning
                 })
               }),
-              /* @__PURE__ */ jsx_runtime391.jsx(ThemedText, {
+              /* @__PURE__ */ jsx_runtime392.jsx(ThemedText, {
                 children: "Do you want to proceed?"
               }),
-              /* @__PURE__ */ jsx_runtime391.jsx(Select, {
+              /* @__PURE__ */ jsx_runtime392.jsx(Select, {
                 options,
                 inlineDescriptions: true,
                 onChange: onSelect,
@@ -450722,11 +450808,11 @@ function PowerShellPermissionRequest(props) {
               })
             ]
           }),
-          /* @__PURE__ */ jsx_runtime391.jsxs(ThemedBox_default, {
+          /* @__PURE__ */ jsx_runtime392.jsxs(ThemedBox_default, {
             justifyContent: "space-between",
             marginTop: 1,
             children: [
-              /* @__PURE__ */ jsx_runtime391.jsxs(ThemedText, {
+              /* @__PURE__ */ jsx_runtime392.jsxs(ThemedText, {
                 dimColor: true,
                 children: [
                   "Esc to cancel",
@@ -450734,7 +450820,7 @@ function PowerShellPermissionRequest(props) {
                   explainerState.enabled && ` \xB7 ctrl+e to ${explainerState.visible ? "hide" : "explain"}`
                 ]
               }),
-              toolUseContext.options.debug && /* @__PURE__ */ jsx_runtime391.jsx(ThemedText, {
+              toolUseContext.options.debug && /* @__PURE__ */ jsx_runtime392.jsx(ThemedText, {
                 dimColor: true,
                 children: "Ctrl+d to show debug info"
               })
@@ -450745,7 +450831,7 @@ function PowerShellPermissionRequest(props) {
     ]
   });
 }
-var import_react219, jsx_runtime391;
+var import_react219, jsx_runtime392;
 var init_PowerShellPermissionRequest = __esm(() => {
   init_ink2();
   init_useKeybinding();
@@ -450766,7 +450852,7 @@ var init_PowerShellPermissionRequest = __esm(() => {
   init_utils15();
   init_powershellToolUseOptions();
   import_react219 = __toESM(require_react(), 1);
-  jsx_runtime391 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime392 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/permissions/SkillPermissionRequest/SkillPermissionRequest.tsx
@@ -450835,13 +450921,13 @@ function SkillPermissionRequest(props) {
   if ($[6] !== skill) {
     alwaysAllowOptions = [];
     if (showAlwaysAllowOptions) {
-      const t5 = /* @__PURE__ */ jsx_runtime392.jsx(ThemedText, {
+      const t5 = /* @__PURE__ */ jsx_runtime393.jsx(ThemedText, {
         bold: true,
         children: skill
       });
       let t6;
       if ($[8] === Symbol.for("react.memo_cache_sentinel")) {
-        t6 = /* @__PURE__ */ jsx_runtime392.jsx(ThemedText, {
+        t6 = /* @__PURE__ */ jsx_runtime393.jsx(ThemedText, {
           bold: true,
           children: originalCwd
         });
@@ -450852,7 +450938,7 @@ function SkillPermissionRequest(props) {
       let t7;
       if ($[9] !== t5) {
         t7 = {
-          label: /* @__PURE__ */ jsx_runtime392.jsxs(ThemedText, {
+          label: /* @__PURE__ */ jsx_runtime393.jsxs(ThemedText, {
             children: [
               "Yes, and don't ask again for ",
               t5,
@@ -450875,7 +450961,7 @@ function SkillPermissionRequest(props) {
         const t8 = commandPrefix + ":*";
         let t9;
         if ($[11] !== t8) {
-          t9 = /* @__PURE__ */ jsx_runtime392.jsx(ThemedText, {
+          t9 = /* @__PURE__ */ jsx_runtime393.jsx(ThemedText, {
             bold: true,
             children: t8
           });
@@ -450886,7 +450972,7 @@ function SkillPermissionRequest(props) {
         }
         let t10;
         if ($[13] === Symbol.for("react.memo_cache_sentinel")) {
-          t10 = /* @__PURE__ */ jsx_runtime392.jsx(ThemedText, {
+          t10 = /* @__PURE__ */ jsx_runtime393.jsx(ThemedText, {
             bold: true,
             children: originalCwd
           });
@@ -450897,7 +450983,7 @@ function SkillPermissionRequest(props) {
         let t11;
         if ($[14] !== t9) {
           t11 = {
-            label: /* @__PURE__ */ jsx_runtime392.jsxs(ThemedText, {
+            label: /* @__PURE__ */ jsx_runtime393.jsxs(ThemedText, {
               children: [
                 "Yes, and don't ask again for",
                 " ",
@@ -451084,7 +451170,7 @@ function SkillPermissionRequest(props) {
   const t12 = `Use skill "${skill}"?`;
   let t13;
   if ($[33] === Symbol.for("react.memo_cache_sentinel")) {
-    t13 = /* @__PURE__ */ jsx_runtime392.jsx(ThemedText, {
+    t13 = /* @__PURE__ */ jsx_runtime393.jsx(ThemedText, {
       children: "Claude may use instructions, code, or files from this Skill."
     });
     $[33] = t13;
@@ -451094,11 +451180,11 @@ function SkillPermissionRequest(props) {
   const t14 = commandObj?.description;
   let t15;
   if ($[34] !== t14) {
-    t15 = /* @__PURE__ */ jsx_runtime392.jsx(ThemedBox_default, {
+    t15 = /* @__PURE__ */ jsx_runtime393.jsx(ThemedBox_default, {
       flexDirection: "column",
       paddingX: 2,
       paddingY: 1,
-      children: /* @__PURE__ */ jsx_runtime392.jsx(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime393.jsx(ThemedText, {
         dimColor: true,
         children: t14
       })
@@ -451110,7 +451196,7 @@ function SkillPermissionRequest(props) {
   }
   let t16;
   if ($[36] !== toolUseConfirm.permissionResult) {
-    t16 = /* @__PURE__ */ jsx_runtime392.jsx(PermissionRuleExplanation, {
+    t16 = /* @__PURE__ */ jsx_runtime393.jsx(PermissionRuleExplanation, {
       permissionResult: toolUseConfirm.permissionResult,
       toolType: "tool"
     });
@@ -451121,7 +451207,7 @@ function SkillPermissionRequest(props) {
   }
   let t17;
   if ($[38] !== handleCancel || $[39] !== handleSelect || $[40] !== options || $[41] !== toolAnalyticsContext) {
-    t17 = /* @__PURE__ */ jsx_runtime392.jsx(PermissionPrompt, {
+    t17 = /* @__PURE__ */ jsx_runtime393.jsx(PermissionPrompt, {
       options,
       onSelect: handleSelect,
       onCancel: handleCancel,
@@ -451137,7 +451223,7 @@ function SkillPermissionRequest(props) {
   }
   let t18;
   if ($[43] !== t16 || $[44] !== t17) {
-    t18 = /* @__PURE__ */ jsx_runtime392.jsxs(ThemedBox_default, {
+    t18 = /* @__PURE__ */ jsx_runtime393.jsxs(ThemedBox_default, {
       flexDirection: "column",
       children: [
         t16,
@@ -451152,7 +451238,7 @@ function SkillPermissionRequest(props) {
   }
   let t19;
   if ($[46] !== t12 || $[47] !== t15 || $[48] !== t18 || $[49] !== workerBadge) {
-    t19 = /* @__PURE__ */ jsx_runtime392.jsxs(PermissionDialog, {
+    t19 = /* @__PURE__ */ jsx_runtime393.jsxs(PermissionDialog, {
       title: t12,
       workerBadge,
       children: [
@@ -451179,7 +451265,7 @@ function _temp176(input) {
   }
   return result.data.skill;
 }
-var import_compiler_runtime309, jsx_runtime392;
+var import_compiler_runtime309, jsx_runtime393;
 var init_SkillPermissionRequest = __esm(() => {
   init_log3();
   init_state();
@@ -451194,7 +451280,7 @@ var init_SkillPermissionRequest = __esm(() => {
   init_PermissionPrompt();
   init_PermissionRuleExplanation();
   import_compiler_runtime309 = __toESM(require_compiler_runtime(), 1);
-  jsx_runtime392 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime393 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/permissions/WebFetchPermissionRequest/WebFetchPermissionRequest.tsx
@@ -451269,14 +451355,14 @@ function WebFetchPermissionRequest(t0) {
   if ($[5] !== hostname) {
     result = [t4];
     if (showAlwaysAllowOptions) {
-      const t5 = /* @__PURE__ */ jsx_runtime393.jsx(ThemedText, {
+      const t5 = /* @__PURE__ */ jsx_runtime394.jsx(ThemedText, {
         bold: true,
         children: hostname
       });
       let t6;
       if ($[7] !== t5) {
         t6 = {
-          label: /* @__PURE__ */ jsx_runtime393.jsxs(ThemedText, {
+          label: /* @__PURE__ */ jsx_runtime394.jsxs(ThemedText, {
             children: [
               "Yes, and don't ask again for ",
               t5
@@ -451294,10 +451380,10 @@ function WebFetchPermissionRequest(t0) {
     let t5;
     if ($[9] === Symbol.for("react.memo_cache_sentinel")) {
       t5 = {
-        label: /* @__PURE__ */ jsx_runtime393.jsxs(ThemedText, {
+        label: /* @__PURE__ */ jsx_runtime394.jsxs(ThemedText, {
           children: [
             "No, and tell Claude what to do differently ",
-            /* @__PURE__ */ jsx_runtime393.jsx(ThemedText, {
+            /* @__PURE__ */ jsx_runtime394.jsx(ThemedText, {
               bold: true,
               children: "(esc)"
             })
@@ -451374,7 +451460,7 @@ function WebFetchPermissionRequest(t0) {
   }
   let t7;
   if ($[18] !== t6) {
-    t7 = /* @__PURE__ */ jsx_runtime393.jsx(ThemedText, {
+    t7 = /* @__PURE__ */ jsx_runtime394.jsx(ThemedText, {
       children: t6
     });
     $[18] = t6;
@@ -451384,7 +451470,7 @@ function WebFetchPermissionRequest(t0) {
   }
   let t8;
   if ($[20] !== toolUseConfirm.description) {
-    t8 = /* @__PURE__ */ jsx_runtime393.jsx(ThemedText, {
+    t8 = /* @__PURE__ */ jsx_runtime394.jsx(ThemedText, {
       dimColor: true,
       children: toolUseConfirm.description
     });
@@ -451395,7 +451481,7 @@ function WebFetchPermissionRequest(t0) {
   }
   let t9;
   if ($[22] !== t7 || $[23] !== t8) {
-    t9 = /* @__PURE__ */ jsx_runtime393.jsxs(ThemedBox_default, {
+    t9 = /* @__PURE__ */ jsx_runtime394.jsxs(ThemedBox_default, {
       flexDirection: "column",
       paddingX: 2,
       paddingY: 1,
@@ -451412,7 +451498,7 @@ function WebFetchPermissionRequest(t0) {
   }
   let t10;
   if ($[25] !== toolUseConfirm.permissionResult) {
-    t10 = /* @__PURE__ */ jsx_runtime393.jsx(PermissionRuleExplanation, {
+    t10 = /* @__PURE__ */ jsx_runtime394.jsx(PermissionRuleExplanation, {
       permissionResult: toolUseConfirm.permissionResult,
       toolType: "tool"
     });
@@ -451423,7 +451509,7 @@ function WebFetchPermissionRequest(t0) {
   }
   let t11;
   if ($[27] === Symbol.for("react.memo_cache_sentinel")) {
-    t11 = /* @__PURE__ */ jsx_runtime393.jsx(ThemedText, {
+    t11 = /* @__PURE__ */ jsx_runtime394.jsx(ThemedText, {
       children: "Do you want to allow Claude to fetch this content?"
     });
     $[27] = t11;
@@ -451440,7 +451526,7 @@ function WebFetchPermissionRequest(t0) {
   }
   let t13;
   if ($[30] !== onChange || $[31] !== options || $[32] !== t12) {
-    t13 = /* @__PURE__ */ jsx_runtime393.jsx(Select, {
+    t13 = /* @__PURE__ */ jsx_runtime394.jsx(Select, {
       options,
       onChange,
       onCancel: t12
@@ -451454,7 +451540,7 @@ function WebFetchPermissionRequest(t0) {
   }
   let t14;
   if ($[34] !== t10 || $[35] !== t13) {
-    t14 = /* @__PURE__ */ jsx_runtime393.jsxs(ThemedBox_default, {
+    t14 = /* @__PURE__ */ jsx_runtime394.jsxs(ThemedBox_default, {
       flexDirection: "column",
       children: [
         t10,
@@ -451470,7 +451556,7 @@ function WebFetchPermissionRequest(t0) {
   }
   let t15;
   if ($[37] !== t14 || $[38] !== t9 || $[39] !== workerBadge) {
-    t15 = /* @__PURE__ */ jsx_runtime393.jsxs(PermissionDialog, {
+    t15 = /* @__PURE__ */ jsx_runtime394.jsxs(PermissionDialog, {
       title: "Fetch",
       workerBadge,
       children: [
@@ -451487,7 +451573,7 @@ function WebFetchPermissionRequest(t0) {
   }
   return t15;
 }
-var import_compiler_runtime310, jsx_runtime393;
+var import_compiler_runtime310, jsx_runtime394;
 var init_WebFetchPermissionRequest = __esm(() => {
   init_ink2();
   init_WebFetchTool();
@@ -451498,7 +451584,7 @@ var init_WebFetchPermissionRequest = __esm(() => {
   init_PermissionRuleExplanation();
   init_utils15();
   import_compiler_runtime310 = __toESM(require_compiler_runtime(), 1);
-  jsx_runtime393 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime394 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/permissions/PermissionRequest.tsx
@@ -451608,7 +451694,7 @@ function PermissionRequest(t0) {
   const PermissionComponent = t4;
   let t5;
   if ($[9] !== PermissionComponent || $[10] !== onDone || $[11] !== onReject || $[12] !== setStickyFooter || $[13] !== toolUseConfirm || $[14] !== toolUseContext || $[15] !== verbose || $[16] !== workerBadge) {
-    t5 = /* @__PURE__ */ jsx_runtime394.jsx(PermissionComponent, {
+    t5 = /* @__PURE__ */ jsx_runtime395.jsx(PermissionComponent, {
       toolUseContext,
       toolUseConfirm,
       onDone,
@@ -451631,7 +451717,7 @@ function PermissionRequest(t0) {
   }
   return t5;
 }
-var import_compiler_runtime311, jsx_runtime394, ReviewArtifactTool = null, ReviewArtifactPermissionRequest = null, WorkflowTool2 = null, WorkflowPermissionRequest = null, MonitorTool2 = null, MonitorPermissionRequest = null;
+var import_compiler_runtime311, jsx_runtime395, ReviewArtifactTool = null, ReviewArtifactPermissionRequest = null, WorkflowTool2 = null, WorkflowPermissionRequest = null, MonitorTool2 = null, MonitorPermissionRequest = null;
 var init_PermissionRequest = __esm(() => {
   init_EnterPlanModeTool();
   init_ExitPlanModeV2Tool();
@@ -451661,7 +451747,7 @@ var init_PermissionRequest = __esm(() => {
   init_SkillPermissionRequest();
   init_WebFetchPermissionRequest();
   import_compiler_runtime311 = __toESM(require_compiler_runtime(), 1);
-  jsx_runtime394 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime395 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/utils/mcp/dateTimeParser.ts
@@ -451930,7 +452016,7 @@ function ResolvingSpinner() {
   const t2 = RESOLVING_SPINNER_CHARS[frame];
   let t3;
   if ($[2] !== t2) {
-    t3 = /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+    t3 = /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
       color: "warning",
       children: t2
     });
@@ -451983,7 +452069,7 @@ function ElicitationDialog(t0) {
   if (event.params.mode === "url") {
     let t1;
     if ($[0] !== event || $[1] !== onResponse || $[2] !== onWaitingDismiss) {
-      t1 = /* @__PURE__ */ jsx_runtime395.jsx(ElicitationURLDialog, {
+      t1 = /* @__PURE__ */ jsx_runtime396.jsx(ElicitationURLDialog, {
         event,
         onResponse,
         onWaitingDismiss
@@ -451999,7 +452085,7 @@ function ElicitationDialog(t0) {
   }
   let t1;
   if ($[4] !== event || $[5] !== onResponse) {
-    t1 = /* @__PURE__ */ jsx_runtime395.jsx(ElicitationFormDialog, {
+    t1 = /* @__PURE__ */ jsx_runtime396.jsx(ElicitationFormDialog, {
       event,
       onResponse
     });
@@ -452571,12 +452657,12 @@ function ElicitationFormDialog({
   function renderFormFields() {
     if (!schemaFields.length)
       return null;
-    return /* @__PURE__ */ jsx_runtime395.jsxs(ThemedBox_default, {
+    return /* @__PURE__ */ jsx_runtime396.jsxs(ThemedBox_default, {
       flexDirection: "column",
       children: [
-        hasFieldsAbove && /* @__PURE__ */ jsx_runtime395.jsx(ThemedBox_default, {
+        hasFieldsAbove && /* @__PURE__ */ jsx_runtime396.jsx(ThemedBox_default, {
           marginLeft: 2,
-          children: /* @__PURE__ */ jsx_runtime395.jsxs(ThemedText, {
+          children: /* @__PURE__ */ jsx_runtime396.jsxs(ThemedText, {
             dimColor: true,
             children: [
               figures_default.arrowUp,
@@ -452598,22 +452684,22 @@ function ElicitationFormDialog({
           const hasValue = value_3 !== undefined && (!Array.isArray(value_3) || value_3.length > 0);
           const error_0 = validationErrors[name_1];
           const isResolving = resolvingFields.has(name_1);
-          const checkbox = isResolving ? /* @__PURE__ */ jsx_runtime395.jsx(ResolvingSpinner, {}) : error_0 ? /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+          const checkbox = isResolving ? /* @__PURE__ */ jsx_runtime396.jsx(ResolvingSpinner, {}) : error_0 ? /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
             color: "error",
             children: figures_default.warning
-          }) : hasValue ? /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+          }) : hasValue ? /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
             color: "success",
             dimColor: !isActive,
             children: figures_default.tick
-          }) : isRequired ? /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+          }) : isRequired ? /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
             color: "error",
             children: "*"
-          }) : /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+          }) : /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
             children: " "
           });
           const selectionColor = error_0 ? "error" : hasValue ? "success" : isRequired ? "error" : "suggestion";
           const activeColor = isActive ? selectionColor : undefined;
-          const label = /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+          const label = /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
             color: activeColor,
             bold: isActive,
             children: schema_6.title || name_1
@@ -452625,29 +452711,29 @@ function ElicitationFormDialog({
             const selected_1 = value_3 ?? [];
             const isExpanded = expandedAccordion === name_1 && isActive;
             if (isExpanded) {
-              valueContent = /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+              valueContent = /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
                 dimColor: true,
                 children: figures_default.triangleDownSmall
               });
-              accordionContent = /* @__PURE__ */ jsx_runtime395.jsx(ThemedBox_default, {
+              accordionContent = /* @__PURE__ */ jsx_runtime396.jsx(ThemedBox_default, {
                 flexDirection: "column",
                 marginLeft: 6,
                 children: msValues_0.map((optVal, optIdx) => {
                   const optLabel = getMultiSelectLabel(schema_6, optVal);
                   const isChecked = selected_1.includes(optVal);
                   const isFocused = optIdx === accordionOptionIndex;
-                  return /* @__PURE__ */ jsx_runtime395.jsxs(ThemedBox_default, {
+                  return /* @__PURE__ */ jsx_runtime396.jsxs(ThemedBox_default, {
                     gap: 1,
                     children: [
-                      /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+                      /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
                         color: "suggestion",
                         children: isFocused ? figures_default.pointer : " "
                       }),
-                      /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+                      /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
                         color: isChecked ? "success" : undefined,
                         children: isChecked ? figures_default.checkboxOn : figures_default.checkboxOff
                       }),
-                      /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+                      /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
                         color: isFocused ? "suggestion" : undefined,
                         bold: isFocused,
                         children: optLabel
@@ -452657,7 +452743,7 @@ function ElicitationFormDialog({
                 })
               });
             } else {
-              const arrow = isActive ? /* @__PURE__ */ jsx_runtime395.jsxs(ThemedText, {
+              const arrow = isActive ? /* @__PURE__ */ jsx_runtime396.jsxs(ThemedText, {
                 dimColor: true,
                 children: [
                   figures_default.triangleRightSmall,
@@ -452666,10 +452752,10 @@ function ElicitationFormDialog({
               }) : null;
               if (selected_1.length > 0) {
                 const displayLabels = selected_1.map((v_4) => getMultiSelectLabel(schema_6, v_4));
-                valueContent = /* @__PURE__ */ jsx_runtime395.jsxs(ThemedText, {
+                valueContent = /* @__PURE__ */ jsx_runtime396.jsxs(ThemedText, {
                   children: [
                     arrow,
-                    /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+                    /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
                       color: activeColor,
                       bold: isActive,
                       children: displayLabels.join(", ")
@@ -452677,10 +452763,10 @@ function ElicitationFormDialog({
                   ]
                 });
               } else {
-                valueContent = /* @__PURE__ */ jsx_runtime395.jsxs(ThemedText, {
+                valueContent = /* @__PURE__ */ jsx_runtime396.jsxs(ThemedText, {
                   children: [
                     arrow,
-                    /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+                    /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
                       dimColor: true,
                       italic: true,
                       children: "not set"
@@ -452693,29 +452779,29 @@ function ElicitationFormDialog({
             const enumValues_0 = getEnumValues2(schema_6);
             const isExpanded_0 = expandedAccordion === name_1 && isActive;
             if (isExpanded_0) {
-              valueContent = /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+              valueContent = /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
                 dimColor: true,
                 children: figures_default.triangleDownSmall
               });
-              accordionContent = /* @__PURE__ */ jsx_runtime395.jsx(ThemedBox_default, {
+              accordionContent = /* @__PURE__ */ jsx_runtime396.jsx(ThemedBox_default, {
                 flexDirection: "column",
                 marginLeft: 6,
                 children: enumValues_0.map((optVal_0, optIdx_0) => {
                   const optLabel_0 = getEnumLabel(schema_6, optVal_0);
                   const isSelected = value_3 === optVal_0;
                   const isFocused_0 = optIdx_0 === accordionOptionIndex;
-                  return /* @__PURE__ */ jsx_runtime395.jsxs(ThemedBox_default, {
+                  return /* @__PURE__ */ jsx_runtime396.jsxs(ThemedBox_default, {
                     gap: 1,
                     children: [
-                      /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+                      /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
                         color: "suggestion",
                         children: isFocused_0 ? figures_default.pointer : " "
                       }),
-                      /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+                      /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
                         color: isSelected ? "success" : undefined,
                         children: isSelected ? figures_default.radioOn : figures_default.radioOff
                       }),
-                      /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+                      /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
                         color: isFocused_0 ? "suggestion" : undefined,
                         bold: isFocused_0,
                         children: optLabel_0
@@ -452725,7 +452811,7 @@ function ElicitationFormDialog({
                 })
               });
             } else {
-              const arrow_0 = isActive ? /* @__PURE__ */ jsx_runtime395.jsxs(ThemedText, {
+              const arrow_0 = isActive ? /* @__PURE__ */ jsx_runtime396.jsxs(ThemedText, {
                 dimColor: true,
                 children: [
                   figures_default.triangleRightSmall,
@@ -452733,10 +452819,10 @@ function ElicitationFormDialog({
                 ]
               }) : null;
               if (hasValue) {
-                valueContent = /* @__PURE__ */ jsx_runtime395.jsxs(ThemedText, {
+                valueContent = /* @__PURE__ */ jsx_runtime396.jsxs(ThemedText, {
                   children: [
                     arrow_0,
-                    /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+                    /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
                       color: activeColor,
                       bold: isActive,
                       children: getEnumLabel(schema_6, value_3)
@@ -452744,10 +452830,10 @@ function ElicitationFormDialog({
                   ]
                 });
               } else {
-                valueContent = /* @__PURE__ */ jsx_runtime395.jsxs(ThemedText, {
+                valueContent = /* @__PURE__ */ jsx_runtime396.jsxs(ThemedText, {
                   children: [
                     arrow_0,
-                    /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+                    /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
                       dimColor: true,
                       italic: true,
                       children: "not set"
@@ -452758,18 +452844,18 @@ function ElicitationFormDialog({
             }
           } else if (schema_6.type === "boolean") {
             if (isActive) {
-              valueContent = hasValue ? /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+              valueContent = hasValue ? /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
                 color: activeColor,
                 bold: true,
                 children: value_3 ? figures_default.checkboxOn : figures_default.checkboxOff
-              }) : /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+              }) : /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
                 dimColor: true,
                 children: figures_default.checkboxOff
               });
             } else {
-              valueContent = hasValue ? /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+              valueContent = hasValue ? /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
                 children: value_3 ? figures_default.checkboxOn : figures_default.checkboxOff
-              }) : /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+              }) : /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
                 dimColor: true,
                 italic: true,
                 children: "not set"
@@ -452777,7 +452863,7 @@ function ElicitationFormDialog({
             }
           } else if (isTextField(schema_6)) {
             if (isActive) {
-              valueContent = /* @__PURE__ */ jsx_runtime395.jsx(TextInput, {
+              valueContent = /* @__PURE__ */ jsx_runtime396.jsx(TextInput, {
                 value: textInputValue,
                 onChange: handleTextInputChange,
                 onSubmit: handleTextInputSubmit,
@@ -452790,38 +452876,38 @@ function ElicitationFormDialog({
               });
             } else {
               const displayValue = hasValue && isDateTimeSchema(schema_6) ? formatDateDisplay(String(value_3), schema_6) : String(value_3);
-              valueContent = hasValue ? /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+              valueContent = hasValue ? /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
                 children: displayValue
-              }) : /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+              }) : /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
                 dimColor: true,
                 italic: true,
                 children: "not set"
               });
             }
           } else {
-            valueContent = hasValue ? /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+            valueContent = hasValue ? /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
               children: String(value_3)
-            }) : /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+            }) : /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
               dimColor: true,
               italic: true,
               children: "not set"
             });
           }
-          return /* @__PURE__ */ jsx_runtime395.jsxs(ThemedBox_default, {
+          return /* @__PURE__ */ jsx_runtime396.jsxs(ThemedBox_default, {
             flexDirection: "column",
             children: [
-              /* @__PURE__ */ jsx_runtime395.jsxs(ThemedBox_default, {
+              /* @__PURE__ */ jsx_runtime396.jsxs(ThemedBox_default, {
                 gap: 1,
                 children: [
-                  /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+                  /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
                     color: selectionColor,
                     children: isActive ? figures_default.pointer : " "
                   }),
                   checkbox,
-                  /* @__PURE__ */ jsx_runtime395.jsxs(ThemedBox_default, {
+                  /* @__PURE__ */ jsx_runtime396.jsxs(ThemedBox_default, {
                     children: [
                       label,
-                      /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+                      /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
                         color: activeColor,
                         children: ": "
                       }),
@@ -452831,30 +452917,30 @@ function ElicitationFormDialog({
                 ]
               }),
               accordionContent,
-              schema_6.description && /* @__PURE__ */ jsx_runtime395.jsx(ThemedBox_default, {
+              schema_6.description && /* @__PURE__ */ jsx_runtime396.jsx(ThemedBox_default, {
                 marginLeft: 6,
-                children: /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+                children: /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
                   dimColor: true,
                   children: schema_6.description
                 })
               }),
-              /* @__PURE__ */ jsx_runtime395.jsx(ThemedBox_default, {
+              /* @__PURE__ */ jsx_runtime396.jsx(ThemedBox_default, {
                 marginLeft: 6,
                 height: 1,
-                children: error_0 ? /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+                children: error_0 ? /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
                   color: "error",
                   italic: true,
                   children: error_0
-                }) : /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+                }) : /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
                   children: " "
                 })
               })
             ]
           }, name_1);
         }),
-        hasFieldsBelow && /* @__PURE__ */ jsx_runtime395.jsx(ThemedBox_default, {
+        hasFieldsBelow && /* @__PURE__ */ jsx_runtime396.jsx(ThemedBox_default, {
           marginLeft: 2,
-          children: /* @__PURE__ */ jsx_runtime395.jsxs(ThemedText, {
+          children: /* @__PURE__ */ jsx_runtime396.jsxs(ThemedText, {
             dimColor: true,
             children: [
               figures_default.arrowDown,
@@ -452867,76 +452953,76 @@ function ElicitationFormDialog({
       ]
     });
   }
-  return /* @__PURE__ */ jsx_runtime395.jsx(Dialog, {
+  return /* @__PURE__ */ jsx_runtime396.jsx(Dialog, {
     title: `MCP server \u201C${serverName}\u201D requests your input`,
     subtitle: `
 ${message}`,
     color: "permission",
     onCancel: () => onResponse("cancel"),
     isCancelActive: (!currentField || !!focusedButton) && !expandedAccordion,
-    inputGuide: (exitState) => exitState.pending ? /* @__PURE__ */ jsx_runtime395.jsxs(ThemedText, {
+    inputGuide: (exitState) => exitState.pending ? /* @__PURE__ */ jsx_runtime396.jsxs(ThemedText, {
       children: [
         "Press ",
         exitState.keyName,
         " again to exit"
       ]
-    }) : /* @__PURE__ */ jsx_runtime395.jsxs(Byline, {
+    }) : /* @__PURE__ */ jsx_runtime396.jsxs(Byline, {
       children: [
-        /* @__PURE__ */ jsx_runtime395.jsx(ConfigurableShortcutHint, {
+        /* @__PURE__ */ jsx_runtime396.jsx(ConfigurableShortcutHint, {
           action: "confirm:no",
           context: "Confirmation",
           fallback: "Esc",
           description: "cancel"
         }),
-        /* @__PURE__ */ jsx_runtime395.jsx(KeyboardShortcutHint, {
+        /* @__PURE__ */ jsx_runtime396.jsx(KeyboardShortcutHint, {
           shortcut: "\u2191\u2193",
           action: "navigate"
         }),
-        currentField && /* @__PURE__ */ jsx_runtime395.jsx(KeyboardShortcutHint, {
+        currentField && /* @__PURE__ */ jsx_runtime396.jsx(KeyboardShortcutHint, {
           shortcut: "Backspace",
           action: "unset"
         }),
-        currentField && currentField.schema.type === "boolean" && /* @__PURE__ */ jsx_runtime395.jsx(KeyboardShortcutHint, {
+        currentField && currentField.schema.type === "boolean" && /* @__PURE__ */ jsx_runtime396.jsx(KeyboardShortcutHint, {
           shortcut: "Space",
           action: "toggle"
         }),
-        currentField && isEnumSchema(currentField.schema) && (expandedAccordion ? /* @__PURE__ */ jsx_runtime395.jsx(KeyboardShortcutHint, {
+        currentField && isEnumSchema(currentField.schema) && (expandedAccordion ? /* @__PURE__ */ jsx_runtime396.jsx(KeyboardShortcutHint, {
           shortcut: "Space",
           action: "select"
-        }) : /* @__PURE__ */ jsx_runtime395.jsx(KeyboardShortcutHint, {
+        }) : /* @__PURE__ */ jsx_runtime396.jsx(KeyboardShortcutHint, {
           shortcut: "\u2192",
           action: "expand"
         })),
-        currentField && isMultiSelectEnumSchema(currentField.schema) && (expandedAccordion ? /* @__PURE__ */ jsx_runtime395.jsx(KeyboardShortcutHint, {
+        currentField && isMultiSelectEnumSchema(currentField.schema) && (expandedAccordion ? /* @__PURE__ */ jsx_runtime396.jsx(KeyboardShortcutHint, {
           shortcut: "Space",
           action: "toggle"
-        }) : /* @__PURE__ */ jsx_runtime395.jsx(KeyboardShortcutHint, {
+        }) : /* @__PURE__ */ jsx_runtime396.jsx(KeyboardShortcutHint, {
           shortcut: "\u2192",
           action: "expand"
         }))
       ]
     }),
-    children: /* @__PURE__ */ jsx_runtime395.jsxs(ThemedBox_default, {
+    children: /* @__PURE__ */ jsx_runtime396.jsxs(ThemedBox_default, {
       flexDirection: "column",
       children: [
         renderFormFields(),
-        /* @__PURE__ */ jsx_runtime395.jsxs(ThemedBox_default, {
+        /* @__PURE__ */ jsx_runtime396.jsxs(ThemedBox_default, {
           children: [
-            /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+            /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
               color: "success",
               children: focusedButton === "accept" ? figures_default.pointer : " "
             }),
-            /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+            /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
               bold: focusedButton === "accept",
               color: focusedButton === "accept" ? "success" : undefined,
               dimColor: focusedButton !== "accept",
               children: " Accept  "
             }),
-            /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+            /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
               color: "error",
               children: focusedButton === "decline" ? figures_default.pointer : " "
             }),
-            /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+            /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
               bold: focusedButton === "decline",
               color: focusedButton === "decline" ? "error" : undefined,
               dimColor: focusedButton !== "decline",
@@ -453047,43 +453133,43 @@ function ElicitationURLDialog({
   });
   if (phase === "waiting") {
     const actionLabel = waitingState?.actionLabel ?? "Continue without waiting";
-    return /* @__PURE__ */ jsx_runtime395.jsx(Dialog, {
+    return /* @__PURE__ */ jsx_runtime396.jsx(Dialog, {
       title: `MCP server \u201C${serverName}\u201D \u2014 waiting for completion`,
       subtitle: `
 ${message}`,
       color: "permission",
       onCancel: () => onWaitingDismiss?.("cancel"),
       isCancelActive: true,
-      inputGuide: (exitState) => exitState.pending ? /* @__PURE__ */ jsx_runtime395.jsxs(ThemedText, {
+      inputGuide: (exitState) => exitState.pending ? /* @__PURE__ */ jsx_runtime396.jsxs(ThemedText, {
         children: [
           "Press ",
           exitState.keyName,
           " again to exit"
         ]
-      }) : /* @__PURE__ */ jsx_runtime395.jsxs(Byline, {
+      }) : /* @__PURE__ */ jsx_runtime396.jsxs(Byline, {
         children: [
-          /* @__PURE__ */ jsx_runtime395.jsx(ConfigurableShortcutHint, {
+          /* @__PURE__ */ jsx_runtime396.jsx(ConfigurableShortcutHint, {
             action: "confirm:no",
             context: "Confirmation",
             fallback: "Esc",
             description: "cancel"
           }),
-          /* @__PURE__ */ jsx_runtime395.jsx(KeyboardShortcutHint, {
+          /* @__PURE__ */ jsx_runtime396.jsx(KeyboardShortcutHint, {
             shortcut: "\\u2190\\u2192",
             action: "switch"
           })
         ]
       }),
-      children: /* @__PURE__ */ jsx_runtime395.jsxs(ThemedBox_default, {
+      children: /* @__PURE__ */ jsx_runtime396.jsxs(ThemedBox_default, {
         flexDirection: "column",
         children: [
-          /* @__PURE__ */ jsx_runtime395.jsx(ThemedBox_default, {
+          /* @__PURE__ */ jsx_runtime396.jsx(ThemedBox_default, {
             marginBottom: 1,
             flexDirection: "column",
-            children: /* @__PURE__ */ jsx_runtime395.jsxs(ThemedText, {
+            children: /* @__PURE__ */ jsx_runtime396.jsxs(ThemedText, {
               children: [
                 urlBeforeDomain,
-                /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+                /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
                   bold: true,
                   children: domain
                 }),
@@ -453091,46 +453177,46 @@ ${message}`,
               ]
             })
           }),
-          /* @__PURE__ */ jsx_runtime395.jsx(ThemedBox_default, {
+          /* @__PURE__ */ jsx_runtime396.jsx(ThemedBox_default, {
             marginBottom: 1,
-            children: /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+            children: /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
               dimColor: true,
               italic: true,
               children: "Waiting for the server to confirm completion\u2026"
             })
           }),
-          /* @__PURE__ */ jsx_runtime395.jsxs(ThemedBox_default, {
+          /* @__PURE__ */ jsx_runtime396.jsxs(ThemedBox_default, {
             children: [
-              /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+              /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
                 color: "success",
                 children: focusedButton === "open" ? figures_default.pointer : " "
               }),
-              /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+              /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
                 bold: focusedButton === "open",
                 color: focusedButton === "open" ? "success" : undefined,
                 dimColor: focusedButton !== "open",
                 children: " Reopen URL  "
               }),
-              /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+              /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
                 color: "success",
                 children: focusedButton === "action" ? figures_default.pointer : " "
               }),
-              /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+              /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
                 bold: focusedButton === "action",
                 color: focusedButton === "action" ? "success" : undefined,
                 dimColor: focusedButton !== "action",
                 children: ` ${actionLabel}`
               }),
-              showCancel && /* @__PURE__ */ jsx_runtime395.jsxs(jsx_runtime395.Fragment, {
+              showCancel && /* @__PURE__ */ jsx_runtime396.jsxs(jsx_runtime396.Fragment, {
                 children: [
-                  /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+                  /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
                     children: " "
                   }),
-                  /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+                  /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
                     color: "error",
                     children: focusedButton === "cancel" ? figures_default.pointer : " "
                   }),
-                  /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+                  /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
                     bold: focusedButton === "cancel",
                     color: focusedButton === "cancel" ? "error" : undefined,
                     dimColor: focusedButton !== "cancel",
@@ -453144,43 +453230,43 @@ ${message}`,
       })
     });
   }
-  return /* @__PURE__ */ jsx_runtime395.jsx(Dialog, {
+  return /* @__PURE__ */ jsx_runtime396.jsx(Dialog, {
     title: `MCP server \u201C${serverName}\u201D wants to open a URL`,
     subtitle: `
 ${message}`,
     color: "permission",
     onCancel: () => onResponse("cancel"),
     isCancelActive: true,
-    inputGuide: (exitState_0) => exitState_0.pending ? /* @__PURE__ */ jsx_runtime395.jsxs(ThemedText, {
+    inputGuide: (exitState_0) => exitState_0.pending ? /* @__PURE__ */ jsx_runtime396.jsxs(ThemedText, {
       children: [
         "Press ",
         exitState_0.keyName,
         " again to exit"
       ]
-    }) : /* @__PURE__ */ jsx_runtime395.jsxs(Byline, {
+    }) : /* @__PURE__ */ jsx_runtime396.jsxs(Byline, {
       children: [
-        /* @__PURE__ */ jsx_runtime395.jsx(ConfigurableShortcutHint, {
+        /* @__PURE__ */ jsx_runtime396.jsx(ConfigurableShortcutHint, {
           action: "confirm:no",
           context: "Confirmation",
           fallback: "Esc",
           description: "cancel"
         }),
-        /* @__PURE__ */ jsx_runtime395.jsx(KeyboardShortcutHint, {
+        /* @__PURE__ */ jsx_runtime396.jsx(KeyboardShortcutHint, {
           shortcut: "\\u2190\\u2192",
           action: "switch"
         })
       ]
     }),
-    children: /* @__PURE__ */ jsx_runtime395.jsxs(ThemedBox_default, {
+    children: /* @__PURE__ */ jsx_runtime396.jsxs(ThemedBox_default, {
       flexDirection: "column",
       children: [
-        /* @__PURE__ */ jsx_runtime395.jsx(ThemedBox_default, {
+        /* @__PURE__ */ jsx_runtime396.jsx(ThemedBox_default, {
           marginBottom: 1,
           flexDirection: "column",
-          children: /* @__PURE__ */ jsx_runtime395.jsxs(ThemedText, {
+          children: /* @__PURE__ */ jsx_runtime396.jsxs(ThemedText, {
             children: [
               urlBeforeDomain,
-              /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+              /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
                 bold: true,
                 children: domain
               }),
@@ -453188,23 +453274,23 @@ ${message}`,
             ]
           })
         }),
-        /* @__PURE__ */ jsx_runtime395.jsxs(ThemedBox_default, {
+        /* @__PURE__ */ jsx_runtime396.jsxs(ThemedBox_default, {
           children: [
-            /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+            /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
               color: "success",
               children: focusedButton === "accept" ? figures_default.pointer : " "
             }),
-            /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+            /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
               bold: focusedButton === "accept",
               color: focusedButton === "accept" ? "success" : undefined,
               dimColor: focusedButton !== "accept",
               children: " Accept  "
             }),
-            /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+            /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
               color: "error",
               children: focusedButton === "decline" ? figures_default.pointer : " "
             }),
-            /* @__PURE__ */ jsx_runtime395.jsx(ThemedText, {
+            /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
               bold: focusedButton === "decline",
               color: focusedButton === "decline" ? "error" : undefined,
               dimColor: focusedButton !== "decline",
@@ -453216,7 +453302,7 @@ ${message}`,
     })
   });
 }
-var import_compiler_runtime312, import_react220, jsx_runtime395, isTextField = (s) => ["string", "number", "integer"].includes(s.type), RESOLVING_SPINNER_CHARS = "\u280B\u2819\u2839\u2838\u283C\u2834\u2826\u2827\u2807\u280F", advanceSpinnerFrame = (f) => (f + 1) % RESOLVING_SPINNER_CHARS.length;
+var import_compiler_runtime312, import_react220, jsx_runtime396, isTextField = (s) => ["string", "number", "integer"].includes(s.type), RESOLVING_SPINNER_CHARS = "\u280B\u2819\u2839\u2838\u283C\u2834\u2826\u2827\u2807\u280F", advanceSpinnerFrame = (f) => (f + 1) % RESOLVING_SPINNER_CHARS.length;
 var init_ElicitationDialog = __esm(() => {
   init_figures();
   init_overlayContext();
@@ -453234,7 +453320,7 @@ var init_ElicitationDialog = __esm(() => {
   init_TextInput();
   import_compiler_runtime312 = __toESM(require_compiler_runtime(), 1);
   import_react220 = __toESM(require_react(), 1);
-  jsx_runtime395 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime396 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/hooks/PromptDialog.tsx
@@ -453268,7 +453354,7 @@ function PromptDialog(t0) {
   const options = t2;
   let t3;
   if ($[3] !== toolInputSummary) {
-    t3 = toolInputSummary ? /* @__PURE__ */ jsx_runtime396.jsx(ThemedText, {
+    t3 = toolInputSummary ? /* @__PURE__ */ jsx_runtime397.jsx(ThemedText, {
       dimColor: true,
       children: toolInputSummary
     }) : undefined;
@@ -453289,10 +453375,10 @@ function PromptDialog(t0) {
   }
   let t5;
   if ($[7] !== options || $[8] !== t4) {
-    t5 = /* @__PURE__ */ jsx_runtime396.jsx(ThemedBox_default, {
+    t5 = /* @__PURE__ */ jsx_runtime397.jsx(ThemedBox_default, {
       flexDirection: "column",
       paddingY: 1,
-      children: /* @__PURE__ */ jsx_runtime396.jsx(Select, {
+      children: /* @__PURE__ */ jsx_runtime397.jsx(Select, {
         options,
         onChange: t4
       })
@@ -453305,7 +453391,7 @@ function PromptDialog(t0) {
   }
   let t6;
   if ($[10] !== request.message || $[11] !== t3 || $[12] !== t5 || $[13] !== title) {
-    t6 = /* @__PURE__ */ jsx_runtime396.jsx(PermissionDialog, {
+    t6 = /* @__PURE__ */ jsx_runtime397.jsx(PermissionDialog, {
       title,
       subtitle: request.message,
       titleRight: t3,
@@ -453328,14 +453414,14 @@ function _temp177(opt) {
     description: opt.description
   };
 }
-var import_compiler_runtime313, jsx_runtime396;
+var import_compiler_runtime313, jsx_runtime397;
 var init_PromptDialog = __esm(() => {
   init_ink2();
   init_useKeybinding();
   init_select();
   init_PermissionDialog();
   import_compiler_runtime313 = __toESM(require_compiler_runtime(), 1);
-  jsx_runtime396 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime397 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/hooks/useCommandQueue.ts
@@ -453863,7 +453949,7 @@ function RainbowText2(t0) {
   } = t0;
   let t1;
   if ($[0] !== text) {
-    t1 = /* @__PURE__ */ jsx_runtime397.jsx(jsx_runtime397.Fragment, {
+    t1 = /* @__PURE__ */ jsx_runtime398.jsx(jsx_runtime398.Fragment, {
       children: [...text].map(_temp178)
     });
     $[0] = text;
@@ -453874,7 +453960,7 @@ function RainbowText2(t0) {
   return t1;
 }
 function _temp178(ch, i) {
-  return /* @__PURE__ */ jsx_runtime397.jsx(ThemedText, {
+  return /* @__PURE__ */ jsx_runtime398.jsx(ThemedText, {
     color: getRainbowColor(i),
     children: ch
   }, i);
@@ -453898,7 +453984,7 @@ function useBuddyNotification() {
       }
       addNotification({
         key: "buddy-teaser",
-        jsx: /* @__PURE__ */ jsx_runtime397.jsx(RainbowText2, {
+        jsx: /* @__PURE__ */ jsx_runtime398.jsx(RainbowText2, {
           text: "/buddy"
         }),
         priority: "immediate",
@@ -453931,7 +454017,7 @@ function findBuddyTriggerPositions(text) {
   }
   return triggers;
 }
-var import_compiler_runtime315, import_react224, jsx_runtime397;
+var import_compiler_runtime315, import_react224, jsx_runtime398;
 var init_useBuddyNotification = __esm(() => {
   init_notifications();
   init_ink2();
@@ -453939,7 +454025,7 @@ var init_useBuddyNotification = __esm(() => {
   init_thinking();
   import_compiler_runtime315 = __toESM(require_compiler_runtime(), 1);
   import_react224 = __toESM(require_react(), 1);
-  jsx_runtime397 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime398 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/hooks/useIdeConnectionStatus.ts
@@ -454012,7 +454098,7 @@ function AutoUpdater({
   }, []);
   const isUpdatingRef = import_react228.useRef(isUpdating);
   isUpdatingRef.current = isUpdating;
-  const checkForUpdates = React129.useCallback(async () => {
+  const checkForUpdates = React130.useCallback(async () => {
     if (isUpdatingRef.current) {
       return;
     }
@@ -454111,11 +454197,11 @@ function AutoUpdater({
   if (!autoUpdaterResult?.version && !isUpdating) {
     return null;
   }
-  return /* @__PURE__ */ jsx_runtime398.jsxs(ThemedBox_default, {
+  return /* @__PURE__ */ jsx_runtime399.jsxs(ThemedBox_default, {
     flexDirection: "row",
     gap: 1,
     children: [
-      verbose && /* @__PURE__ */ jsx_runtime398.jsxs(ThemedText, {
+      verbose && /* @__PURE__ */ jsx_runtime399.jsxs(ThemedText, {
         dimColor: true,
         wrap: "truncate",
         children: [
@@ -454126,32 +454212,32 @@ function AutoUpdater({
           versions.latest
         ]
       }),
-      isUpdating ? /* @__PURE__ */ jsx_runtime398.jsx(jsx_runtime398.Fragment, {
-        children: /* @__PURE__ */ jsx_runtime398.jsx(ThemedBox_default, {
-          children: /* @__PURE__ */ jsx_runtime398.jsx(ThemedText, {
+      isUpdating ? /* @__PURE__ */ jsx_runtime399.jsx(jsx_runtime399.Fragment, {
+        children: /* @__PURE__ */ jsx_runtime399.jsx(ThemedBox_default, {
+          children: /* @__PURE__ */ jsx_runtime399.jsx(ThemedText, {
             color: "text",
             dimColor: true,
             wrap: "truncate",
             children: "Auto-updating\u2026"
           })
         })
-      }) : autoUpdaterResult?.status === "success" && showSuccessMessage && updateSemver && /* @__PURE__ */ jsx_runtime398.jsx(ThemedText, {
+      }) : autoUpdaterResult?.status === "success" && showSuccessMessage && updateSemver && /* @__PURE__ */ jsx_runtime399.jsx(ThemedText, {
         color: "success",
         wrap: "truncate",
         children: "\u2713 Update installed \xB7 Restart to apply"
       }),
-      (autoUpdaterResult?.status === "install_failed" || autoUpdaterResult?.status === "no_permissions") && /* @__PURE__ */ jsx_runtime398.jsxs(ThemedText, {
+      (autoUpdaterResult?.status === "install_failed" || autoUpdaterResult?.status === "no_permissions") && /* @__PURE__ */ jsx_runtime399.jsxs(ThemedText, {
         color: "error",
         wrap: "truncate",
         children: [
           "\u2717 Auto-update failed \xB7 Try ",
-          /* @__PURE__ */ jsx_runtime398.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime399.jsx(ThemedText, {
             bold: true,
             children: "claude doctor"
           }),
           " or",
           " ",
-          /* @__PURE__ */ jsx_runtime398.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime399.jsx(ThemedText, {
             bold: true,
             children: hasLocalInstall ? `cd ~/.claude/local && npm update ${{ VERSION: "2.1.88", BUILD_TIME: "", PACKAGE_URL: "https://www.npmjs.com/package/@anthropic-ai/claude-code", NATIVE_PACKAGE_URL: "", VERSION_CHANGELOG: "", ISSUES_EXPLAINER: "", FEEDBACK_CHANNEL: "" }.PACKAGE_URL}` : `npm i -g ${{ VERSION: "2.1.88", BUILD_TIME: "", PACKAGE_URL: "https://www.npmjs.com/package/@anthropic-ai/claude-code", NATIVE_PACKAGE_URL: "", VERSION_CHANGELOG: "", ISSUES_EXPLAINER: "", FEEDBACK_CHANNEL: "" }.PACKAGE_URL}`
           })
@@ -454160,7 +454246,7 @@ function AutoUpdater({
     ]
   });
 }
-var React129, import_react228, jsx_runtime398;
+var React130, import_react228, jsx_runtime399;
 var init_AutoUpdater = __esm(() => {
   init_analytics();
   init_dist5();
@@ -454173,9 +454259,9 @@ var init_AutoUpdater = __esm(() => {
   init_localInstaller();
   init_nativeInstaller();
   init_settings2();
-  React129 = __toESM(require_react(), 1);
+  React130 = __toESM(require_react(), 1);
   import_react228 = __toESM(require_react(), 1);
-  jsx_runtime398 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime399 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/NativeAutoUpdater.tsx
@@ -454217,7 +454303,7 @@ function NativeAutoUpdater({
   const channel = getInitialSettings()?.autoUpdatesChannel ?? "latest";
   const isUpdatingRef = import_react229.useRef(isUpdating);
   isUpdatingRef.current = isUpdating;
-  const checkForUpdates = React130.useCallback(async () => {
+  const checkForUpdates = React131.useCallback(async () => {
     if (isUpdatingRef.current) {
       return;
     }
@@ -454293,11 +454379,11 @@ function NativeAutoUpdater({
   if (!shouldRender) {
     return null;
   }
-  return /* @__PURE__ */ jsx_runtime399.jsxs(ThemedBox_default, {
+  return /* @__PURE__ */ jsx_runtime400.jsxs(ThemedBox_default, {
     flexDirection: "row",
     gap: 1,
     children: [
-      verbose && /* @__PURE__ */ jsx_runtime399.jsxs(ThemedText, {
+      verbose && /* @__PURE__ */ jsx_runtime400.jsxs(ThemedText, {
         dimColor: true,
         wrap: "truncate",
         children: [
@@ -454309,23 +454395,23 @@ function NativeAutoUpdater({
           versions.latest
         ]
       }),
-      isUpdating ? /* @__PURE__ */ jsx_runtime399.jsx(ThemedBox_default, {
-        children: /* @__PURE__ */ jsx_runtime399.jsx(ThemedText, {
+      isUpdating ? /* @__PURE__ */ jsx_runtime400.jsx(ThemedBox_default, {
+        children: /* @__PURE__ */ jsx_runtime400.jsx(ThemedText, {
           dimColor: true,
           wrap: "truncate",
           children: "Checking for updates"
         })
-      }) : autoUpdaterResult?.status === "success" && showSuccessMessage && updateSemver && /* @__PURE__ */ jsx_runtime399.jsx(ThemedText, {
+      }) : autoUpdaterResult?.status === "success" && showSuccessMessage && updateSemver && /* @__PURE__ */ jsx_runtime400.jsx(ThemedText, {
         color: "success",
         wrap: "truncate",
         children: "\u2713 Update installed \xB7 Restart to update"
       }),
-      autoUpdaterResult?.status === "install_failed" && /* @__PURE__ */ jsx_runtime399.jsxs(ThemedText, {
+      autoUpdaterResult?.status === "install_failed" && /* @__PURE__ */ jsx_runtime400.jsxs(ThemedText, {
         color: "error",
         wrap: "truncate",
         children: [
           "\u2717 Auto-update failed \xB7 Try ",
-          /* @__PURE__ */ jsx_runtime399.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime400.jsx(ThemedText, {
             bold: true,
             children: "/status"
           })
@@ -454335,7 +454421,7 @@ function NativeAutoUpdater({
     ]
   });
 }
-var React130, import_react229, jsx_runtime399;
+var React131, import_react229, jsx_runtime400;
 var init_NativeAutoUpdater = __esm(() => {
   init_analytics();
   init_debug();
@@ -454347,9 +454433,9 @@ var init_NativeAutoUpdater = __esm(() => {
   init_config2();
   init_nativeInstaller();
   init_settings2();
-  React130 = __toESM(require_react(), 1);
+  React131 = __toESM(require_react(), 1);
   import_react229 = __toESM(require_react(), 1);
-  jsx_runtime399 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime400 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/PackageManagerAutoUpdater.tsx
@@ -454403,7 +454489,7 @@ function PackageManagerAutoUpdater(t0) {
     t2 = $[1];
     t3 = $[2];
   }
-  React131.useEffect(t2, t3);
+  React132.useEffect(t2, t3);
   useInterval(checkForUpdates, 1800000);
   if (!updateAvailable) {
     return null;
@@ -454411,7 +454497,7 @@ function PackageManagerAutoUpdater(t0) {
   const updateCommand = packageManager === "homebrew" ? "brew upgrade claude-code" : packageManager === "winget" ? "winget upgrade Anthropic.ClaudeCode" : packageManager === "apk" ? "apk upgrade claude-code" : "your package manager update command";
   let t4;
   if ($[3] !== verbose) {
-    t4 = verbose && /* @__PURE__ */ jsx_runtime400.jsxs(ThemedText, {
+    t4 = verbose && /* @__PURE__ */ jsx_runtime401.jsxs(ThemedText, {
       dimColor: true,
       wrap: "truncate",
       children: [
@@ -454426,12 +454512,12 @@ function PackageManagerAutoUpdater(t0) {
   }
   let t5;
   if ($[5] !== updateCommand) {
-    t5 = /* @__PURE__ */ jsx_runtime400.jsxs(ThemedText, {
+    t5 = /* @__PURE__ */ jsx_runtime401.jsxs(ThemedText, {
       color: "warning",
       wrap: "truncate",
       children: [
         "Update available! Run: ",
-        /* @__PURE__ */ jsx_runtime400.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime401.jsx(ThemedText, {
           bold: true,
           children: updateCommand
         })
@@ -454444,7 +454530,7 @@ function PackageManagerAutoUpdater(t0) {
   }
   let t6;
   if ($[7] !== t4 || $[8] !== t5) {
-    t6 = /* @__PURE__ */ jsx_runtime400.jsxs(jsx_runtime400.Fragment, {
+    t6 = /* @__PURE__ */ jsx_runtime401.jsxs(jsx_runtime401.Fragment, {
       children: [
         t4,
         t5
@@ -454458,7 +454544,7 @@ function PackageManagerAutoUpdater(t0) {
   }
   return t6;
 }
-var import_compiler_runtime316, React131, import_react230, jsx_runtime400;
+var import_compiler_runtime316, React132, import_react230, jsx_runtime401;
 var init_PackageManagerAutoUpdater = __esm(() => {
   init_dist5();
   init_ink2();
@@ -454468,9 +454554,9 @@ var init_PackageManagerAutoUpdater = __esm(() => {
   init_packageManagers();
   init_settings2();
   import_compiler_runtime316 = __toESM(require_compiler_runtime(), 1);
-  React131 = __toESM(require_react(), 1);
+  React132 = __toESM(require_react(), 1);
   import_react230 = __toESM(require_react(), 1);
-  jsx_runtime400 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime401 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/AutoUpdaterWrapper.tsx
@@ -454484,8 +454570,8 @@ function AutoUpdaterWrapper(t0) {
     showSuccessMessage,
     verbose
   } = t0;
-  const [useNativeInstaller, setUseNativeInstaller] = React132.useState(null);
-  const [isPackageManager, setIsPackageManager] = React132.useState(null);
+  const [useNativeInstaller, setUseNativeInstaller] = React133.useState(null);
+  const [isPackageManager, setIsPackageManager] = React133.useState(null);
   let t1;
   let t2;
   if ($[0] === Symbol.for("react.memo_cache_sentinel")) {
@@ -454509,14 +454595,14 @@ function AutoUpdaterWrapper(t0) {
     t1 = $[0];
     t2 = $[1];
   }
-  React132.useEffect(t1, t2);
+  React133.useEffect(t1, t2);
   if (useNativeInstaller === null || isPackageManager === null) {
     return null;
   }
   if (isPackageManager) {
     let t3;
     if ($[2] !== autoUpdaterResult || $[3] !== isUpdating || $[4] !== onAutoUpdaterResult || $[5] !== onChangeIsUpdating || $[6] !== showSuccessMessage || $[7] !== verbose) {
-      t3 = /* @__PURE__ */ jsx_runtime401.jsx(PackageManagerAutoUpdater, {
+      t3 = /* @__PURE__ */ jsx_runtime402.jsx(PackageManagerAutoUpdater, {
         verbose,
         onAutoUpdaterResult,
         autoUpdaterResult,
@@ -454539,7 +454625,7 @@ function AutoUpdaterWrapper(t0) {
   const Updater = useNativeInstaller ? NativeAutoUpdater : AutoUpdater;
   let t3;
   if ($[9] !== Updater || $[10] !== autoUpdaterResult || $[11] !== isUpdating || $[12] !== onAutoUpdaterResult || $[13] !== onChangeIsUpdating || $[14] !== showSuccessMessage || $[15] !== verbose) {
-    t3 = /* @__PURE__ */ jsx_runtime401.jsx(Updater, {
+    t3 = /* @__PURE__ */ jsx_runtime402.jsx(Updater, {
       verbose,
       onAutoUpdaterResult,
       autoUpdaterResult,
@@ -454560,7 +454646,7 @@ function AutoUpdaterWrapper(t0) {
   }
   return t3;
 }
-var import_compiler_runtime317, React132, jsx_runtime401;
+var import_compiler_runtime317, React133, jsx_runtime402;
 var init_AutoUpdaterWrapper = __esm(() => {
   init_config2();
   init_debug();
@@ -454569,8 +454655,8 @@ var init_AutoUpdaterWrapper = __esm(() => {
   init_NativeAutoUpdater();
   init_PackageManagerAutoUpdater();
   import_compiler_runtime317 = __toESM(require_compiler_runtime(), 1);
-  React132 = __toESM(require_react(), 1);
-  jsx_runtime401 = __toESM(require_jsx_runtime(), 1);
+  React133 = __toESM(require_react(), 1);
+  jsx_runtime402 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/IdeStatusIndicator.tsx
@@ -454592,7 +454678,7 @@ function IdeStatusIndicator(t0) {
     const t1 = ideSelection.lineCount === 1 ? "line" : "lines";
     let t2;
     if ($[0] !== ideSelection.lineCount || $[1] !== t1) {
-      t2 = /* @__PURE__ */ jsx_runtime402.jsxs(ThemedText, {
+      t2 = /* @__PURE__ */ jsx_runtime403.jsxs(ThemedText, {
         color: "ide",
         wrap: "truncate",
         children: [
@@ -454622,7 +454708,7 @@ function IdeStatusIndicator(t0) {
     }
     let t2;
     if ($[5] !== t1) {
-      t2 = /* @__PURE__ */ jsx_runtime402.jsxs(ThemedText, {
+      t2 = /* @__PURE__ */ jsx_runtime403.jsxs(ThemedText, {
         color: "ide",
         wrap: "truncate",
         children: [
@@ -454638,12 +454724,12 @@ function IdeStatusIndicator(t0) {
     return t2;
   }
 }
-var import_compiler_runtime318, jsx_runtime402;
+var import_compiler_runtime318, jsx_runtime403;
 var init_IdeStatusIndicator = __esm(() => {
   init_useIdeConnectionStatus();
   init_ink2();
   import_compiler_runtime318 = __toESM(require_compiler_runtime(), 1);
-  jsx_runtime402 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime403 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/hooks/useMemoryUsage.ts
@@ -454686,8 +454772,8 @@ function MemoryUsageIndicator() {
   }
   const formattedSize = formatFileSize(heapUsed);
   const color = status === "critical" ? "error" : "warning";
-  return /* @__PURE__ */ jsx_runtime403.jsx(ThemedBox_default, {
-    children: /* @__PURE__ */ jsx_runtime403.jsxs(ThemedText, {
+  return /* @__PURE__ */ jsx_runtime404.jsx(ThemedBox_default, {
+    children: /* @__PURE__ */ jsx_runtime404.jsxs(ThemedText, {
       color,
       wrap: "truncate",
       children: [
@@ -454698,12 +454784,12 @@ function MemoryUsageIndicator() {
     })
   });
 }
-var jsx_runtime403;
+var jsx_runtime404;
 var init_MemoryUsageIndicator = __esm(() => {
   init_useMemoryUsage();
   init_ink2();
   init_format();
-  jsx_runtime403 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime404 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/services/compact/compactWarningHook.ts
@@ -454779,13 +454865,13 @@ function TokenWarning(t0) {
   const autocompactLabel = reactiveOnlyMode ? `${100 - displayPercentLeft}% context used` : `${displayPercentLeft}% until auto-compact`;
   let t4;
   if ($[9] !== autocompactLabel || $[10] !== isAboveErrorThreshold || $[11] !== percentLeft) {
-    t4 = /* @__PURE__ */ jsx_runtime404.jsx(ThemedBox_default, {
+    t4 = /* @__PURE__ */ jsx_runtime405.jsx(ThemedBox_default, {
       flexDirection: "row",
-      children: showAutoCompactWarning ? /* @__PURE__ */ jsx_runtime404.jsx(ThemedText, {
+      children: showAutoCompactWarning ? /* @__PURE__ */ jsx_runtime405.jsx(ThemedText, {
         dimColor: true,
         wrap: "truncate",
         children: upgradeMessage ? `${autocompactLabel} \xB7 ${upgradeMessage}` : autocompactLabel
-      }) : /* @__PURE__ */ jsx_runtime404.jsx(ThemedText, {
+      }) : /* @__PURE__ */ jsx_runtime405.jsx(ThemedText, {
         color: isAboveErrorThreshold ? "error" : "warning",
         wrap: "truncate",
         children: upgradeMessage ? `Context low (${percentLeft}% remaining) \xB7 ${upgradeMessage}` : `Context low (${percentLeft}% remaining) \xB7 Run /compact to compact & continue`
@@ -454800,7 +454886,7 @@ function TokenWarning(t0) {
   }
   return t4;
 }
-var import_compiler_runtime319, import_react233, jsx_runtime404;
+var import_compiler_runtime319, import_react233, jsx_runtime405;
 var init_TokenWarning = __esm(() => {
   init_ink2();
   init_growthbook();
@@ -454809,7 +454895,7 @@ var init_TokenWarning = __esm(() => {
   init_contextWindowUpgradeCheck();
   import_compiler_runtime319 = __toESM(require_compiler_runtime(), 1);
   import_react233 = __toESM(require_react(), 1);
-  jsx_runtime404 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime405 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/PromptInput/SandboxPromptFooterHint.tsx
@@ -454860,10 +454946,10 @@ function SandboxPromptFooterHint() {
   const t2 = recentViolationCount === 1 ? "operation" : "operations";
   let t3;
   if ($[2] !== detailsShortcut || $[3] !== recentViolationCount || $[4] !== t2) {
-    t3 = /* @__PURE__ */ jsx_runtime405.jsx(ThemedBox_default, {
+    t3 = /* @__PURE__ */ jsx_runtime406.jsx(ThemedBox_default, {
       paddingX: 0,
       paddingY: 0,
-      children: /* @__PURE__ */ jsx_runtime405.jsxs(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime406.jsxs(ThemedText, {
         color: "inactive",
         wrap: "truncate",
         children: [
@@ -454887,14 +454973,14 @@ function SandboxPromptFooterHint() {
   }
   return t3;
 }
-var import_compiler_runtime320, import_react234, jsx_runtime405;
+var import_compiler_runtime320, import_react234, jsx_runtime406;
 var init_SandboxPromptFooterHint = __esm(() => {
   init_ink2();
   init_useShortcutDisplay();
   init_sandbox_adapter();
   import_compiler_runtime320 = __toESM(require_compiler_runtime(), 1);
   import_react234 = __toESM(require_react(), 1);
-  jsx_runtime405 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime406 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/PromptInput/Notifications.tsx
@@ -454999,9 +455085,9 @@ function Notifications(t0) {
         logEvent("tengu_external_editor_hint_shown", {});
         addNotification({
           key: "external-editor-hint",
-          jsx: /* @__PURE__ */ jsx_runtime406.jsx(ThemedText, {
+          jsx: /* @__PURE__ */ jsx_runtime407.jsx(ThemedText, {
             dimColor: true,
-            children: /* @__PURE__ */ jsx_runtime406.jsx(ConfigurableShortcutHint, {
+            children: /* @__PURE__ */ jsx_runtime407.jsx(ConfigurableShortcutHint, {
               action: "chat:externalEditor",
               context: "Chat",
               fallback: "ctrl+g",
@@ -455030,7 +455116,7 @@ function Notifications(t0) {
   const t12 = isInOverageMode ?? false;
   let t13;
   if ($[15] !== apiKeyStatus || $[16] !== autoUpdaterResult || $[17] !== debug || $[18] !== ideSelection || $[19] !== isAutoUpdating || $[20] !== isShowingCompactMessage || $[21] !== mainLoopModel || $[22] !== mcpClients || $[23] !== notifications || $[24] !== onAutoUpdaterResult || $[25] !== onChangeIsUpdating || $[26] !== shouldShowAutoUpdater || $[27] !== t12 || $[28] !== tokenUsage || $[29] !== verbose) {
-    t13 = /* @__PURE__ */ jsx_runtime406.jsx(NotificationContent, {
+    t13 = /* @__PURE__ */ jsx_runtime407.jsx(NotificationContent, {
       ideSelection,
       mcpClients,
       notifications,
@@ -455069,8 +455155,8 @@ function Notifications(t0) {
   }
   let t14;
   if ($[31] !== t11 || $[32] !== t13) {
-    t14 = /* @__PURE__ */ jsx_runtime406.jsx(SentryErrorBoundary, {
-      children: /* @__PURE__ */ jsx_runtime406.jsx(ThemedBox_default, {
+    t14 = /* @__PURE__ */ jsx_runtime407.jsx(SentryErrorBoundary, {
+      children: /* @__PURE__ */ jsx_runtime407.jsx(ThemedBox_default, {
         flexDirection: "column",
         alignItems: t11,
         flexShrink: 0,
@@ -455126,31 +455212,31 @@ function NotificationContent({
   const voiceError = null;
   const isBriefOnly = false;
   if (false) {}
-  return /* @__PURE__ */ jsx_runtime406.jsxs(jsx_runtime406.Fragment, {
+  return /* @__PURE__ */ jsx_runtime407.jsxs(jsx_runtime407.Fragment, {
     children: [
-      /* @__PURE__ */ jsx_runtime406.jsx(IdeStatusIndicator, {
+      /* @__PURE__ */ jsx_runtime407.jsx(IdeStatusIndicator, {
         ideSelection,
         mcpClients
       }),
-      notifications.current && ("jsx" in notifications.current ? /* @__PURE__ */ jsx_runtime406.jsx(ThemedText, {
+      notifications.current && ("jsx" in notifications.current ? /* @__PURE__ */ jsx_runtime407.jsx(ThemedText, {
         wrap: "truncate",
         children: notifications.current.jsx
-      }, notifications.current.key) : /* @__PURE__ */ jsx_runtime406.jsx(ThemedText, {
+      }, notifications.current.key) : /* @__PURE__ */ jsx_runtime407.jsx(ThemedText, {
         color: notifications.current.color,
         dimColor: !notifications.current.color,
         wrap: "truncate",
         children: notifications.current.text
       })),
-      isInOverageMode && !isTeamOrEnterprise && /* @__PURE__ */ jsx_runtime406.jsx(ThemedBox_default, {
-        children: /* @__PURE__ */ jsx_runtime406.jsx(ThemedText, {
+      isInOverageMode && !isTeamOrEnterprise && /* @__PURE__ */ jsx_runtime407.jsx(ThemedBox_default, {
+        children: /* @__PURE__ */ jsx_runtime407.jsx(ThemedText, {
           dimColor: true,
           wrap: "truncate",
           children: "Now using extra usage"
         })
       }),
-      apiKeyHelperSlow && /* @__PURE__ */ jsx_runtime406.jsxs(ThemedBox_default, {
+      apiKeyHelperSlow && /* @__PURE__ */ jsx_runtime407.jsxs(ThemedBox_default, {
         children: [
-          /* @__PURE__ */ jsx_runtime406.jsxs(ThemedText, {
+          /* @__PURE__ */ jsx_runtime407.jsxs(ThemedText, {
             color: "warning",
             wrap: "truncate",
             children: [
@@ -455158,7 +455244,7 @@ function NotificationContent({
               " "
             ]
           }),
-          /* @__PURE__ */ jsx_runtime406.jsxs(ThemedText, {
+          /* @__PURE__ */ jsx_runtime407.jsxs(ThemedText, {
             dimColor: true,
             wrap: "truncate",
             children: [
@@ -455169,22 +455255,22 @@ function NotificationContent({
           })
         ]
       }),
-      (apiKeyStatus === "invalid" || apiKeyStatus === "missing") && /* @__PURE__ */ jsx_runtime406.jsx(ThemedBox_default, {
-        children: /* @__PURE__ */ jsx_runtime406.jsx(ThemedText, {
+      (apiKeyStatus === "invalid" || apiKeyStatus === "missing") && /* @__PURE__ */ jsx_runtime407.jsx(ThemedBox_default, {
+        children: /* @__PURE__ */ jsx_runtime407.jsx(ThemedText, {
           color: "error",
           wrap: "truncate",
           children: isEnvTruthy(process.env.CLAUDE_CODE_REMOTE) ? "Authentication error \xB7 Try again" : "Not logged in \xB7 Run /login"
         })
       }),
-      debug && /* @__PURE__ */ jsx_runtime406.jsx(ThemedBox_default, {
-        children: /* @__PURE__ */ jsx_runtime406.jsx(ThemedText, {
+      debug && /* @__PURE__ */ jsx_runtime407.jsx(ThemedBox_default, {
+        children: /* @__PURE__ */ jsx_runtime407.jsx(ThemedText, {
           color: "warning",
           wrap: "truncate",
           children: "Debug mode"
         })
       }),
-      apiKeyStatus !== "invalid" && apiKeyStatus !== "missing" && verbose && /* @__PURE__ */ jsx_runtime406.jsx(ThemedBox_default, {
-        children: /* @__PURE__ */ jsx_runtime406.jsxs(ThemedText, {
+      apiKeyStatus !== "invalid" && apiKeyStatus !== "missing" && verbose && /* @__PURE__ */ jsx_runtime407.jsx(ThemedBox_default, {
+        children: /* @__PURE__ */ jsx_runtime407.jsxs(ThemedText, {
           dimColor: true,
           wrap: "truncate",
           children: [
@@ -455193,11 +455279,11 @@ function NotificationContent({
           ]
         })
       }),
-      !isBriefOnly && /* @__PURE__ */ jsx_runtime406.jsx(TokenWarning, {
+      !isBriefOnly && /* @__PURE__ */ jsx_runtime407.jsx(TokenWarning, {
         tokenUsage,
         model: mainLoopModel
       }),
-      shouldShowAutoUpdater && /* @__PURE__ */ jsx_runtime406.jsx(AutoUpdaterWrapper, {
+      shouldShowAutoUpdater && /* @__PURE__ */ jsx_runtime407.jsx(AutoUpdaterWrapper, {
         verbose,
         onAutoUpdaterResult,
         autoUpdaterResult,
@@ -455206,12 +455292,12 @@ function NotificationContent({
         showSuccessMessage: !isShowingCompactMessage
       }),
       null,
-      /* @__PURE__ */ jsx_runtime406.jsx(MemoryUsageIndicator, {}),
-      /* @__PURE__ */ jsx_runtime406.jsx(SandboxPromptFooterHint, {})
+      /* @__PURE__ */ jsx_runtime407.jsx(MemoryUsageIndicator, {}),
+      /* @__PURE__ */ jsx_runtime407.jsx(SandboxPromptFooterHint, {})
     ]
   });
 }
-var import_compiler_runtime321, import_react235, jsx_runtime406, FOOTER_TEMPORARY_STATUS_TIMEOUT = 5000;
+var import_compiler_runtime321, import_react235, jsx_runtime407, FOOTER_TEMPORARY_STATUS_TIMEOUT = 5000;
 var init_Notifications = __esm(() => {
   init_notifications();
   init_analytics();
@@ -455240,7 +455326,7 @@ var init_Notifications = __esm(() => {
   init_SandboxPromptFooterHint();
   import_compiler_runtime321 = __toESM(require_compiler_runtime(), 1);
   import_react235 = __toESM(require_react(), 1);
-  jsx_runtime406 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime407 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/hooks/useArrowKeyHistory.tsx
@@ -455311,9 +455397,9 @@ function useArrowKeyHistory(onSetInput, currentInput, pastedContents, setCursorO
   const showSearchHint = import_react236.useCallback(() => {
     addNotification({
       key: "search-history-hint",
-      jsx: /* @__PURE__ */ jsx_runtime407.jsx(ThemedText, {
+      jsx: /* @__PURE__ */ jsx_runtime408.jsx(ThemedText, {
         dimColor: true,
-        children: /* @__PURE__ */ jsx_runtime407.jsx(ConfigurableShortcutHint, {
+        children: /* @__PURE__ */ jsx_runtime408.jsx(ConfigurableShortcutHint, {
           action: "history:search",
           context: "Global",
           fallback: "ctrl+r",
@@ -455409,7 +455495,7 @@ function useArrowKeyHistory(onSetInput, currentInput, pastedContents, setCursorO
     dismissSearchHint
   };
 }
-var import_react236, jsx_runtime407, HISTORY_CHUNK_SIZE = 10, pendingLoad = null, pendingLoadTarget = 0, pendingLoadModeFilter = undefined;
+var import_react236, jsx_runtime408, HISTORY_CHUNK_SIZE = 10, pendingLoad = null, pendingLoadTarget = 0, pendingLoadModeFilter = undefined;
 var init_useArrowKeyHistory = __esm(() => {
   init_notifications();
   init_ConfigurableShortcutHint();
@@ -455417,7 +455503,7 @@ var init_useArrowKeyHistory = __esm(() => {
   init_history();
   init_ink2();
   import_react236 = __toESM(require_react(), 1);
-  jsx_runtime407 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime408 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/hooks/useHistorySearch.ts
@@ -459168,7 +459254,7 @@ function useTypeahead({
         e.preventDefault();
         addNotification({
           key: "thinking-toggle-hint",
-          jsx: /* @__PURE__ */ jsx_runtime408.jsxs(ThemedText, {
+          jsx: /* @__PURE__ */ jsx_runtime409.jsxs(ThemedText, {
             dimColor: true,
             children: [
               "Use ",
@@ -459217,7 +459303,7 @@ function useTypeahead({
     handleKeyDown
   };
 }
-var import_react240, jsx_runtime408, AT_TOKEN_HEAD_RE, PATH_CHAR_HEAD_RE, TOKEN_WITH_AT_RE, TOKEN_WITHOUT_AT_RE, HAS_AT_SYMBOL_RE, HASH_CHANNEL_RE, DM_MEMBER_RE, currentShellCompletionAbortController = null;
+var import_react240, jsx_runtime409, AT_TOKEN_HEAD_RE, PATH_CHAR_HEAD_RE, TOKEN_WITH_AT_RE, TOKEN_WITHOUT_AT_RE, HAS_AT_SYMBOL_RE, HASH_CHANNEL_RE, DM_MEMBER_RE, currentShellCompletionAbortController = null;
 var init_useTypeahead = __esm(() => {
   init_notifications();
   init_ink2();
@@ -459243,7 +459329,7 @@ var init_useTypeahead = __esm(() => {
   init_fileSuggestions();
   init_unifiedSuggestions();
   import_react240 = __toESM(require_react(), 1);
-  jsx_runtime408 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime409 = __toESM(require_jsx_runtime(), 1);
   AT_TOKEN_HEAD_RE = /^@[\p{L}\p{N}\p{M}_\-./\\()[\]~:]*/u;
   PATH_CHAR_HEAD_RE = /^[\p{L}\p{N}\p{M}_\-./\\()[\]~:]+/u;
   TOKEN_WITH_AT_RE = /(@[\p{L}\p{N}\p{M}_\-./\\()[\]~:]*|[\p{L}\p{N}\p{M}_\-./\\()[\]~:]+)$/u;
@@ -459619,7 +459705,7 @@ function BridgeDialog(t0) {
     t12 = 1;
     let t19;
     if ($[49] !== indicator || $[50] !== statusColor || $[51] !== statusLabel) {
-      t19 = /* @__PURE__ */ jsx_runtime409.jsxs(ThemedText, {
+      t19 = /* @__PURE__ */ jsx_runtime410.jsxs(ThemedText, {
         color: statusColor,
         children: [
           indicator,
@@ -459636,7 +459722,7 @@ function BridgeDialog(t0) {
     }
     let t20;
     if ($[53] !== contextSuffix) {
-      t20 = /* @__PURE__ */ jsx_runtime409.jsx(ThemedText, {
+      t20 = /* @__PURE__ */ jsx_runtime410.jsx(ThemedText, {
         dimColor: true,
         children: contextSuffix
       });
@@ -459647,7 +459733,7 @@ function BridgeDialog(t0) {
     }
     let t21;
     if ($[55] !== t19 || $[56] !== t20) {
-      t21 = /* @__PURE__ */ jsx_runtime409.jsxs(ThemedText, {
+      t21 = /* @__PURE__ */ jsx_runtime410.jsxs(ThemedText, {
         children: [
           t19,
           t20
@@ -459661,7 +459747,7 @@ function BridgeDialog(t0) {
     }
     let t22;
     if ($[58] !== error) {
-      t22 = error && /* @__PURE__ */ jsx_runtime409.jsx(ThemedText, {
+      t22 = error && /* @__PURE__ */ jsx_runtime410.jsx(ThemedText, {
         color: "error",
         children: error
       });
@@ -459672,7 +459758,7 @@ function BridgeDialog(t0) {
     }
     let t23;
     if ($[60] !== environmentId || $[61] !== verbose) {
-      t23 = verbose && environmentId && /* @__PURE__ */ jsx_runtime409.jsxs(ThemedText, {
+      t23 = verbose && environmentId && /* @__PURE__ */ jsx_runtime410.jsxs(ThemedText, {
         dimColor: true,
         children: [
           "Environment: ",
@@ -459687,7 +459773,7 @@ function BridgeDialog(t0) {
     }
     let t24;
     if ($[63] !== sessionId || $[64] !== verbose) {
-      t24 = verbose && sessionId && /* @__PURE__ */ jsx_runtime409.jsxs(ThemedText, {
+      t24 = verbose && sessionId && /* @__PURE__ */ jsx_runtime410.jsxs(ThemedText, {
         dimColor: true,
         children: [
           "Session: ",
@@ -459701,7 +459787,7 @@ function BridgeDialog(t0) {
       t24 = $[65];
     }
     if ($[66] !== t21 || $[67] !== t22 || $[68] !== t23 || $[69] !== t24) {
-      t13 = /* @__PURE__ */ jsx_runtime409.jsxs(ThemedBox_default, {
+      t13 = /* @__PURE__ */ jsx_runtime410.jsxs(ThemedBox_default, {
         flexDirection: "column",
         children: [
           t21,
@@ -459718,7 +459804,7 @@ function BridgeDialog(t0) {
     } else {
       t13 = $[70];
     }
-    t14 = showQR && qrLines.length > 0 && /* @__PURE__ */ jsx_runtime409.jsx(ThemedBox_default, {
+    t14 = showQR && qrLines.length > 0 && /* @__PURE__ */ jsx_runtime410.jsx(ThemedBox_default, {
       flexDirection: "column",
       children: qrLines.map(_temp1410)
     });
@@ -459759,7 +459845,7 @@ function BridgeDialog(t0) {
   }
   let t18;
   if ($[71] !== footerText) {
-    t18 = footerText && /* @__PURE__ */ jsx_runtime409.jsx(ThemedText, {
+    t18 = footerText && /* @__PURE__ */ jsx_runtime410.jsx(ThemedText, {
       dimColor: true,
       children: footerText
     });
@@ -459770,7 +459856,7 @@ function BridgeDialog(t0) {
   }
   let t19;
   if ($[73] === Symbol.for("react.memo_cache_sentinel")) {
-    t19 = /* @__PURE__ */ jsx_runtime409.jsx(ThemedText, {
+    t19 = /* @__PURE__ */ jsx_runtime410.jsx(ThemedText, {
       dimColor: true,
       children: "d to disconnect \xB7 space for QR code \xB7 Enter/Esc to close"
     });
@@ -459780,7 +459866,7 @@ function BridgeDialog(t0) {
   }
   let t20;
   if ($[74] !== T0 || $[75] !== t11 || $[76] !== t12 || $[77] !== t13 || $[78] !== t14 || $[79] !== t18) {
-    t20 = /* @__PURE__ */ jsx_runtime409.jsxs(T0, {
+    t20 = /* @__PURE__ */ jsx_runtime410.jsxs(T0, {
       flexDirection: t11,
       gap: t12,
       children: [
@@ -459802,7 +459888,7 @@ function BridgeDialog(t0) {
   }
   let t21;
   if ($[81] !== T1 || $[82] !== t15 || $[83] !== t16 || $[84] !== t17 || $[85] !== t20) {
-    t21 = /* @__PURE__ */ jsx_runtime409.jsx(T1, {
+    t21 = /* @__PURE__ */ jsx_runtime410.jsx(T1, {
       title: t15,
       onCancel: t16,
       hideInputGuide: t17,
@@ -459820,7 +459906,7 @@ function BridgeDialog(t0) {
   return t21;
 }
 function _temp1410(line, i) {
-  return /* @__PURE__ */ jsx_runtime409.jsx(ThemedText, {
+  return /* @__PURE__ */ jsx_runtime410.jsx(ThemedText, {
     children: line
   }, i);
 }
@@ -459879,7 +459965,7 @@ function _temp276(s_0) {
 function _temp181(s) {
   return s.replBridgeConnected;
 }
-var import_compiler_runtime323, import_react242, jsx_runtime409;
+var import_compiler_runtime323, import_react242, jsx_runtime410;
 var init_BridgeDialog = __esm(() => {
   init_server3();
   init_state();
@@ -459894,7 +459980,7 @@ var init_BridgeDialog = __esm(() => {
   init_Dialog();
   import_compiler_runtime323 = __toESM(require_compiler_runtime(), 1);
   import_react242 = __toESM(require_react(), 1);
-  jsx_runtime409 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime410 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/CoordinatorAgentStatus.tsx
@@ -459910,7 +459996,7 @@ function useCoordinatorTaskCount() {
 function _temp183(s) {
   return s.tasks;
 }
-var import_compiler_runtime324, React135;
+var import_compiler_runtime324, React136;
 var init_CoordinatorAgentStatus = __esm(() => {
   init_figures2();
   init_useTerminalSize();
@@ -459923,7 +460009,7 @@ var init_CoordinatorAgentStatus = __esm(() => {
   init_framework();
   init_taskStatusUtils();
   import_compiler_runtime324 = __toESM(require_compiler_runtime(), 1);
-  React135 = __toESM(require_react(), 1);
+  React136 = __toESM(require_react(), 1);
 });
 
 // src/utils/highlightMatch.tsx
@@ -459940,7 +460026,7 @@ function highlightMatch(text, query) {
   while (idx !== -1) {
     if (idx > offset)
       parts.push(text.slice(offset, idx));
-    parts.push(/* @__PURE__ */ jsx_runtime410.jsx(ThemedText, {
+    parts.push(/* @__PURE__ */ jsx_runtime411.jsx(ThemedText, {
       inverse: true,
       children: text.slice(idx, idx + query.length)
     }, idx));
@@ -459949,14 +460035,14 @@ function highlightMatch(text, query) {
   }
   if (offset < text.length)
     parts.push(text.slice(offset));
-  return /* @__PURE__ */ jsx_runtime410.jsx(jsx_runtime410.Fragment, {
+  return /* @__PURE__ */ jsx_runtime411.jsx(jsx_runtime411.Fragment, {
     children: parts
   });
 }
-var jsx_runtime410;
+var jsx_runtime411;
 var init_highlightMatch = __esm(() => {
   init_ink2();
-  jsx_runtime410 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime411 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/design-system/FuzzyPicker.tsx
@@ -460052,14 +460138,14 @@ function FuzzyPicker({
   const windowStart = clamp(focusedIndex - visibleCount + 1, 0, items.length - visibleCount);
   const visible = items.slice(windowStart, windowStart + visibleCount);
   const emptyText = typeof emptyMessage === "function" ? emptyMessage(query) : emptyMessage;
-  const searchBox = /* @__PURE__ */ jsx_runtime411.jsx(SearchBox, {
+  const searchBox = /* @__PURE__ */ jsx_runtime412.jsx(SearchBox, {
     query,
     cursorOffset,
     placeholder,
     isFocused: true,
     isTerminalFocused
   });
-  const listBlock = /* @__PURE__ */ jsx_runtime411.jsx(List, {
+  const listBlock = /* @__PURE__ */ jsx_runtime412.jsx(List, {
     visible,
     windowStart,
     visibleCount,
@@ -460070,36 +460156,36 @@ function FuzzyPicker({
     renderItem,
     emptyText
   });
-  const preview = renderPreview && focused ? /* @__PURE__ */ jsx_runtime411.jsx(ThemedBox_default, {
+  const preview = renderPreview && focused ? /* @__PURE__ */ jsx_runtime412.jsx(ThemedBox_default, {
     flexDirection: "column",
     flexGrow: 1,
     children: renderPreview(focused)
   }) : null;
-  const listGroup = renderPreview && previewPosition === "right" ? /* @__PURE__ */ jsx_runtime411.jsxs(ThemedBox_default, {
+  const listGroup = renderPreview && previewPosition === "right" ? /* @__PURE__ */ jsx_runtime412.jsxs(ThemedBox_default, {
     flexDirection: "row",
     gap: 2,
     height: visibleCount + (matchLabel ? 1 : 0),
     children: [
-      /* @__PURE__ */ jsx_runtime411.jsxs(ThemedBox_default, {
+      /* @__PURE__ */ jsx_runtime412.jsxs(ThemedBox_default, {
         flexDirection: "column",
         flexShrink: 0,
         children: [
           listBlock,
-          matchLabel && /* @__PURE__ */ jsx_runtime411.jsx(ThemedText, {
+          matchLabel && /* @__PURE__ */ jsx_runtime412.jsx(ThemedText, {
             dimColor: true,
             children: matchLabel
           })
         ]
       }),
-      preview ?? /* @__PURE__ */ jsx_runtime411.jsx(ThemedBox_default, {
+      preview ?? /* @__PURE__ */ jsx_runtime412.jsx(ThemedBox_default, {
         flexGrow: 1
       })
     ]
-  }) : /* @__PURE__ */ jsx_runtime411.jsxs(ThemedBox_default, {
+  }) : /* @__PURE__ */ jsx_runtime412.jsxs(ThemedBox_default, {
     flexDirection: "column",
     children: [
       listBlock,
-      matchLabel && /* @__PURE__ */ jsx_runtime411.jsx(ThemedText, {
+      matchLabel && /* @__PURE__ */ jsx_runtime412.jsx(ThemedText, {
         dimColor: true,
         children: matchLabel
       }),
@@ -460107,16 +460193,16 @@ function FuzzyPicker({
     ]
   });
   const inputAbove = direction !== "up";
-  return /* @__PURE__ */ jsx_runtime411.jsx(Pane, {
+  return /* @__PURE__ */ jsx_runtime412.jsx(Pane, {
     color: "permission",
-    children: /* @__PURE__ */ jsx_runtime411.jsxs(ThemedBox_default, {
+    children: /* @__PURE__ */ jsx_runtime412.jsxs(ThemedBox_default, {
       flexDirection: "column",
       gap: 1,
       tabIndex: 0,
       autoFocus: true,
       onKeyDown: handleKeyDown,
       children: [
-        /* @__PURE__ */ jsx_runtime411.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime412.jsx(ThemedText, {
           bold: true,
           color: "permission",
           children: title
@@ -460124,27 +460210,27 @@ function FuzzyPicker({
         inputAbove && searchBox,
         listGroup,
         !inputAbove && searchBox,
-        /* @__PURE__ */ jsx_runtime411.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime412.jsx(ThemedText, {
           dimColor: true,
-          children: /* @__PURE__ */ jsx_runtime411.jsxs(Byline, {
+          children: /* @__PURE__ */ jsx_runtime412.jsxs(Byline, {
             children: [
-              /* @__PURE__ */ jsx_runtime411.jsx(KeyboardShortcutHint, {
+              /* @__PURE__ */ jsx_runtime412.jsx(KeyboardShortcutHint, {
                 shortcut: "\u2191/\u2193",
                 action: compact ? "nav" : "navigate"
               }),
-              /* @__PURE__ */ jsx_runtime411.jsx(KeyboardShortcutHint, {
+              /* @__PURE__ */ jsx_runtime412.jsx(KeyboardShortcutHint, {
                 shortcut: "Enter",
                 action: compact ? firstWord(selectAction) : selectAction
               }),
-              onTab && /* @__PURE__ */ jsx_runtime411.jsx(KeyboardShortcutHint, {
+              onTab && /* @__PURE__ */ jsx_runtime412.jsx(KeyboardShortcutHint, {
                 shortcut: "Tab",
                 action: onTab.action
               }),
-              onShiftTab && !compact && /* @__PURE__ */ jsx_runtime411.jsx(KeyboardShortcutHint, {
+              onShiftTab && !compact && /* @__PURE__ */ jsx_runtime412.jsx(KeyboardShortcutHint, {
                 shortcut: "shift+tab",
                 action: onShiftTab.action
               }),
-              /* @__PURE__ */ jsx_runtime411.jsx(KeyboardShortcutHint, {
+              /* @__PURE__ */ jsx_runtime412.jsx(KeyboardShortcutHint, {
                 shortcut: "Esc",
                 action: "cancel"
               }),
@@ -460172,7 +460258,7 @@ function List(t0) {
   if (visible.length === 0) {
     let t1;
     if ($[0] !== emptyText) {
-      t1 = /* @__PURE__ */ jsx_runtime411.jsx(ThemedText, {
+      t1 = /* @__PURE__ */ jsx_runtime412.jsx(ThemedText, {
         dimColor: true,
         children: emptyText
       });
@@ -460183,7 +460269,7 @@ function List(t0) {
     }
     let t2;
     if ($[2] !== t1 || $[3] !== visibleCount) {
-      t2 = /* @__PURE__ */ jsx_runtime411.jsx(ThemedBox_default, {
+      t2 = /* @__PURE__ */ jsx_runtime412.jsx(ThemedBox_default, {
         height: visibleCount,
         flexShrink: 0,
         children: t1
@@ -460205,7 +460291,7 @@ function List(t0) {
         const isFocused = actualIndex === focusedIndex;
         const atLowEdge = i === 0 && windowStart > 0;
         const atHighEdge = i === visible.length - 1 && windowStart + visibleCount < total;
-        return /* @__PURE__ */ jsx_runtime411.jsx(ListItem, {
+        return /* @__PURE__ */ jsx_runtime412.jsx(ListItem, {
           isFocused,
           showScrollUp: direction === "up" ? atHighEdge : atLowEdge,
           showScrollDown: direction === "up" ? atLowEdge : atHighEdge,
@@ -460242,7 +460328,7 @@ function List(t0) {
   const t2 = direction === "up" ? "column-reverse" : "column";
   let t3;
   if ($[23] !== rows || $[24] !== t2 || $[25] !== visibleCount) {
-    t3 = /* @__PURE__ */ jsx_runtime411.jsx(ThemedBox_default, {
+    t3 = /* @__PURE__ */ jsx_runtime412.jsx(ThemedBox_default, {
       height: visibleCount,
       flexShrink: 0,
       flexDirection: t2,
@@ -460261,7 +460347,7 @@ function firstWord(s) {
   const i = s.indexOf(" ");
   return i === -1 ? s : s.slice(0, i);
 }
-var import_compiler_runtime325, import_react243, jsx_runtime411, DEFAULT_VISIBLE = 8, CHROME_ROWS2 = 10, MIN_VISIBLE = 2;
+var import_compiler_runtime325, import_react243, jsx_runtime412, DEFAULT_VISIBLE = 8, CHROME_ROWS2 = 10, MIN_VISIBLE = 2;
 var init_FuzzyPicker = __esm(() => {
   init_useSearchInput();
   init_useTerminalSize();
@@ -460274,7 +460360,7 @@ var init_FuzzyPicker = __esm(() => {
   init_Pane();
   import_compiler_runtime325 = __toESM(require_compiler_runtime(), 1);
   import_react243 = __toESM(require_react(), 1);
-  jsx_runtime411 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime412 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/GlobalSearchDialog.tsx
@@ -460468,10 +460554,10 @@ function GlobalSearchDialog(t0) {
   }
   let t13;
   if ($[20] !== maxPathWidth || $[21] !== maxTextWidth || $[22] !== query) {
-    t13 = (m_7, isFocused) => /* @__PURE__ */ jsx_runtime412.jsxs(ThemedText, {
+    t13 = (m_7, isFocused) => /* @__PURE__ */ jsx_runtime413.jsxs(ThemedText, {
       color: isFocused ? "suggestion" : undefined,
       children: [
-        /* @__PURE__ */ jsx_runtime412.jsxs(ThemedText, {
+        /* @__PURE__ */ jsx_runtime413.jsxs(ThemedText, {
           dimColor: true,
           children: [
             truncatePathMiddle(m_7.file, maxPathWidth),
@@ -460492,9 +460578,9 @@ function GlobalSearchDialog(t0) {
   }
   let t14;
   if ($[24] !== preview || $[25] !== previewWidth || $[26] !== query) {
-    t14 = (m_8) => preview?.file === m_8.file && preview.line === m_8.line ? /* @__PURE__ */ jsx_runtime412.jsxs(jsx_runtime412.Fragment, {
+    t14 = (m_8) => preview?.file === m_8.file && preview.line === m_8.line ? /* @__PURE__ */ jsx_runtime413.jsxs(jsx_runtime413.Fragment, {
       children: [
-        /* @__PURE__ */ jsx_runtime412.jsxs(ThemedText, {
+        /* @__PURE__ */ jsx_runtime413.jsxs(ThemedText, {
           dimColor: true,
           children: [
             truncatePathMiddle(m_8.file, previewWidth),
@@ -460503,11 +460589,11 @@ function GlobalSearchDialog(t0) {
           ]
         }),
         preview.content.split(`
-`).map((line_0, i) => /* @__PURE__ */ jsx_runtime412.jsx(ThemedText, {
+`).map((line_0, i) => /* @__PURE__ */ jsx_runtime413.jsx(ThemedText, {
           children: highlightMatch(truncateToWidth(line_0, previewWidth), query)
         }, i))
       ]
-    }) : /* @__PURE__ */ jsx_runtime412.jsx(LoadingState, {
+    }) : /* @__PURE__ */ jsx_runtime413.jsx(LoadingState, {
       message: "Loading\u2026",
       dimColor: true
     });
@@ -460520,7 +460606,7 @@ function GlobalSearchDialog(t0) {
   }
   let t15;
   if ($[28] !== handleOpen || $[29] !== matchLabel || $[30] !== matches || $[31] !== onDone || $[32] !== t10 || $[33] !== t11 || $[34] !== t12 || $[35] !== t13 || $[36] !== t14 || $[37] !== t9 || $[38] !== visibleResults) {
-    t15 = /* @__PURE__ */ jsx_runtime412.jsx(FuzzyPicker, {
+    t15 = /* @__PURE__ */ jsx_runtime413.jsx(FuzzyPicker, {
       title: "Global Search",
       placeholder: "Type to search\u2026",
       items: matches,
@@ -460628,7 +460714,7 @@ function parseRipgrepLine(line) {
     text: text ?? ""
   };
 }
-var import_compiler_runtime326, import_react244, jsx_runtime412, VISIBLE_RESULTS = 12, DEBOUNCE_MS3 = 100, PREVIEW_CONTEXT_LINES = 4, MAX_MATCHES_PER_FILE = 10, MAX_TOTAL_MATCHES = 500;
+var import_compiler_runtime326, import_react244, jsx_runtime413, VISIBLE_RESULTS = 12, DEBOUNCE_MS3 = 100, PREVIEW_CONTEXT_LINES = 4, MAX_MATCHES_PER_FILE = 10, MAX_TOTAL_MATCHES = 500;
 var init_GlobalSearchDialog = __esm(() => {
   init_overlayContext();
   init_useTerminalSize();
@@ -460645,7 +460731,7 @@ var init_GlobalSearchDialog = __esm(() => {
   init_LoadingState();
   import_compiler_runtime326 = __toESM(require_compiler_runtime(), 1);
   import_react244 = __toESM(require_react(), 1);
-  jsx_runtime412 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime413 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/HistorySearchDialog.tsx
@@ -460710,7 +460796,7 @@ function HistorySearchDialog({
   const listWidth = previewOnRight ? Math.floor((columns - 6) * 0.5) : columns - 6;
   const rowWidth = Math.max(20, listWidth - AGE_WIDTH - 1);
   const previewWidth = previewOnRight ? Math.max(20, columns - listWidth - 12) : Math.max(20, columns - 10);
-  return /* @__PURE__ */ jsx_runtime413.jsx(FuzzyPicker, {
+  return /* @__PURE__ */ jsx_runtime414.jsx(FuzzyPicker, {
     title: "Search prompts",
     placeholder: "Filter history\u2026",
     initialQuery,
@@ -460729,13 +460815,13 @@ function HistorySearchDialog({
     selectAction: "use",
     direction: "up",
     previewPosition: previewOnRight ? "right" : "bottom",
-    renderItem: (item_2, isFocused) => /* @__PURE__ */ jsx_runtime413.jsxs(ThemedText, {
+    renderItem: (item_2, isFocused) => /* @__PURE__ */ jsx_runtime414.jsxs(ThemedText, {
       children: [
-        /* @__PURE__ */ jsx_runtime413.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime414.jsx(ThemedText, {
           dimColor: true,
           children: item_2.age
         }),
-        /* @__PURE__ */ jsx_runtime413.jsxs(ThemedText, {
+        /* @__PURE__ */ jsx_runtime414.jsxs(ThemedText, {
           color: isFocused ? "suggestion" : undefined,
           children: [
             " ",
@@ -460752,18 +460838,18 @@ function HistorySearchDialog({
       const overflow = wrapped.length > PREVIEW_ROWS;
       const shown = wrapped.slice(0, overflow ? PREVIEW_ROWS - 1 : PREVIEW_ROWS);
       const more = wrapped.length - shown.length;
-      return /* @__PURE__ */ jsx_runtime413.jsxs(ThemedBox_default, {
+      return /* @__PURE__ */ jsx_runtime414.jsxs(ThemedBox_default, {
         flexDirection: "column",
         borderStyle: "round",
         borderDimColor: true,
         paddingX: 1,
         height: PREVIEW_ROWS + 2,
         children: [
-          shown.map((row, i) => /* @__PURE__ */ jsx_runtime413.jsx(ThemedText, {
+          shown.map((row, i) => /* @__PURE__ */ jsx_runtime414.jsx(ThemedText, {
             dimColor: true,
             children: row
           }, i)),
-          more > 0 && /* @__PURE__ */ jsx_runtime413.jsx(ThemedText, {
+          more > 0 && /* @__PURE__ */ jsx_runtime414.jsx(ThemedText, {
             dimColor: true,
             children: `\u2026 +${more} more lines`
           })
@@ -460780,7 +460866,7 @@ function isSubsequence(text, query) {
   }
   return j === query.length;
 }
-var import_react245, jsx_runtime413, PREVIEW_ROWS = 6, AGE_WIDTH = 8;
+var import_react245, jsx_runtime414, PREVIEW_ROWS = 6, AGE_WIDTH = 8;
 var init_HistorySearchDialog = __esm(() => {
   init_overlayContext();
   init_history();
@@ -460792,7 +460878,7 @@ var init_HistorySearchDialog = __esm(() => {
   init_format();
   init_FuzzyPicker();
   import_react245 = __toESM(require_react(), 1);
-  jsx_runtime413 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime414 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/QuickOpenDialog.tsx
@@ -460961,7 +461047,7 @@ function QuickOpenDialog(t0) {
   }
   let t12;
   if ($[19] !== maxPathWidth) {
-    t12 = (p_6, isFocused) => /* @__PURE__ */ jsx_runtime414.jsx(ThemedText, {
+    t12 = (p_6, isFocused) => /* @__PURE__ */ jsx_runtime415.jsx(ThemedText, {
       color: isFocused ? "suggestion" : undefined,
       children: truncatePathMiddle(p_6, maxPathWidth)
     });
@@ -460972,9 +461058,9 @@ function QuickOpenDialog(t0) {
   }
   let t13;
   if ($[21] !== preview || $[22] !== previewWidth || $[23] !== query) {
-    t13 = (p_7) => preview ? /* @__PURE__ */ jsx_runtime414.jsxs(jsx_runtime414.Fragment, {
+    t13 = (p_7) => preview ? /* @__PURE__ */ jsx_runtime415.jsxs(jsx_runtime415.Fragment, {
       children: [
-        /* @__PURE__ */ jsx_runtime414.jsxs(ThemedText, {
+        /* @__PURE__ */ jsx_runtime415.jsxs(ThemedText, {
           dimColor: true,
           children: [
             truncatePathMiddle(p_7, previewWidth),
@@ -460982,11 +461068,11 @@ function QuickOpenDialog(t0) {
           ]
         }),
         preview.content.split(`
-`).map((line, i_1) => /* @__PURE__ */ jsx_runtime414.jsx(ThemedText, {
+`).map((line, i_1) => /* @__PURE__ */ jsx_runtime415.jsx(ThemedText, {
           children: highlightMatch(truncateToWidth(line, previewWidth), query)
         }, i_1))
       ]
-    }) : /* @__PURE__ */ jsx_runtime414.jsx(LoadingState, {
+    }) : /* @__PURE__ */ jsx_runtime415.jsx(LoadingState, {
       message: "Loading preview\u2026",
       dimColor: true
     });
@@ -460999,7 +461085,7 @@ function QuickOpenDialog(t0) {
   }
   let t14;
   if ($[25] !== handleOpen || $[26] !== onDone || $[27] !== results || $[28] !== t10 || $[29] !== t11 || $[30] !== t12 || $[31] !== t13 || $[32] !== t9 || $[33] !== visibleResults) {
-    t14 = /* @__PURE__ */ jsx_runtime414.jsx(FuzzyPicker, {
+    t14 = /* @__PURE__ */ jsx_runtime415.jsx(FuzzyPicker, {
       title: "Quick Open",
       placeholder: "Type to search files\u2026",
       items: results,
@@ -461051,7 +461137,7 @@ function _temp278(i_0) {
 function _temp185(i) {
   return i.id.startsWith("file-");
 }
-var import_compiler_runtime327, import_react246, jsx_runtime414, VISIBLE_RESULTS2 = 8, PREVIEW_LINES = 20;
+var import_compiler_runtime327, import_react246, jsx_runtime415, VISIBLE_RESULTS2 = 8, PREVIEW_LINES = 20;
 var init_QuickOpenDialog = __esm(() => {
   init_overlayContext();
   init_fileSuggestions();
@@ -461067,7 +461153,7 @@ var init_QuickOpenDialog = __esm(() => {
   init_LoadingState();
   import_compiler_runtime327 = __toESM(require_compiler_runtime(), 1);
   import_react246 = __toESM(require_react(), 1);
-  jsx_runtime414 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime415 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/ThinkingToggle.tsx
@@ -461168,16 +461254,16 @@ function ThinkingToggle(t0) {
   const handleSelectChange = t7;
   let t8;
   if ($[14] === Symbol.for("react.memo_cache_sentinel")) {
-    t8 = /* @__PURE__ */ jsx_runtime415.jsxs(ThemedBox_default, {
+    t8 = /* @__PURE__ */ jsx_runtime416.jsxs(ThemedBox_default, {
       marginBottom: 1,
       flexDirection: "column",
       children: [
-        /* @__PURE__ */ jsx_runtime415.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime416.jsx(ThemedText, {
           color: "remember",
           bold: true,
           children: "Toggle thinking mode"
         }),
-        /* @__PURE__ */ jsx_runtime415.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime416.jsx(ThemedText, {
           dimColor: true,
           children: "Enable or disable thinking for this session."
         })
@@ -461189,28 +461275,28 @@ function ThinkingToggle(t0) {
   }
   let t9;
   if ($[15] !== confirmationPending || $[16] !== currentValue || $[17] !== handleSelectChange || $[18] !== onCancel) {
-    t9 = /* @__PURE__ */ jsx_runtime415.jsxs(ThemedBox_default, {
+    t9 = /* @__PURE__ */ jsx_runtime416.jsxs(ThemedBox_default, {
       flexDirection: "column",
       children: [
         t8,
-        confirmationPending !== null ? /* @__PURE__ */ jsx_runtime415.jsxs(ThemedBox_default, {
+        confirmationPending !== null ? /* @__PURE__ */ jsx_runtime416.jsxs(ThemedBox_default, {
           flexDirection: "column",
           marginBottom: 1,
           gap: 1,
           children: [
-            /* @__PURE__ */ jsx_runtime415.jsx(ThemedText, {
+            /* @__PURE__ */ jsx_runtime416.jsx(ThemedText, {
               color: "warning",
               children: "Changing thinking mode mid-conversation will increase latency and may reduce quality. For best results, set this at the start of a session."
             }),
-            /* @__PURE__ */ jsx_runtime415.jsx(ThemedText, {
+            /* @__PURE__ */ jsx_runtime416.jsx(ThemedText, {
               color: "warning",
               children: "Do you want to proceed?"
             })
           ]
-        }) : /* @__PURE__ */ jsx_runtime415.jsx(ThemedBox_default, {
+        }) : /* @__PURE__ */ jsx_runtime416.jsx(ThemedBox_default, {
           flexDirection: "column",
           marginBottom: 1,
-          children: /* @__PURE__ */ jsx_runtime415.jsx(Select, {
+          children: /* @__PURE__ */ jsx_runtime416.jsx(Select, {
             defaultValue: currentValue ? "true" : "false",
             defaultFocusValue: currentValue ? "true" : "false",
             options,
@@ -461231,35 +461317,35 @@ function ThinkingToggle(t0) {
   }
   let t10;
   if ($[20] !== confirmationPending || $[21] !== exitState.keyName || $[22] !== exitState.pending) {
-    t10 = /* @__PURE__ */ jsx_runtime415.jsx(ThemedText, {
+    t10 = /* @__PURE__ */ jsx_runtime416.jsx(ThemedText, {
       dimColor: true,
       italic: true,
-      children: exitState.pending ? /* @__PURE__ */ jsx_runtime415.jsxs(jsx_runtime415.Fragment, {
+      children: exitState.pending ? /* @__PURE__ */ jsx_runtime416.jsxs(jsx_runtime416.Fragment, {
         children: [
           "Press ",
           exitState.keyName,
           " again to exit"
         ]
-      }) : confirmationPending !== null ? /* @__PURE__ */ jsx_runtime415.jsxs(Byline, {
+      }) : confirmationPending !== null ? /* @__PURE__ */ jsx_runtime416.jsxs(Byline, {
         children: [
-          /* @__PURE__ */ jsx_runtime415.jsx(KeyboardShortcutHint, {
+          /* @__PURE__ */ jsx_runtime416.jsx(KeyboardShortcutHint, {
             shortcut: "Enter",
             action: "confirm"
           }),
-          /* @__PURE__ */ jsx_runtime415.jsx(ConfigurableShortcutHint, {
+          /* @__PURE__ */ jsx_runtime416.jsx(ConfigurableShortcutHint, {
             action: "confirm:no",
             context: "Confirmation",
             fallback: "Esc",
             description: "cancel"
           })
         ]
-      }) : /* @__PURE__ */ jsx_runtime415.jsxs(Byline, {
+      }) : /* @__PURE__ */ jsx_runtime416.jsxs(Byline, {
         children: [
-          /* @__PURE__ */ jsx_runtime415.jsx(KeyboardShortcutHint, {
+          /* @__PURE__ */ jsx_runtime416.jsx(KeyboardShortcutHint, {
             shortcut: "Enter",
             action: "confirm"
           }),
-          /* @__PURE__ */ jsx_runtime415.jsx(ConfigurableShortcutHint, {
+          /* @__PURE__ */ jsx_runtime416.jsx(ConfigurableShortcutHint, {
             action: "confirm:no",
             context: "Confirmation",
             fallback: "Esc",
@@ -461277,7 +461363,7 @@ function ThinkingToggle(t0) {
   }
   let t11;
   if ($[24] !== t10 || $[25] !== t9) {
-    t11 = /* @__PURE__ */ jsx_runtime415.jsxs(Pane, {
+    t11 = /* @__PURE__ */ jsx_runtime416.jsxs(Pane, {
       color: "permission",
       children: [
         t9,
@@ -461293,7 +461379,7 @@ function ThinkingToggle(t0) {
   return t11;
 }
 function _temp186() {}
-var import_compiler_runtime328, import_react247, jsx_runtime415;
+var import_compiler_runtime328, import_react247, jsx_runtime416;
 var init_ThinkingToggle = __esm(() => {
   init_useExitOnCtrlCDWithKeybindings();
   init_ink2();
@@ -461305,7 +461391,7 @@ var init_ThinkingToggle = __esm(() => {
   init_Pane();
   import_compiler_runtime328 = __toESM(require_compiler_runtime(), 1);
   import_react247 = __toESM(require_react(), 1);
-  jsx_runtime415 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime416 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/utils/teamDiscovery.ts
@@ -461484,7 +461570,7 @@ function TeamsDialog({
     return 0;
   }
   if (dialogLevel.type === "teammateList") {
-    return /* @__PURE__ */ jsx_runtime416.jsx(TeamDetailView, {
+    return /* @__PURE__ */ jsx_runtime417.jsx(TeamDetailView, {
       teamName: dialogLevel.teamName,
       teammates: teammateStatuses,
       selectedIndex,
@@ -461492,7 +461578,7 @@ function TeamsDialog({
     });
   }
   if (dialogLevel.type === "teammateDetail" && currentTeammate) {
-    return /* @__PURE__ */ jsx_runtime416.jsx(TeammateDetailView, {
+    return /* @__PURE__ */ jsx_runtime417.jsx(TeammateDetailView, {
       teammate: currentTeammate,
       teamName: dialogLevel.teamName,
       onCancel: goBackToList
@@ -461514,12 +461600,12 @@ function TeamDetailView(t0) {
   const t1 = `Team ${teamName}`;
   let t2;
   if ($[0] !== selectedIndex || $[1] !== teammates) {
-    t2 = teammates.length === 0 ? /* @__PURE__ */ jsx_runtime416.jsx(ThemedText, {
+    t2 = teammates.length === 0 ? /* @__PURE__ */ jsx_runtime417.jsx(ThemedText, {
       dimColor: true,
       children: "No teammates"
-    }) : /* @__PURE__ */ jsx_runtime416.jsx(ThemedBox_default, {
+    }) : /* @__PURE__ */ jsx_runtime417.jsx(ThemedBox_default, {
       flexDirection: "column",
-      children: teammates.map((teammate, index) => /* @__PURE__ */ jsx_runtime416.jsx(TeammateListItem, {
+      children: teammates.map((teammate, index) => /* @__PURE__ */ jsx_runtime417.jsx(TeammateListItem, {
         teammate,
         isSelected: index === selectedIndex
       }, teammate.agentId))
@@ -461532,7 +461618,7 @@ function TeamDetailView(t0) {
   }
   let t3;
   if ($[3] !== onCancel || $[4] !== subtitle || $[5] !== t1 || $[6] !== t2) {
-    t3 = /* @__PURE__ */ jsx_runtime416.jsx(Dialog, {
+    t3 = /* @__PURE__ */ jsx_runtime417.jsx(Dialog, {
       title: t1,
       subtitle,
       onCancel,
@@ -461550,9 +461636,9 @@ function TeamDetailView(t0) {
   }
   let t4;
   if ($[8] !== cycleModeShortcut) {
-    t4 = /* @__PURE__ */ jsx_runtime416.jsx(ThemedBox_default, {
+    t4 = /* @__PURE__ */ jsx_runtime417.jsx(ThemedBox_default, {
       marginLeft: 1,
-      children: /* @__PURE__ */ jsx_runtime416.jsxs(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime417.jsxs(ThemedText, {
         dimColor: true,
         children: [
           figures_default.arrowUp,
@@ -461573,7 +461659,7 @@ function TeamDetailView(t0) {
   }
   let t5;
   if ($[10] !== t3 || $[11] !== t4) {
-    t5 = /* @__PURE__ */ jsx_runtime416.jsxs(jsx_runtime416.Fragment, {
+    t5 = /* @__PURE__ */ jsx_runtime417.jsxs(jsx_runtime417.Fragment, {
       children: [
         t3,
         t4
@@ -461613,7 +461699,7 @@ function TeammateListItem(t0) {
   const t3 = isSelected ? figures_default.pointer + " " : "  ";
   let t4;
   if ($[3] !== teammate.isHidden) {
-    t4 = teammate.isHidden && /* @__PURE__ */ jsx_runtime416.jsx(ThemedText, {
+    t4 = teammate.isHidden && /* @__PURE__ */ jsx_runtime417.jsx(ThemedText, {
       dimColor: true,
       children: "[hidden] "
     });
@@ -461624,7 +461710,7 @@ function TeammateListItem(t0) {
   }
   let t5;
   if ($[5] !== isIdle) {
-    t5 = isIdle && /* @__PURE__ */ jsx_runtime416.jsx(ThemedText, {
+    t5 = isIdle && /* @__PURE__ */ jsx_runtime417.jsx(ThemedText, {
       dimColor: true,
       children: "[idle] "
     });
@@ -461635,7 +461721,7 @@ function TeammateListItem(t0) {
   }
   let t6;
   if ($[7] !== modeColor || $[8] !== modeSymbol) {
-    t6 = modeSymbol && /* @__PURE__ */ jsx_runtime416.jsxs(ThemedText, {
+    t6 = modeSymbol && /* @__PURE__ */ jsx_runtime417.jsxs(ThemedText, {
       color: modeColor,
       children: [
         modeSymbol,
@@ -461650,7 +461736,7 @@ function TeammateListItem(t0) {
   }
   let t7;
   if ($[10] !== teammate.model) {
-    t7 = teammate.model && /* @__PURE__ */ jsx_runtime416.jsxs(ThemedText, {
+    t7 = teammate.model && /* @__PURE__ */ jsx_runtime417.jsxs(ThemedText, {
       dimColor: true,
       children: [
         " (",
@@ -461665,7 +461751,7 @@ function TeammateListItem(t0) {
   }
   let t8;
   if ($[12] !== shouldDim || $[13] !== t2 || $[14] !== t3 || $[15] !== t4 || $[16] !== t5 || $[17] !== t6 || $[18] !== t7 || $[19] !== teammate.name) {
-    t8 = /* @__PURE__ */ jsx_runtime416.jsxs(ThemedText, {
+    t8 = /* @__PURE__ */ jsx_runtime417.jsxs(ThemedText, {
       color: t2,
       dimColor: shouldDim,
       children: [
@@ -461782,7 +461868,7 @@ function TeammateDetailView(t0) {
   const modeColor = t5;
   let t6;
   if ($[14] !== modeColor || $[15] !== modeSymbol) {
-    t6 = modeSymbol && /* @__PURE__ */ jsx_runtime416.jsxs(ThemedText, {
+    t6 = modeSymbol && /* @__PURE__ */ jsx_runtime417.jsxs(ThemedText, {
       color: modeColor,
       children: [
         modeSymbol,
@@ -461797,7 +461883,7 @@ function TeammateDetailView(t0) {
   }
   let t7;
   if ($[17] !== teammate.name || $[18] !== themeColor) {
-    t7 = themeColor ? /* @__PURE__ */ jsx_runtime416.jsx(ThemedText, {
+    t7 = themeColor ? /* @__PURE__ */ jsx_runtime417.jsx(ThemedText, {
       color: themeColor,
       children: `@${teammate.name}`
     }) : `@${teammate.name}`;
@@ -461809,7 +461895,7 @@ function TeammateDetailView(t0) {
   }
   let t8;
   if ($[20] !== t6 || $[21] !== t7) {
-    t8 = /* @__PURE__ */ jsx_runtime416.jsxs(jsx_runtime416.Fragment, {
+    t8 = /* @__PURE__ */ jsx_runtime417.jsxs(jsx_runtime417.Fragment, {
       children: [
         t6,
         t7
@@ -461824,10 +461910,10 @@ function TeammateDetailView(t0) {
   const title = t8;
   let t9;
   if ($[23] !== teammateTasks) {
-    t9 = teammateTasks.length > 0 && /* @__PURE__ */ jsx_runtime416.jsxs(ThemedBox_default, {
+    t9 = teammateTasks.length > 0 && /* @__PURE__ */ jsx_runtime417.jsxs(ThemedBox_default, {
       flexDirection: "column",
       children: [
-        /* @__PURE__ */ jsx_runtime416.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime417.jsx(ThemedText, {
           bold: true,
           children: "Tasks"
         }),
@@ -461841,17 +461927,17 @@ function TeammateDetailView(t0) {
   }
   let t10;
   if ($[25] !== promptExpanded || $[26] !== teammate.prompt) {
-    t10 = teammate.prompt && /* @__PURE__ */ jsx_runtime416.jsxs(ThemedBox_default, {
+    t10 = teammate.prompt && /* @__PURE__ */ jsx_runtime417.jsxs(ThemedBox_default, {
       flexDirection: "column",
       children: [
-        /* @__PURE__ */ jsx_runtime416.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime417.jsx(ThemedText, {
           bold: true,
           children: "Prompt"
         }),
-        /* @__PURE__ */ jsx_runtime416.jsxs(ThemedText, {
+        /* @__PURE__ */ jsx_runtime417.jsxs(ThemedText, {
           children: [
             promptExpanded ? teammate.prompt : truncateToWidth(teammate.prompt, 80),
-            stringWidth(teammate.prompt) > 80 && !promptExpanded && /* @__PURE__ */ jsx_runtime416.jsx(ThemedText, {
+            stringWidth(teammate.prompt) > 80 && !promptExpanded && /* @__PURE__ */ jsx_runtime417.jsx(ThemedText, {
               dimColor: true,
               children: " (p to expand)"
             })
@@ -461867,7 +461953,7 @@ function TeammateDetailView(t0) {
   }
   let t11;
   if ($[28] !== onCancel || $[29] !== subtitle || $[30] !== t10 || $[31] !== t9 || $[32] !== title) {
-    t11 = /* @__PURE__ */ jsx_runtime416.jsxs(Dialog, {
+    t11 = /* @__PURE__ */ jsx_runtime417.jsxs(Dialog, {
       title,
       subtitle,
       onCancel,
@@ -461889,9 +461975,9 @@ function TeammateDetailView(t0) {
   }
   let t12;
   if ($[34] !== cycleModeShortcut) {
-    t12 = /* @__PURE__ */ jsx_runtime416.jsx(ThemedBox_default, {
+    t12 = /* @__PURE__ */ jsx_runtime417.jsx(ThemedBox_default, {
       marginLeft: 1,
-      children: /* @__PURE__ */ jsx_runtime416.jsxs(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime417.jsxs(ThemedText, {
         dimColor: true,
         children: [
           figures_default.arrowLeft,
@@ -461910,7 +461996,7 @@ function TeammateDetailView(t0) {
   }
   let t13;
   if ($[36] !== t11 || $[37] !== t12) {
-    t13 = /* @__PURE__ */ jsx_runtime416.jsxs(jsx_runtime416.Fragment, {
+    t13 = /* @__PURE__ */ jsx_runtime417.jsxs(jsx_runtime417.Fragment, {
       children: [
         t11,
         t12
@@ -461925,7 +462011,7 @@ function TeammateDetailView(t0) {
   return t13;
 }
 function _temp279(task_0) {
-  return /* @__PURE__ */ jsx_runtime416.jsxs(ThemedText, {
+  return /* @__PURE__ */ jsx_runtime417.jsxs(ThemedText, {
     color: task_0.status === "completed" ? "success" : undefined,
     children: [
       task_0.status === "completed" ? figures_default.tick : "\u25FC",
@@ -462051,7 +462137,7 @@ function cycleAllTeammateModes(teammates, teamName, isBypassAvailable) {
   }
   logForDebugging(`[TeamsDialog] Sent mode change to all ${teammates.length} teammates: ${targetMode}`);
 }
-var import_compiler_runtime329, import_react248, jsx_runtime416;
+var import_compiler_runtime329, import_react248, jsx_runtime417;
 var init_TeamsDialog = __esm(() => {
   init_figures();
   init_dist5();
@@ -462079,7 +462165,7 @@ var init_TeamsDialog = __esm(() => {
   init_ThemedText();
   import_compiler_runtime329 = __toESM(require_compiler_runtime(), 1);
   import_react248 = __toESM(require_react(), 1);
-  jsx_runtime416 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime417 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/vim/motions.ts
@@ -463289,9 +463375,9 @@ function VimTextInput(props) {
   import_react250.default.useEffect(t17, t18);
   let t19;
   if ($[34] !== isTerminalFocused || $[35] !== props || $[36] !== vimInputState) {
-    t19 = /* @__PURE__ */ jsx_runtime417.jsx(ThemedBox_default, {
+    t19 = /* @__PURE__ */ jsx_runtime418.jsx(ThemedBox_default, {
       flexDirection: "column",
-      children: /* @__PURE__ */ jsx_runtime417.jsx(BaseTextInput, {
+      children: /* @__PURE__ */ jsx_runtime418.jsx(BaseTextInput, {
         inputState: vimInputState,
         terminalFocus: isTerminalFocused,
         highlights: props.highlights,
@@ -463310,7 +463396,7 @@ function VimTextInput(props) {
 function _temp188(text) {
   return text;
 }
-var import_compiler_runtime330, import_react250, jsx_runtime417;
+var import_compiler_runtime330, import_react250, jsx_runtime418;
 var init_VimTextInput = __esm(() => {
   init_source();
   init_useClipboardImageHint();
@@ -463319,7 +463405,7 @@ var init_VimTextInput = __esm(() => {
   init_BaseTextInput();
   import_compiler_runtime330 = __toESM(require_compiler_runtime(), 1);
   import_react250 = __toESM(require_react(), 1);
-  jsx_runtime417 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime418 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/StatusLine.tsx
@@ -463548,21 +463634,21 @@ function StatusLineInner({
     };
   }, []);
   const paddingX = settings?.statusLine?.padding ?? 0;
-  return /* @__PURE__ */ jsx_runtime418.jsx(ThemedBox_default, {
+  return /* @__PURE__ */ jsx_runtime419.jsx(ThemedBox_default, {
     paddingX,
     gap: 2,
-    children: statusLineText ? /* @__PURE__ */ jsx_runtime418.jsx(ThemedText, {
+    children: statusLineText ? /* @__PURE__ */ jsx_runtime419.jsx(ThemedText, {
       dimColor: true,
       wrap: "truncate",
-      children: /* @__PURE__ */ jsx_runtime418.jsx(Ansi, {
+      children: /* @__PURE__ */ jsx_runtime419.jsx(Ansi, {
         children: statusLineText
       })
-    }) : isFullscreenEnvEnabled() ? /* @__PURE__ */ jsx_runtime418.jsx(ThemedText, {
+    }) : isFullscreenEnvEnabled() ? /* @__PURE__ */ jsx_runtime419.jsx(ThemedText, {
       children: " "
     }) : null
   });
 }
-var import_react251, jsx_runtime418, StatusLine;
+var import_react251, jsx_runtime419, StatusLine;
 var init_StatusLine = __esm(() => {
   init_analytics();
   init_AppState();
@@ -463587,7 +463673,7 @@ var init_StatusLine = __esm(() => {
   init_worktree();
   init_utils13();
   import_react251 = __toESM(require_react(), 1);
-  jsx_runtime418 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime419 = __toESM(require_jsx_runtime(), 1);
   StatusLine = import_react251.memo(StatusLineInner);
 });
 
@@ -463786,7 +463872,7 @@ function BackgroundTaskStatus(t0) {
     const visiblePills = t11;
     let t12;
     if ($[23] !== showLeftArrow) {
-      t12 = showLeftArrow && /* @__PURE__ */ jsx_runtime419.jsxs(ThemedText, {
+      t12 = showLeftArrow && /* @__PURE__ */ jsx_runtime420.jsxs(ThemedText, {
         dimColor: true,
         children: [
           figures_default.arrowLeft,
@@ -463802,12 +463888,12 @@ function BackgroundTaskStatus(t0) {
     if ($[25] !== selectedIdx || $[26] !== setAppState || $[27] !== viewedIdx || $[28] !== visiblePills) {
       t13 = visiblePills.map((pill_1, i_1) => {
         const needsSeparator = i_1 > 0;
-        return /* @__PURE__ */ jsx_runtime419.jsxs(React138.Fragment, {
+        return /* @__PURE__ */ jsx_runtime420.jsxs(React139.Fragment, {
           children: [
-            needsSeparator && /* @__PURE__ */ jsx_runtime419.jsx(ThemedText, {
+            needsSeparator && /* @__PURE__ */ jsx_runtime420.jsx(ThemedText, {
               children: " "
             }),
-            /* @__PURE__ */ jsx_runtime419.jsx(AgentPill, {
+            /* @__PURE__ */ jsx_runtime420.jsx(AgentPill, {
               name: pill_1.name,
               color: pill_1.color,
               isSelected: selectedIdx === pill_1.idx,
@@ -463828,7 +463914,7 @@ function BackgroundTaskStatus(t0) {
     }
     let t14;
     if ($[30] !== showRightArrow) {
-      t14 = showRightArrow && /* @__PURE__ */ jsx_runtime419.jsxs(ThemedText, {
+      t14 = showRightArrow && /* @__PURE__ */ jsx_runtime420.jsxs(ThemedText, {
         dimColor: true,
         children: [
           " ",
@@ -463842,11 +463928,11 @@ function BackgroundTaskStatus(t0) {
     }
     let t15;
     if ($[32] === Symbol.for("react.memo_cache_sentinel")) {
-      t15 = /* @__PURE__ */ jsx_runtime419.jsxs(ThemedText, {
+      t15 = /* @__PURE__ */ jsx_runtime420.jsxs(ThemedText, {
         dimColor: true,
         children: [
           " \xB7 ",
-          /* @__PURE__ */ jsx_runtime419.jsx(KeyboardShortcutHint, {
+          /* @__PURE__ */ jsx_runtime420.jsx(KeyboardShortcutHint, {
             shortcut: "shift + \u2193",
             action: "expand"
           })
@@ -463858,7 +463944,7 @@ function BackgroundTaskStatus(t0) {
     }
     let t16;
     if ($[33] !== t12 || $[34] !== t13 || $[35] !== t14) {
-      t16 = /* @__PURE__ */ jsx_runtime419.jsxs(jsx_runtime419.Fragment, {
+      t16 = /* @__PURE__ */ jsx_runtime420.jsxs(jsx_runtime420.Fragment, {
         children: [
           t12,
           t13,
@@ -463891,7 +463977,7 @@ function BackgroundTaskStatus(t0) {
   }
   let t9;
   if ($[39] !== onOpenDialog || $[40] !== t8 || $[41] !== tasksSelected) {
-    t9 = /* @__PURE__ */ jsx_runtime419.jsx(SummaryPill, {
+    t9 = /* @__PURE__ */ jsx_runtime420.jsx(SummaryPill, {
       selected: tasksSelected,
       onClick: onOpenDialog,
       children: t8
@@ -463905,7 +463991,7 @@ function BackgroundTaskStatus(t0) {
   }
   let t10;
   if ($[43] !== runningTasks) {
-    t10 = pillNeedsCta(runningTasks) && /* @__PURE__ */ jsx_runtime419.jsxs(ThemedText, {
+    t10 = pillNeedsCta(runningTasks) && /* @__PURE__ */ jsx_runtime420.jsxs(ThemedText, {
       dimColor: true,
       children: [
         " \xB7 ",
@@ -463920,7 +464006,7 @@ function BackgroundTaskStatus(t0) {
   }
   let t11;
   if ($[45] !== t10 || $[46] !== t9) {
-    t11 = /* @__PURE__ */ jsx_runtime419.jsxs(jsx_runtime419.Fragment, {
+    t11 = /* @__PURE__ */ jsx_runtime420.jsxs(jsx_runtime420.Fragment, {
       children: [
         t9,
         t10
@@ -463995,7 +464081,7 @@ function AgentPill(t0) {
   if (highlighted) {
     let t1;
     if ($[0] !== color || $[1] !== isViewed || $[2] !== name) {
-      t1 = color ? /* @__PURE__ */ jsx_runtime419.jsxs(ThemedText, {
+      t1 = color ? /* @__PURE__ */ jsx_runtime420.jsxs(ThemedText, {
         backgroundColor: color,
         color: "inverseText",
         bold: isViewed,
@@ -464003,7 +464089,7 @@ function AgentPill(t0) {
           "@",
           name
         ]
-      }) : /* @__PURE__ */ jsx_runtime419.jsxs(ThemedText, {
+      }) : /* @__PURE__ */ jsx_runtime420.jsxs(ThemedText, {
         color: "background",
         inverse: true,
         bold: isViewed,
@@ -464024,7 +464110,7 @@ function AgentPill(t0) {
     if (isIdle) {
       let t1;
       if ($[4] !== isViewed || $[5] !== name) {
-        t1 = /* @__PURE__ */ jsx_runtime419.jsxs(ThemedText, {
+        t1 = /* @__PURE__ */ jsx_runtime420.jsxs(ThemedText, {
           dimColor: true,
           bold: isViewed,
           children: [
@@ -464043,7 +464129,7 @@ function AgentPill(t0) {
       if (isViewed) {
         let t1;
         if ($[7] !== color || $[8] !== name) {
-          t1 = /* @__PURE__ */ jsx_runtime419.jsxs(ThemedText, {
+          t1 = /* @__PURE__ */ jsx_runtime420.jsxs(ThemedText, {
             color,
             bold: true,
             children: [
@@ -464062,7 +464148,7 @@ function AgentPill(t0) {
         const t1 = !color;
         let t2;
         if ($[10] !== color || $[11] !== name || $[12] !== t1) {
-          t2 = /* @__PURE__ */ jsx_runtime419.jsxs(ThemedText, {
+          t2 = /* @__PURE__ */ jsx_runtime420.jsxs(ThemedText, {
             color,
             dimColor: t1,
             children: [
@@ -464097,7 +464183,7 @@ function AgentPill(t0) {
   }
   let t3;
   if ($[16] !== label || $[17] !== onClick) {
-    t3 = /* @__PURE__ */ jsx_runtime419.jsx(ThemedBox_default, {
+    t3 = /* @__PURE__ */ jsx_runtime420.jsx(ThemedBox_default, {
       onClick,
       onMouseEnter: t1,
       onMouseLeave: t2,
@@ -464122,7 +464208,7 @@ function SummaryPill(t0) {
   const t1 = selected || hover;
   let t2;
   if ($[0] !== children2 || $[1] !== t1) {
-    t2 = /* @__PURE__ */ jsx_runtime419.jsx(ThemedText, {
+    t2 = /* @__PURE__ */ jsx_runtime420.jsx(ThemedText, {
       color: "background",
       inverse: t1,
       children: children2
@@ -464150,7 +464236,7 @@ function SummaryPill(t0) {
   }
   let t5;
   if ($[5] !== label || $[6] !== onClick) {
-    t5 = /* @__PURE__ */ jsx_runtime419.jsx(ThemedBox_default, {
+    t5 = /* @__PURE__ */ jsx_runtime420.jsx(ThemedBox_default, {
       onClick,
       onMouseEnter: t3,
       onMouseLeave: t4,
@@ -464172,7 +464258,7 @@ function getAgentThemeColor(colorName) {
   }
   return;
 }
-var import_compiler_runtime331, React138, import_react252, jsx_runtime419;
+var import_compiler_runtime331, React139, import_react252, jsx_runtime420;
 var init_BackgroundTaskStatus = __esm(() => {
   init_figures();
   init_useTerminalSize();
@@ -464186,9 +464272,9 @@ var init_BackgroundTaskStatus = __esm(() => {
   init_KeyboardShortcutHint();
   init_taskStatusUtils();
   import_compiler_runtime331 = __toESM(require_compiler_runtime(), 1);
-  React138 = __toESM(require_react(), 1);
+  React139 = __toESM(require_react(), 1);
   import_react252 = __toESM(require_react(), 1);
-  jsx_runtime419 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime420 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/teams/TeamStatus.tsx
@@ -464213,13 +464299,13 @@ function TeamStatus(t0) {
   }
   let t2;
   if ($[2] !== showHint || $[3] !== teamsSelected) {
-    t2 = showHint && teamsSelected ? /* @__PURE__ */ jsx_runtime420.jsxs(jsx_runtime420.Fragment, {
+    t2 = showHint && teamsSelected ? /* @__PURE__ */ jsx_runtime421.jsxs(jsx_runtime421.Fragment, {
       children: [
-        /* @__PURE__ */ jsx_runtime420.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime421.jsx(ThemedText, {
           dimColor: true,
           children: "\xB7 "
         }),
-        /* @__PURE__ */ jsx_runtime420.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime421.jsx(ThemedText, {
           dimColor: true,
           children: "Enter to view"
         })
@@ -464236,7 +464322,7 @@ function TeamStatus(t0) {
   const t3 = teamsSelected ? "selected" : "normal";
   let t4;
   if ($[5] !== statusText || $[6] !== t3 || $[7] !== teamsSelected) {
-    t4 = /* @__PURE__ */ jsx_runtime420.jsx(ThemedText, {
+    t4 = /* @__PURE__ */ jsx_runtime421.jsx(ThemedText, {
       color: "background",
       inverse: teamsSelected,
       children: statusText
@@ -464250,7 +464336,7 @@ function TeamStatus(t0) {
   }
   let t5;
   if ($[9] !== hint) {
-    t5 = hint ? /* @__PURE__ */ jsx_runtime420.jsxs(ThemedText, {
+    t5 = hint ? /* @__PURE__ */ jsx_runtime421.jsxs(ThemedText, {
       children: [
         " ",
         hint
@@ -464263,7 +464349,7 @@ function TeamStatus(t0) {
   }
   let t6;
   if ($[11] !== t4 || $[12] !== t5) {
-    t6 = /* @__PURE__ */ jsx_runtime420.jsxs(jsx_runtime420.Fragment, {
+    t6 = /* @__PURE__ */ jsx_runtime421.jsxs(jsx_runtime421.Fragment, {
       children: [
         t4,
         t5
@@ -464283,12 +464369,12 @@ function _temp281(t) {
 function _temp191(s) {
   return s.teamContext;
 }
-var import_compiler_runtime332, jsx_runtime420;
+var import_compiler_runtime332, jsx_runtime421;
 var init_TeamStatus = __esm(() => {
   init_ink2();
   init_AppState();
   import_compiler_runtime332 = __toESM(require_compiler_runtime(), 1);
-  jsx_runtime420 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime421 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/PromptInput/HistorySearchInput.tsx
@@ -464302,7 +464388,7 @@ function HistorySearchInput(t0) {
   const t1 = historyFailedMatch ? "no matching prompt:" : "search prompts:";
   let t2;
   if ($[0] !== t1) {
-    t2 = /* @__PURE__ */ jsx_runtime421.jsx(ThemedText, {
+    t2 = /* @__PURE__ */ jsx_runtime422.jsx(ThemedText, {
       dimColor: true,
       children: t1
     });
@@ -464314,7 +464400,7 @@ function HistorySearchInput(t0) {
   const t3 = stringWidth(value) + 1;
   let t4;
   if ($[2] !== onChange || $[3] !== t3 || $[4] !== value) {
-    t4 = /* @__PURE__ */ jsx_runtime421.jsx(TextInput, {
+    t4 = /* @__PURE__ */ jsx_runtime422.jsx(TextInput, {
       value,
       onChange,
       cursorOffset: value.length,
@@ -464334,7 +464420,7 @@ function HistorySearchInput(t0) {
   }
   let t5;
   if ($[6] !== t2 || $[7] !== t4) {
-    t5 = /* @__PURE__ */ jsx_runtime421.jsxs(ThemedBox_default, {
+    t5 = /* @__PURE__ */ jsx_runtime422.jsxs(ThemedBox_default, {
       gap: 1,
       children: [
         t2,
@@ -464350,13 +464436,13 @@ function HistorySearchInput(t0) {
   return t5;
 }
 function _temp192() {}
-var import_compiler_runtime333, jsx_runtime421, HistorySearchInput_default;
+var import_compiler_runtime333, jsx_runtime422, HistorySearchInput_default;
 var init_HistorySearchInput = __esm(() => {
   init_stringWidth();
   init_ink2();
   init_TextInput();
   import_compiler_runtime333 = __toESM(require_compiler_runtime(), 1);
-  jsx_runtime421 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime422 = __toESM(require_jsx_runtime(), 1);
   HistorySearchInput_default = HistorySearchInput;
 });
 
@@ -464528,7 +464614,7 @@ function PromptInputFooterLeftSide(t0) {
   if (exitMessage.show) {
     let t1;
     if ($[0] !== exitMessage.key) {
-      t1 = /* @__PURE__ */ jsx_runtime422.jsxs(ThemedText, {
+      t1 = /* @__PURE__ */ jsx_runtime423.jsxs(ThemedText, {
         dimColor: true,
         children: [
           "Press ",
@@ -464546,7 +464632,7 @@ function PromptInputFooterLeftSide(t0) {
   if (isPasting) {
     let t1;
     if ($[2] === Symbol.for("react.memo_cache_sentinel")) {
-      t1 = /* @__PURE__ */ jsx_runtime422.jsx(ThemedText, {
+      t1 = /* @__PURE__ */ jsx_runtime423.jsx(ThemedText, {
         dimColor: true,
         children: "Pasting text\u2026"
       }, "pasting-message");
@@ -464568,7 +464654,7 @@ function PromptInputFooterLeftSide(t0) {
   const showVim = t1;
   let t2;
   if ($[6] !== historyFailedMatch || $[7] !== historyQuery || $[8] !== isSearching || $[9] !== setHistoryQuery) {
-    t2 = isSearching && /* @__PURE__ */ jsx_runtime422.jsx(HistorySearchInput_default, {
+    t2 = isSearching && /* @__PURE__ */ jsx_runtime423.jsx(HistorySearchInput_default, {
       value: historyQuery,
       onChange: setHistoryQuery,
       historyFailedMatch
@@ -464583,7 +464669,7 @@ function PromptInputFooterLeftSide(t0) {
   }
   let t3;
   if ($[11] !== showVim) {
-    t3 = showVim ? /* @__PURE__ */ jsx_runtime422.jsx(ThemedText, {
+    t3 = showVim ? /* @__PURE__ */ jsx_runtime423.jsx(ThemedText, {
       dimColor: true,
       children: "-- INSERT --"
     }, "vim-insert") : null;
@@ -464595,7 +464681,7 @@ function PromptInputFooterLeftSide(t0) {
   const t4 = !suppressHint && !showVim;
   let t5;
   if ($[13] !== isLoading || $[14] !== mode || $[15] !== onOpenTasksDialog || $[16] !== t4 || $[17] !== tasksSelected || $[18] !== teammateFooterIndex || $[19] !== teamsSelected || $[20] !== tmuxSelected || $[21] !== toolPermissionContext) {
-    t5 = /* @__PURE__ */ jsx_runtime422.jsx(ModeIndicator, {
+    t5 = /* @__PURE__ */ jsx_runtime423.jsx(ModeIndicator, {
       mode,
       toolPermissionContext,
       showHint: t4,
@@ -464621,7 +464707,7 @@ function PromptInputFooterLeftSide(t0) {
   }
   let t6;
   if ($[23] !== t2 || $[24] !== t3 || $[25] !== t5) {
-    t6 = /* @__PURE__ */ jsx_runtime422.jsxs(ThemedBox_default, {
+    t6 = /* @__PURE__ */ jsx_runtime423.jsxs(ThemedBox_default, {
       justifyContent: "flex-start",
       gap: 1,
       children: [
@@ -464687,7 +464773,7 @@ function ModeIndicator({
   const isKillAgentsConfirmShowing = useAppState((s_7) => s_7.notifications.current?.key === "kill-agents-confirm");
   const hasTeams = isAgentSwarmsEnabled() && !isInProcessEnabled() && teamContext !== undefined && count2(Object.values(teamContext.teammates), (t_0) => t_0.name !== "team-lead") > 0;
   if (mode === "bash") {
-    return /* @__PURE__ */ jsx_runtime422.jsx(ThemedText, {
+    return /* @__PURE__ */ jsx_runtime423.jsx(ThemedText, {
       color: "bashBorder",
       children: "! for bash mode"
     });
@@ -464703,18 +464789,18 @@ function ModeIndicator({
   const shouldShowModeHint = primaryItemCount < 2;
   const hasInProcessTeammates = !showSpinnerTree && hasBackgroundTasks && Object.values(tasks).some((t_1) => t_1.type === "in_process_teammate");
   const hasTeammatePills = hasInProcessTeammates || !showSpinnerTree && isViewingTeammate;
-  const modePart = currentMode && hasActiveMode && !getIsRemoteMode() ? /* @__PURE__ */ jsx_runtime422.jsxs(ThemedText, {
+  const modePart = currentMode && hasActiveMode && !getIsRemoteMode() ? /* @__PURE__ */ jsx_runtime423.jsxs(ThemedText, {
     color: getModeColor(currentMode),
     children: [
       permissionModeSymbol(currentMode),
       " ",
       permissionModeTitle(currentMode).toLowerCase(),
       " on",
-      shouldShowModeHint && /* @__PURE__ */ jsx_runtime422.jsxs(ThemedText, {
+      shouldShowModeHint && /* @__PURE__ */ jsx_runtime423.jsxs(ThemedText, {
         dimColor: true,
         children: [
           " ",
-          /* @__PURE__ */ jsx_runtime422.jsx(KeyboardShortcutHint, {
+          /* @__PURE__ */ jsx_runtime423.jsx(KeyboardShortcutHint, {
             shortcut: modeCycleShortcut,
             action: "cycle",
             parens: true
@@ -464724,9 +464810,9 @@ function ModeIndicator({
     ]
   }, "mode") : null;
   const parts = [
-    ...remoteSessionUrl ? [/* @__PURE__ */ jsx_runtime422.jsx(Link, {
+    ...remoteSessionUrl ? [/* @__PURE__ */ jsx_runtime423.jsx(Link, {
       url: remoteSessionUrl,
-      children: /* @__PURE__ */ jsx_runtime422.jsxs(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime423.jsxs(ThemedText, {
         color: "ide",
         children: [
           figures_default.circleDouble,
@@ -464735,11 +464821,11 @@ function ModeIndicator({
       })
     }, "remote")] : [],
     ...[],
-    ...isAgentSwarmsEnabled() && hasTeams ? [/* @__PURE__ */ jsx_runtime422.jsx(TeamStatus, {
+    ...isAgentSwarmsEnabled() && hasTeams ? [/* @__PURE__ */ jsx_runtime423.jsx(TeamStatus, {
       teamsSelected,
       showHint: showHint && !hasBackgroundTasks
     }, "teams")] : [],
-    ...shouldShowPrStatus ? [/* @__PURE__ */ jsx_runtime422.jsx(PrBadge, {
+    ...shouldShowPrStatus ? [/* @__PURE__ */ jsx_runtime423.jsx(PrBadge, {
       number: prStatus.number,
       url: prStatus.url,
       reviewState: prStatus.reviewState
@@ -464749,9 +464835,9 @@ function ModeIndicator({
   const hasRunningAgentTasks = Object.values(tasks).some((t_3) => t_3.type === "local_agent" && t_3.status === "running");
   const hintParts = showHint ? getSpinnerHintParts(isLoading, escShortcut, todosShortcut, killAgentsShortcut, hasTaskItems, expandedView, hasAnyInProcessTeammates, hasRunningAgentTasks, isKillAgentsConfirmShowing) : [];
   if (isViewingCompletedTeammate) {
-    parts.push(/* @__PURE__ */ jsx_runtime422.jsx(ThemedText, {
+    parts.push(/* @__PURE__ */ jsx_runtime423.jsx(ThemedText, {
       dimColor: true,
-      children: /* @__PURE__ */ jsx_runtime422.jsx(KeyboardShortcutHint, {
+      children: /* @__PURE__ */ jsx_runtime423.jsx(KeyboardShortcutHint, {
         shortcut: escShortcut,
         action: "return to team lead"
       })
@@ -464761,11 +464847,11 @@ function ModeIndicator({
   }
   if (hasTeammatePills) {
     const otherParts = [...modePart ? [modePart] : [], ...parts, ...isViewingCompletedTeammate ? [] : hintParts];
-    return /* @__PURE__ */ jsx_runtime422.jsxs(ThemedBox_default, {
+    return /* @__PURE__ */ jsx_runtime423.jsxs(ThemedBox_default, {
       flexDirection: "column",
       children: [
-        /* @__PURE__ */ jsx_runtime422.jsx(ThemedBox_default, {
-          children: /* @__PURE__ */ jsx_runtime422.jsx(BackgroundTaskStatus, {
+        /* @__PURE__ */ jsx_runtime423.jsx(ThemedBox_default, {
+          children: /* @__PURE__ */ jsx_runtime423.jsx(BackgroundTaskStatus, {
             tasksSelected,
             isViewingTeammate,
             teammateFooterIndex,
@@ -464773,8 +464859,8 @@ function ModeIndicator({
             onOpenDialog: onOpenTasksDialog
           })
         }),
-        otherParts.length > 0 && /* @__PURE__ */ jsx_runtime422.jsx(ThemedBox_default, {
-          children: /* @__PURE__ */ jsx_runtime422.jsx(Byline, {
+        otherParts.length > 0 && /* @__PURE__ */ jsx_runtime423.jsx(ThemedBox_default, {
+          children: /* @__PURE__ */ jsx_runtime423.jsx(Byline, {
             children: otherParts
           })
         })
@@ -464782,7 +464868,7 @@ function ModeIndicator({
     });
   }
   const hasCoordinatorTasks = false;
-  const tasksPart = hasBackgroundTasks && !hasTeammatePills && !shouldHideTasksFooter(tasks, showSpinnerTree) ? /* @__PURE__ */ jsx_runtime422.jsx(BackgroundTaskStatus, {
+  const tasksPart = hasBackgroundTasks && !hasTeammatePills && !shouldHideTasksFooter(tasks, showSpinnerTree) ? /* @__PURE__ */ jsx_runtime423.jsx(BackgroundTaskStatus, {
     tasksSelected,
     isViewingTeammate,
     teammateFooterIndex,
@@ -464790,7 +464876,7 @@ function ModeIndicator({
     onOpenDialog: onOpenTasksDialog
   }) : null;
   if (parts.length === 0 && !tasksPart && !modePart && showHint) {
-    parts.push(/* @__PURE__ */ jsx_runtime422.jsx(ThemedText, {
+    parts.push(/* @__PURE__ */ jsx_runtime423.jsx(ThemedText, {
       dimColor: true,
       children: "? for shortcuts"
     }, "shortcuts-hint"));
@@ -464800,17 +464886,17 @@ function ModeIndicator({
   if (false) {} else if (isFullscreenEnvEnabled() && selectionHintHasContent) {
     const isMac = getPlatform() === "macos";
     const altClickFailed = isMac && (selGetState()?.lastPressHadAlt ?? false);
-    parts.push(/* @__PURE__ */ jsx_runtime422.jsx(ThemedText, {
+    parts.push(/* @__PURE__ */ jsx_runtime423.jsx(ThemedText, {
       dimColor: true,
-      children: /* @__PURE__ */ jsx_runtime422.jsxs(Byline, {
+      children: /* @__PURE__ */ jsx_runtime423.jsxs(Byline, {
         children: [
-          !copyOnSelect && /* @__PURE__ */ jsx_runtime422.jsx(KeyboardShortcutHint, {
+          !copyOnSelect && /* @__PURE__ */ jsx_runtime423.jsx(KeyboardShortcutHint, {
             shortcut: "ctrl+c",
             action: "copy"
           }),
-          isXtermJs() && (altClickFailed ? /* @__PURE__ */ jsx_runtime422.jsx(ThemedText, {
+          isXtermJs() && (altClickFailed ? /* @__PURE__ */ jsx_runtime423.jsx(ThemedText, {
             children: "set macOptionClickForcesSelection in VS Code settings"
-          }) : /* @__PURE__ */ jsx_runtime422.jsx(KeyboardShortcutHint, {
+          }) : /* @__PURE__ */ jsx_runtime423.jsx(KeyboardShortcutHint, {
             shortcut: isMac ? "option+click" : "shift+click",
             action: "native select"
           }))
@@ -464819,49 +464905,49 @@ function ModeIndicator({
     }, "selection-copy"));
   } else if (false) {}
   if ((tasksPart || hasCoordinatorTasks) && showHint && !hasTeams) {
-    parts.push(/* @__PURE__ */ jsx_runtime422.jsx(ThemedText, {
+    parts.push(/* @__PURE__ */ jsx_runtime423.jsx(ThemedText, {
       dimColor: true,
-      children: tasksSelected ? /* @__PURE__ */ jsx_runtime422.jsx(KeyboardShortcutHint, {
+      children: tasksSelected ? /* @__PURE__ */ jsx_runtime423.jsx(KeyboardShortcutHint, {
         shortcut: "Enter",
         action: "view tasks"
-      }) : /* @__PURE__ */ jsx_runtime422.jsx(KeyboardShortcutHint, {
+      }) : /* @__PURE__ */ jsx_runtime423.jsx(KeyboardShortcutHint, {
         shortcut: "\u2193",
         action: "manage"
       })
     }, "manage-tasks"));
   }
   if (parts.length === 0 && !tasksPart && !modePart) {
-    return isFullscreenEnvEnabled() ? /* @__PURE__ */ jsx_runtime422.jsx(ThemedText, {
+    return isFullscreenEnvEnabled() ? /* @__PURE__ */ jsx_runtime423.jsx(ThemedText, {
       children: " "
     }) : null;
   }
-  return /* @__PURE__ */ jsx_runtime422.jsxs(ThemedBox_default, {
+  return /* @__PURE__ */ jsx_runtime423.jsxs(ThemedBox_default, {
     height: 1,
     overflow: "hidden",
     children: [
-      modePart && /* @__PURE__ */ jsx_runtime422.jsxs(ThemedBox_default, {
+      modePart && /* @__PURE__ */ jsx_runtime423.jsxs(ThemedBox_default, {
         flexShrink: 0,
         children: [
           modePart,
-          (tasksPart || parts.length > 0) && /* @__PURE__ */ jsx_runtime422.jsx(ThemedText, {
+          (tasksPart || parts.length > 0) && /* @__PURE__ */ jsx_runtime423.jsx(ThemedText, {
             dimColor: true,
             children: " \xB7 "
           })
         ]
       }),
-      tasksPart && /* @__PURE__ */ jsx_runtime422.jsxs(ThemedBox_default, {
+      tasksPart && /* @__PURE__ */ jsx_runtime423.jsxs(ThemedBox_default, {
         flexShrink: 0,
         children: [
           tasksPart,
-          parts.length > 0 && /* @__PURE__ */ jsx_runtime422.jsx(ThemedText, {
+          parts.length > 0 && /* @__PURE__ */ jsx_runtime423.jsx(ThemedText, {
             dimColor: true,
             children: " \xB7 "
           })
         ]
       }),
-      parts.length > 0 && /* @__PURE__ */ jsx_runtime422.jsx(ThemedText, {
+      parts.length > 0 && /* @__PURE__ */ jsx_runtime423.jsx(ThemedText, {
         wrap: "truncate",
-        children: /* @__PURE__ */ jsx_runtime422.jsx(Byline, {
+        children: /* @__PURE__ */ jsx_runtime423.jsx(Byline, {
           children: parts
         })
       })
@@ -464886,21 +464972,21 @@ function getSpinnerHintParts(isLoading, escShortcut, todosShortcut, killAgentsSh
     toggleAction = expandedView === "tasks" ? "hide tasks" : "show tasks";
   }
   const showToggleHint = hasTaskItems || hasTeammates;
-  return [...isLoading ? [/* @__PURE__ */ jsx_runtime422.jsx(ThemedText, {
+  return [...isLoading ? [/* @__PURE__ */ jsx_runtime423.jsx(ThemedText, {
     dimColor: true,
-    children: /* @__PURE__ */ jsx_runtime422.jsx(KeyboardShortcutHint, {
+    children: /* @__PURE__ */ jsx_runtime423.jsx(KeyboardShortcutHint, {
       shortcut: escShortcut,
       action: "interrupt"
     })
-  }, "esc")] : [], ...!isLoading && hasRunningAgentTasks && !isKillAgentsConfirmShowing ? [/* @__PURE__ */ jsx_runtime422.jsx(ThemedText, {
+  }, "esc")] : [], ...!isLoading && hasRunningAgentTasks && !isKillAgentsConfirmShowing ? [/* @__PURE__ */ jsx_runtime423.jsx(ThemedText, {
     dimColor: true,
-    children: /* @__PURE__ */ jsx_runtime422.jsx(KeyboardShortcutHint, {
+    children: /* @__PURE__ */ jsx_runtime423.jsx(KeyboardShortcutHint, {
       shortcut: killAgentsShortcut,
       action: "stop agents"
     })
-  }, "kill-agents")] : [], ...showToggleHint ? [/* @__PURE__ */ jsx_runtime422.jsx(ThemedText, {
+  }, "kill-agents")] : [], ...showToggleHint ? [/* @__PURE__ */ jsx_runtime423.jsx(ThemedText, {
     dimColor: true,
-    children: /* @__PURE__ */ jsx_runtime422.jsx(KeyboardShortcutHint, {
+    children: /* @__PURE__ */ jsx_runtime423.jsx(KeyboardShortcutHint, {
       shortcut: todosShortcut,
       action: toggleAction
     })
@@ -464909,7 +464995,7 @@ function getSpinnerHintParts(isLoading, escShortcut, todosShortcut, killAgentsSh
 function isPrStatusEnabled() {
   return getGlobalConfig().prStatusFooterEnabled ?? true;
 }
-var import_compiler_runtime335, import_react254, jsx_runtime422, proactiveModule3 = null, NO_OP_SUBSCRIBE = (_cb) => () => {}, NULL = () => null;
+var import_compiler_runtime335, import_react254, jsx_runtime423, proactiveModule3 = null, NO_OP_SUBSCRIBE = (_cb) => () => {}, NULL = () => null;
 var init_PromptInputFooterLeftSide = __esm(() => {
   init_ink2();
   init_figures();
@@ -464943,7 +465029,7 @@ var init_PromptInputFooterLeftSide = __esm(() => {
   init_PrBadge();
   import_compiler_runtime335 = __toESM(require_compiler_runtime(), 1);
   import_react254 = __toESM(require_react(), 1);
-  jsx_runtime422 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime423 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/PromptInput/PromptInputFooter.tsx
@@ -465003,10 +465089,10 @@ function PromptInputFooter({
   } : null, [isFullscreen, suggestions, selectedSuggestion, maxColumnWidth]);
   useSetPromptOverlay(overlayData);
   if (suggestions.length && !isFullscreen) {
-    return /* @__PURE__ */ jsx_runtime423.jsx(ThemedBox_default, {
+    return /* @__PURE__ */ jsx_runtime424.jsx(ThemedBox_default, {
       paddingX: 2,
       paddingY: 0,
-      children: /* @__PURE__ */ jsx_runtime423.jsx(PromptInputFooterSuggestions, {
+      children: /* @__PURE__ */ jsx_runtime424.jsx(PromptInputFooterSuggestions, {
         suggestions,
         selectedSuggestion,
         maxColumnWidth
@@ -465014,30 +465100,30 @@ function PromptInputFooter({
     });
   }
   if (helpOpen) {
-    return /* @__PURE__ */ jsx_runtime423.jsx(PromptInputHelpMenu, {
+    return /* @__PURE__ */ jsx_runtime424.jsx(PromptInputHelpMenu, {
       dimColor: true,
       fixedWidth: true,
       paddingX: 2
     });
   }
-  return /* @__PURE__ */ jsx_runtime423.jsxs(jsx_runtime423.Fragment, {
+  return /* @__PURE__ */ jsx_runtime424.jsxs(jsx_runtime424.Fragment, {
     children: [
-      /* @__PURE__ */ jsx_runtime423.jsxs(ThemedBox_default, {
+      /* @__PURE__ */ jsx_runtime424.jsxs(ThemedBox_default, {
         flexDirection: isNarrow ? "column" : "row",
         justifyContent: isNarrow ? "flex-start" : "space-between",
         paddingX: 2,
         gap: isNarrow ? 0 : 1,
         children: [
-          /* @__PURE__ */ jsx_runtime423.jsxs(ThemedBox_default, {
+          /* @__PURE__ */ jsx_runtime424.jsxs(ThemedBox_default, {
             flexDirection: "column",
             flexShrink: isNarrow ? 0 : 1,
             children: [
-              mode === "prompt" && !isShort && !exitMessage.show && !isPasting && statusLineShouldDisplay(settings) && /* @__PURE__ */ jsx_runtime423.jsx(StatusLine, {
+              mode === "prompt" && !isShort && !exitMessage.show && !isPasting && statusLineShouldDisplay(settings) && /* @__PURE__ */ jsx_runtime424.jsx(StatusLine, {
                 messagesRef,
                 lastAssistantMessageId,
                 vimMode
               }),
-              /* @__PURE__ */ jsx_runtime423.jsx(PromptInputFooterLeftSide, {
+              /* @__PURE__ */ jsx_runtime424.jsx(PromptInputFooterLeftSide, {
                 exitMessage,
                 vimMode,
                 mode,
@@ -465057,11 +465143,11 @@ function PromptInputFooter({
               })
             ]
           }),
-          /* @__PURE__ */ jsx_runtime423.jsxs(ThemedBox_default, {
+          /* @__PURE__ */ jsx_runtime424.jsxs(ThemedBox_default, {
             flexShrink: 1,
             gap: 1,
             children: [
-              isFullscreen ? null : /* @__PURE__ */ jsx_runtime423.jsx(Notifications, {
+              isFullscreen ? null : /* @__PURE__ */ jsx_runtime424.jsx(Notifications, {
                 apiKeyStatus,
                 autoUpdaterResult,
                 debug,
@@ -465076,7 +465162,7 @@ function PromptInputFooter({
                 isNarrow
               }),
               false,
-              /* @__PURE__ */ jsx_runtime423.jsx(BridgeStatusIndicator, {
+              /* @__PURE__ */ jsx_runtime424.jsx(BridgeStatusIndicator, {
                 bridgeSelected
               })
             ]
@@ -465108,20 +465194,20 @@ function BridgeStatusIndicator({
   if (!explicit && status.label !== "Remote Control reconnecting") {
     return null;
   }
-  return /* @__PURE__ */ jsx_runtime423.jsxs(ThemedText, {
+  return /* @__PURE__ */ jsx_runtime424.jsxs(ThemedText, {
     color: bridgeSelected ? "background" : status.color,
     inverse: bridgeSelected,
     wrap: "truncate",
     children: [
       status.label,
-      bridgeSelected && /* @__PURE__ */ jsx_runtime423.jsx(ThemedText, {
+      bridgeSelected && /* @__PURE__ */ jsx_runtime424.jsx(ThemedText, {
         dimColor: true,
         children: " \xB7 Enter to view"
       })
     ]
   });
 }
-var import_react255, jsx_runtime423, PromptInputFooter_default;
+var import_react255, jsx_runtime424, PromptInputFooter_default;
 var init_PromptInputFooter = __esm(() => {
   init_bridgeEnabled();
   init_bridgeStatusUtil();
@@ -465139,7 +465225,7 @@ var init_PromptInputFooter = __esm(() => {
   init_PromptInputFooterSuggestions();
   init_PromptInputHelpMenu();
   import_react255 = __toESM(require_react(), 1);
-  jsx_runtime423 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime424 = __toESM(require_jsx_runtime(), 1);
   PromptInputFooter_default = import_react255.memo(PromptInputFooter);
 });
 
@@ -465167,7 +465253,7 @@ function PromptChar(t0) {
   const color = teammateColor ?? undefined;
   let t1;
   if ($[0] !== color || $[1] !== isLoading) {
-    t1 = /* @__PURE__ */ jsx_runtime424.jsxs(ThemedText, {
+    t1 = /* @__PURE__ */ jsx_runtime425.jsxs(ThemedText, {
       color,
       dimColor: isLoading,
       children: [
@@ -465202,19 +465288,19 @@ function PromptInputModeIndicator(t0) {
   const viewedTeammateThemeColor = viewingAgentColor ? AGENT_COLOR_TO_THEME_COLOR[viewingAgentColor] : undefined;
   let t2;
   if ($[1] !== isLoading || $[2] !== mode || $[3] !== viewedTeammateThemeColor || $[4] !== viewingAgentName) {
-    t2 = /* @__PURE__ */ jsx_runtime424.jsx(ThemedBox_default, {
+    t2 = /* @__PURE__ */ jsx_runtime425.jsx(ThemedBox_default, {
       alignItems: "flex-start",
       alignSelf: "flex-start",
       flexWrap: "nowrap",
       justifyContent: "flex-start",
-      children: viewingAgentName ? /* @__PURE__ */ jsx_runtime424.jsx(PromptChar, {
+      children: viewingAgentName ? /* @__PURE__ */ jsx_runtime425.jsx(PromptChar, {
         isLoading,
         themeColor: viewedTeammateThemeColor
-      }) : mode === "bash" ? /* @__PURE__ */ jsx_runtime424.jsx(ThemedText, {
+      }) : mode === "bash" ? /* @__PURE__ */ jsx_runtime425.jsx(ThemedText, {
         color: "bashBorder",
         dimColor: isLoading,
         children: "!\xA0"
-      }) : /* @__PURE__ */ jsx_runtime424.jsx(PromptChar, {
+      }) : /* @__PURE__ */ jsx_runtime425.jsx(PromptChar, {
         isLoading,
         themeColor: isAgentSwarmsEnabled() ? teammateColor : undefined
       })
@@ -465229,7 +465315,7 @@ function PromptInputModeIndicator(t0) {
   }
   return t2;
 }
-var import_compiler_runtime336, jsx_runtime424;
+var import_compiler_runtime336, jsx_runtime425;
 var init_PromptInputModeIndicator = __esm(() => {
   init_figures();
   init_ink2();
@@ -465237,7 +465323,7 @@ var init_PromptInputModeIndicator = __esm(() => {
   init_teammate();
   init_agentSwarmsEnabled();
   import_compiler_runtime336 = __toESM(require_compiler_runtime(), 1);
-  jsx_runtime424 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime425 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/PromptInput/PromptInputQueuedCommands.tsx
@@ -465294,13 +465380,13 @@ function PromptInputQueuedCommandsImpl() {
   if (viewingAgent || messages === null) {
     return null;
   }
-  return /* @__PURE__ */ jsx_runtime425.jsx(ThemedBox_default, {
+  return /* @__PURE__ */ jsx_runtime426.jsx(ThemedBox_default, {
     marginTop: 1,
     flexDirection: "column",
-    children: messages.map((message, i) => /* @__PURE__ */ jsx_runtime425.jsx(QueuedMessageProvider, {
+    children: messages.map((message, i) => /* @__PURE__ */ jsx_runtime426.jsx(QueuedMessageProvider, {
       isFirst: i === 0,
       useBriefLayout,
-      children: /* @__PURE__ */ jsx_runtime425.jsx(Message, {
+      children: /* @__PURE__ */ jsx_runtime426.jsx(Message, {
         message,
         lookups: EMPTY_LOOKUPS,
         addMargin: false,
@@ -465317,7 +465403,7 @@ function PromptInputQueuedCommandsImpl() {
     }, i))
   });
 }
-var React139, import_react256, jsx_runtime425, EMPTY_SET2, MAX_VISIBLE_NOTIFICATIONS = 3, PromptInputQueuedCommands;
+var React140, import_react256, jsx_runtime426, EMPTY_SET2, MAX_VISIBLE_NOTIFICATIONS = 3, PromptInputQueuedCommands;
 var init_PromptInputQueuedCommands = __esm(() => {
   init_ink2();
   init_AppState();
@@ -465328,11 +465414,11 @@ var init_PromptInputQueuedCommands = __esm(() => {
   init_messages3();
   init_slowOperations();
   init_Message();
-  React139 = __toESM(require_react(), 1);
+  React140 = __toESM(require_react(), 1);
   import_react256 = __toESM(require_react(), 1);
-  jsx_runtime425 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime426 = __toESM(require_jsx_runtime(), 1);
   EMPTY_SET2 = new Set;
-  PromptInputQueuedCommands = React139.memo(PromptInputQueuedCommandsImpl);
+  PromptInputQueuedCommands = React140.memo(PromptInputQueuedCommandsImpl);
 });
 
 // src/components/PromptInput/PromptInputStashNotice.tsx
@@ -465346,9 +465432,9 @@ function PromptInputStashNotice(t0) {
   }
   let t1;
   if ($[0] === Symbol.for("react.memo_cache_sentinel")) {
-    t1 = /* @__PURE__ */ jsx_runtime426.jsx(ThemedBox_default, {
+    t1 = /* @__PURE__ */ jsx_runtime427.jsx(ThemedBox_default, {
       paddingLeft: 2,
-      children: /* @__PURE__ */ jsx_runtime426.jsxs(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime427.jsxs(ThemedText, {
         dimColor: true,
         children: [
           figures_default.pointerSmall,
@@ -465362,12 +465448,12 @@ function PromptInputStashNotice(t0) {
   }
   return t1;
 }
-var import_compiler_runtime337, jsx_runtime426;
+var import_compiler_runtime337, jsx_runtime427;
 var init_PromptInputStashNotice = __esm(() => {
   init_figures();
   init_ink2();
   import_compiler_runtime337 = __toESM(require_compiler_runtime(), 1);
-  jsx_runtime426 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime427 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/PromptInput/inputPaste.ts
@@ -465671,8 +465757,8 @@ function useSwarmBanner() {
   const agent = useAppState((s) => s.agent);
   useAppState((s) => s.viewingAgentTaskId);
   const store = useAppStateStore();
-  const [insideTmux, setInsideTmux] = React140.useState(null);
-  React140.useEffect(() => {
+  const [insideTmux, setInsideTmux] = React141.useState(null);
+  React141.useEffect(() => {
     isInsideTmux().then(setInsideTmux);
   }, []);
   const state = store.getState();
@@ -465739,7 +465825,7 @@ function useSwarmBanner() {
 function toThemeColor(colorName, fallback = "cyan_FOR_SUBAGENTS_ONLY") {
   return colorName && AGENT_COLORS.includes(colorName) ? AGENT_COLOR_TO_THEME_COLOR[colorName] : fallback;
 }
-var React140;
+var React141;
 var init_useSwarmBanner = __esm(() => {
   init_AppState();
   init_selectors();
@@ -465749,7 +465835,7 @@ var init_useSwarmBanner = __esm(() => {
   init_registry();
   init_teammate();
   init_teammateContext();
-  React140 = __toESM(require_react(), 1);
+  React141 = __toESM(require_react(), 1);
 });
 
 // src/components/PromptInput/PromptInput.tsx
@@ -465805,12 +465891,12 @@ function PromptInput({
     show: false
   });
   const [cursorOffset, setCursorOffset] = import_react260.useState(input.length);
-  const lastInternalInputRef = React141.useRef(input);
+  const lastInternalInputRef = React142.useRef(input);
   if (input !== lastInternalInputRef.current) {
     setCursorOffset(input.length);
     lastInternalInputRef.current = input;
   }
-  const trackAndSetInput = React141.useCallback((value) => {
+  const trackAndSetInput = React142.useCallback((value) => {
     lastInternalInputRef.current = value;
     onInputChange(value);
   }, [onInputChange]);
@@ -466253,12 +466339,12 @@ function PromptInput({
       if (!config.hasUsedStash) {
         addNotification({
           key: "stash-hint",
-          jsx: /* @__PURE__ */ jsx_runtime427.jsxs(ThemedText, {
+          jsx: /* @__PURE__ */ jsx_runtime428.jsxs(ThemedText, {
             dimColor: true,
             children: [
               "Tip:",
               " ",
-              /* @__PURE__ */ jsx_runtime427.jsx(ConfigurableShortcutHint, {
+              /* @__PURE__ */ jsx_runtime428.jsx(ConfigurableShortcutHint, {
                 action: "chat:stash",
                 context: "Chat",
                 fallback: "ctrl+s",
@@ -466987,13 +467073,13 @@ function PromptInput({
     if (getPlatform() === "macos" && isMacosOptionChar(char)) {
       const shortcut = MACOS_OPTION_SPECIAL_CHARS[char];
       const terminalName = getNativeCSIuTerminalDisplayName();
-      const jsx = terminalName ? /* @__PURE__ */ jsx_runtime427.jsxs(ThemedText, {
+      const jsx = terminalName ? /* @__PURE__ */ jsx_runtime428.jsxs(ThemedText, {
         dimColor: true,
         children: [
           "To enable ",
           shortcut,
           ", set ",
-          /* @__PURE__ */ jsx_runtime427.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime428.jsx(ThemedText, {
             bold: true,
             children: "Option as Meta"
           }),
@@ -467002,7 +467088,7 @@ function PromptInput({
           terminalName,
           " preferences (\u2318,)"
         ]
-      }) : /* @__PURE__ */ jsx_runtime427.jsxs(ThemedText, {
+      }) : /* @__PURE__ */ jsx_runtime428.jsxs(ThemedText, {
         dimColor: true,
         children: [
           "To enable ",
@@ -467122,7 +467208,7 @@ function PromptInput({
     }
     addNotification({
       key: "model-switched",
-      jsx: /* @__PURE__ */ jsx_runtime427.jsx(ThemedText, {
+      jsx: /* @__PURE__ */ jsx_runtime428.jsx(ThemedText, {
         children: message
       }),
       priority: "immediate",
@@ -467138,10 +467224,10 @@ function PromptInput({
   const modelPickerElement = import_react260.useMemo(() => {
     if (!showModelPicker)
       return null;
-    return /* @__PURE__ */ jsx_runtime427.jsx(ThemedBox_default, {
+    return /* @__PURE__ */ jsx_runtime428.jsx(ThemedBox_default, {
       flexDirection: "column",
       marginTop: 1,
-      children: /* @__PURE__ */ jsx_runtime427.jsx(ModelPicker, {
+      children: /* @__PURE__ */ jsx_runtime428.jsx(ModelPicker, {
         initial: mainLoopModel_,
         sessionModel: mainLoopModelForSession,
         onSelect: handleModelSelect,
@@ -467156,7 +467242,7 @@ function PromptInput({
     if (result) {
       addNotification({
         key: "fast-mode-toggled",
-        jsx: /* @__PURE__ */ jsx_runtime427.jsx(ThemedText, {
+        jsx: /* @__PURE__ */ jsx_runtime428.jsx(ThemedText, {
           children: result
         }),
         priority: "immediate",
@@ -467167,10 +467253,10 @@ function PromptInput({
   const fastModePickerElement = import_react260.useMemo(() => {
     if (!showFastModePicker)
       return null;
-    return /* @__PURE__ */ jsx_runtime427.jsx(ThemedBox_default, {
+    return /* @__PURE__ */ jsx_runtime428.jsx(ThemedBox_default, {
       flexDirection: "column",
       marginTop: 1,
-      children: /* @__PURE__ */ jsx_runtime427.jsx(FastModePicker, {
+      children: /* @__PURE__ */ jsx_runtime428.jsx(FastModePicker, {
         onDone: handleFastModeSelect,
         unavailableReason: getFastModeUnavailableReason()
       })
@@ -467187,7 +467273,7 @@ function PromptInput({
     });
     addNotification({
       key: "thinking-toggled-hotkey",
-      jsx: /* @__PURE__ */ jsx_runtime427.jsxs(ThemedText, {
+      jsx: /* @__PURE__ */ jsx_runtime428.jsxs(ThemedText, {
         color: enabled ? "suggestion" : undefined,
         dimColor: !enabled,
         children: [
@@ -467205,10 +467291,10 @@ function PromptInput({
   const thinkingToggleElement = import_react260.useMemo(() => {
     if (!showThinkingToggle)
       return null;
-    return /* @__PURE__ */ jsx_runtime427.jsx(ThemedBox_default, {
+    return /* @__PURE__ */ jsx_runtime428.jsx(ThemedBox_default, {
       flexDirection: "column",
       marginTop: 1,
-      children: /* @__PURE__ */ jsx_runtime427.jsx(ThinkingToggle, {
+      children: /* @__PURE__ */ jsx_runtime428.jsx(ThinkingToggle, {
         currentValue: thinkingEnabled ?? true,
         onSelect: handleThinkingSelect,
         onCancel: handleThinkingCancel,
@@ -467219,14 +467305,14 @@ function PromptInput({
   const autoModeOptInDialog = import_react260.useMemo(() => null, [showAutoModeOptIn, handleAutoModeOptInAccept, handleAutoModeOptInDecline]);
   useSetPromptOverlayDialog(isFullscreenEnvEnabled() ? autoModeOptInDialog : null);
   if (showBashesDialog) {
-    return /* @__PURE__ */ jsx_runtime427.jsx(BackgroundTasksDialog, {
+    return /* @__PURE__ */ jsx_runtime428.jsx(BackgroundTasksDialog, {
       onDone: () => setShowBashesDialog(false),
       toolUseContext: getToolUseContext(messages, [], new AbortController, mainLoopModel),
       initialDetailTaskId: typeof showBashesDialog === "string" ? showBashesDialog : undefined
     });
   }
   if (isAgentSwarmsEnabled() && showTeamsDialog) {
-    return /* @__PURE__ */ jsx_runtime427.jsx(TeamsDialog, {
+    return /* @__PURE__ */ jsx_runtime428.jsx(TeamsDialog, {
       initialTeams: cachedTeams,
       onDone: () => {
         setShowTeamsDialog(false);
@@ -467239,20 +467325,20 @@ function PromptInput({
       insertTextAtCursor(/\s/.test(cursorChar) ? text : ` ${text}`);
     };
     if (showQuickOpen) {
-      return /* @__PURE__ */ jsx_runtime427.jsx(QuickOpenDialog, {
+      return /* @__PURE__ */ jsx_runtime428.jsx(QuickOpenDialog, {
         onDone: () => setShowQuickOpen(false),
         onInsert: insertWithSpacing
       });
     }
     if (showGlobalSearch) {
-      return /* @__PURE__ */ jsx_runtime427.jsx(GlobalSearchDialog, {
+      return /* @__PURE__ */ jsx_runtime428.jsx(GlobalSearchDialog, {
         onDone: () => setShowGlobalSearch(false),
         onInsert: insertWithSpacing
       });
     }
   }
   if (showHistoryPicker) {
-    return /* @__PURE__ */ jsx_runtime427.jsx(HistorySearchDialog, {
+    return /* @__PURE__ */ jsx_runtime428.jsx(HistorySearchDialog, {
       initialQuery: input,
       onSelect: (entry) => {
         const entryMode = getModeFromInput(entry.display);
@@ -467276,7 +467362,7 @@ function PromptInput({
     return thinkingToggleElement;
   }
   if (showBridgeDialog) {
-    return /* @__PURE__ */ jsx_runtime427.jsx(BridgeDialog, {
+    return /* @__PURE__ */ jsx_runtime428.jsx(BridgeDialog, {
       onDone: () => {
         setShowBridgeDialog(false);
         selectFooterItem(null);
@@ -467338,7 +467424,7 @@ function PromptInput({
     return "promptBorder";
   };
   if (isExternalEditorActive) {
-    return /* @__PURE__ */ jsx_runtime427.jsx(ThemedBox_default, {
+    return /* @__PURE__ */ jsx_runtime428.jsx(ThemedBox_default, {
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "center",
@@ -467348,44 +467434,44 @@ function PromptInput({
       borderRight: false,
       borderBottom: true,
       width: "100%",
-      children: /* @__PURE__ */ jsx_runtime427.jsx(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime428.jsx(ThemedText, {
         dimColor: true,
         italic: true,
         children: "Save and close editor to continue..."
       })
     });
   }
-  const textInputElement = isVimModeEnabled() ? /* @__PURE__ */ jsx_runtime427.jsx(VimTextInput, {
+  const textInputElement = isVimModeEnabled() ? /* @__PURE__ */ jsx_runtime428.jsx(VimTextInput, {
     ...baseProps,
     initialMode: vimMode,
     onModeChange: setVimMode
-  }) : /* @__PURE__ */ jsx_runtime427.jsx(TextInput, {
+  }) : /* @__PURE__ */ jsx_runtime428.jsx(TextInput, {
     ...baseProps
   });
-  return /* @__PURE__ */ jsx_runtime427.jsxs(ThemedBox_default, {
+  return /* @__PURE__ */ jsx_runtime428.jsxs(ThemedBox_default, {
     flexDirection: "column",
     marginTop: briefOwnsGap ? 0 : 1,
     children: [
-      !isFullscreenEnvEnabled() && /* @__PURE__ */ jsx_runtime427.jsx(PromptInputQueuedCommands, {}),
-      hasSuppressedDialogs && /* @__PURE__ */ jsx_runtime427.jsx(ThemedBox_default, {
+      !isFullscreenEnvEnabled() && /* @__PURE__ */ jsx_runtime428.jsx(PromptInputQueuedCommands, {}),
+      hasSuppressedDialogs && /* @__PURE__ */ jsx_runtime428.jsx(ThemedBox_default, {
         marginTop: 1,
         marginLeft: 2,
-        children: /* @__PURE__ */ jsx_runtime427.jsx(ThemedText, {
+        children: /* @__PURE__ */ jsx_runtime428.jsx(ThemedText, {
           dimColor: true,
           children: "Waiting for permission\u2026"
         })
       }),
-      /* @__PURE__ */ jsx_runtime427.jsx(PromptInputStashNotice, {
+      /* @__PURE__ */ jsx_runtime428.jsx(PromptInputStashNotice, {
         hasStash: stashedPrompt !== undefined
       }),
-      swarmBanner ? /* @__PURE__ */ jsx_runtime427.jsxs(jsx_runtime427.Fragment, {
+      swarmBanner ? /* @__PURE__ */ jsx_runtime428.jsxs(jsx_runtime428.Fragment, {
         children: [
-          /* @__PURE__ */ jsx_runtime427.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime428.jsx(ThemedText, {
             color: swarmBanner.bgColor,
-            children: swarmBanner.text ? /* @__PURE__ */ jsx_runtime427.jsxs(jsx_runtime427.Fragment, {
+            children: swarmBanner.text ? /* @__PURE__ */ jsx_runtime428.jsxs(jsx_runtime428.Fragment, {
               children: [
                 "\u2500".repeat(Math.max(0, columns - stringWidth(swarmBanner.text) - 4)),
-                /* @__PURE__ */ jsx_runtime427.jsxs(ThemedText, {
+                /* @__PURE__ */ jsx_runtime428.jsxs(ThemedText, {
                   backgroundColor: swarmBanner.bgColor,
                   color: "inverseText",
                   children: [
@@ -467398,17 +467484,17 @@ function PromptInput({
               ]
             }) : "\u2500".repeat(columns)
           }),
-          /* @__PURE__ */ jsx_runtime427.jsxs(ThemedBox_default, {
+          /* @__PURE__ */ jsx_runtime428.jsxs(ThemedBox_default, {
             flexDirection: "row",
             width: "100%",
             children: [
-              /* @__PURE__ */ jsx_runtime427.jsx(PromptInputModeIndicator, {
+              /* @__PURE__ */ jsx_runtime428.jsx(PromptInputModeIndicator, {
                 mode,
                 isLoading,
                 viewingAgentName,
                 viewingAgentColor
               }),
-              /* @__PURE__ */ jsx_runtime427.jsx(ThemedBox_default, {
+              /* @__PURE__ */ jsx_runtime428.jsx(ThemedBox_default, {
                 flexGrow: 1,
                 flexShrink: 1,
                 onClick: handleInputClick,
@@ -467416,12 +467502,12 @@ function PromptInput({
               })
             ]
           }),
-          /* @__PURE__ */ jsx_runtime427.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime428.jsx(ThemedText, {
             color: swarmBanner.bgColor,
             children: "\u2500".repeat(columns)
           })
         ]
-      }) : /* @__PURE__ */ jsx_runtime427.jsxs(ThemedBox_default, {
+      }) : /* @__PURE__ */ jsx_runtime428.jsxs(ThemedBox_default, {
         flexDirection: "row",
         alignItems: "flex-start",
         justifyContent: "flex-start",
@@ -467433,13 +467519,13 @@ function PromptInput({
         width: "100%",
         borderText: buildBorderText(showFastIcon ?? false, showFastIconHint, fastModeCooldown),
         children: [
-          /* @__PURE__ */ jsx_runtime427.jsx(PromptInputModeIndicator, {
+          /* @__PURE__ */ jsx_runtime428.jsx(PromptInputModeIndicator, {
             mode,
             isLoading,
             viewingAgentName,
             viewingAgentColor
           }),
-          /* @__PURE__ */ jsx_runtime427.jsx(ThemedBox_default, {
+          /* @__PURE__ */ jsx_runtime428.jsx(ThemedBox_default, {
             flexGrow: 1,
             flexShrink: 1,
             onClick: handleInputClick,
@@ -467447,7 +467533,7 @@ function PromptInput({
           })
         ]
       }),
-      /* @__PURE__ */ jsx_runtime427.jsx(PromptInputFooter_default, {
+      /* @__PURE__ */ jsx_runtime428.jsx(PromptInputFooter_default, {
         apiKeyStatus,
         debug,
         exitMessage,
@@ -467482,7 +467568,7 @@ function PromptInput({
         onOpenTasksDialog: isFullscreenEnvEnabled() ? handleOpenTasksDialog : undefined
       }),
       isFullscreenEnvEnabled() ? null : autoModeOptInDialog,
-      isFullscreenEnvEnabled() ? /* @__PURE__ */ jsx_runtime427.jsx(ThemedBox_default, {
+      isFullscreenEnvEnabled() ? /* @__PURE__ */ jsx_runtime428.jsx(ThemedBox_default, {
         position: "absolute",
         marginTop: briefOwnsGap ? -2 : -1,
         height: suggestions.length === 0 && !showAutoModeOptIn ? 1 : 0,
@@ -467492,7 +467578,7 @@ function PromptInput({
         flexDirection: "column",
         justifyContent: "flex-end",
         overflow: "hidden",
-        children: /* @__PURE__ */ jsx_runtime427.jsx(Notifications, {
+        children: /* @__PURE__ */ jsx_runtime428.jsx(Notifications, {
           apiKeyStatus,
           autoUpdaterResult,
           debug,
@@ -467545,7 +467631,7 @@ function buildBorderText(showFastIcon, showFastIconHint, fastModeCooldown) {
     offset: 0
   };
 }
-var React141, import_react260, jsx_runtime427, PROMPT_FOOTER_LINES = 5, MIN_INPUT_VIEWPORT_LINES = 3, PromptInput_default;
+var React142, import_react260, jsx_runtime428, PROMPT_FOOTER_LINES = 5, MIN_INPUT_VIEWPORT_LINES = 3, PromptInput_default;
 var init_PromptInput = __esm(() => {
   init_source();
   init_notifications();
@@ -467641,10 +467727,10 @@ var init_PromptInput = __esm(() => {
   init_useShowFastIconHint();
   init_useSwarmBanner();
   init_utils13();
-  React141 = __toESM(require_react(), 1);
+  React142 = __toESM(require_react(), 1);
   import_react260 = __toESM(require_react(), 1);
-  jsx_runtime427 = __toESM(require_jsx_runtime(), 1);
-  PromptInput_default = React141.memo(PromptInput);
+  jsx_runtime428 = __toESM(require_jsx_runtime(), 1);
+  PromptInput_default = React142.memo(PromptInput);
 });
 
 // src/utils/controlMessageCompat.ts
@@ -469362,7 +469448,7 @@ function FeedbackSurveyView(t0) {
   useDebouncedDigitInput(t3);
   let t4;
   if ($[6] === Symbol.for("react.memo_cache_sentinel")) {
-    t4 = /* @__PURE__ */ jsx_runtime428.jsx(ThemedText, {
+    t4 = /* @__PURE__ */ jsx_runtime429.jsx(ThemedText, {
       color: "ansi:cyan",
       children: "\u25CF "
     });
@@ -469372,10 +469458,10 @@ function FeedbackSurveyView(t0) {
   }
   let t5;
   if ($[7] !== message) {
-    t5 = /* @__PURE__ */ jsx_runtime428.jsxs(ThemedBox_default, {
+    t5 = /* @__PURE__ */ jsx_runtime429.jsxs(ThemedBox_default, {
       children: [
         t4,
-        /* @__PURE__ */ jsx_runtime428.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime429.jsx(ThemedText, {
           bold: true,
           children: message
         })
@@ -469388,11 +469474,11 @@ function FeedbackSurveyView(t0) {
   }
   let t6;
   if ($[9] === Symbol.for("react.memo_cache_sentinel")) {
-    t6 = /* @__PURE__ */ jsx_runtime428.jsx(ThemedBox_default, {
+    t6 = /* @__PURE__ */ jsx_runtime429.jsx(ThemedBox_default, {
       width: 10,
-      children: /* @__PURE__ */ jsx_runtime428.jsxs(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime429.jsxs(ThemedText, {
         children: [
-          /* @__PURE__ */ jsx_runtime428.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime429.jsx(ThemedText, {
             color: "ansi:cyan",
             children: "1"
           }),
@@ -469406,11 +469492,11 @@ function FeedbackSurveyView(t0) {
   }
   let t7;
   if ($[10] === Symbol.for("react.memo_cache_sentinel")) {
-    t7 = /* @__PURE__ */ jsx_runtime428.jsx(ThemedBox_default, {
+    t7 = /* @__PURE__ */ jsx_runtime429.jsx(ThemedBox_default, {
       width: 10,
-      children: /* @__PURE__ */ jsx_runtime428.jsxs(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime429.jsxs(ThemedText, {
         children: [
-          /* @__PURE__ */ jsx_runtime428.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime429.jsx(ThemedText, {
             color: "ansi:cyan",
             children: "2"
           }),
@@ -469424,11 +469510,11 @@ function FeedbackSurveyView(t0) {
   }
   let t8;
   if ($[11] === Symbol.for("react.memo_cache_sentinel")) {
-    t8 = /* @__PURE__ */ jsx_runtime428.jsx(ThemedBox_default, {
+    t8 = /* @__PURE__ */ jsx_runtime429.jsx(ThemedBox_default, {
       width: 10,
-      children: /* @__PURE__ */ jsx_runtime428.jsxs(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime429.jsxs(ThemedText, {
         children: [
-          /* @__PURE__ */ jsx_runtime428.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime429.jsx(ThemedText, {
             color: "ansi:cyan",
             children: "3"
           }),
@@ -469442,16 +469528,16 @@ function FeedbackSurveyView(t0) {
   }
   let t9;
   if ($[12] === Symbol.for("react.memo_cache_sentinel")) {
-    t9 = /* @__PURE__ */ jsx_runtime428.jsxs(ThemedBox_default, {
+    t9 = /* @__PURE__ */ jsx_runtime429.jsxs(ThemedBox_default, {
       marginLeft: 2,
       children: [
         t6,
         t7,
         t8,
-        /* @__PURE__ */ jsx_runtime428.jsx(ThemedBox_default, {
-          children: /* @__PURE__ */ jsx_runtime428.jsxs(ThemedText, {
+        /* @__PURE__ */ jsx_runtime429.jsx(ThemedBox_default, {
+          children: /* @__PURE__ */ jsx_runtime429.jsxs(ThemedText, {
             children: [
-              /* @__PURE__ */ jsx_runtime428.jsx(ThemedText, {
+              /* @__PURE__ */ jsx_runtime429.jsx(ThemedText, {
                 color: "ansi:cyan",
                 children: "0"
               }),
@@ -469467,7 +469553,7 @@ function FeedbackSurveyView(t0) {
   }
   let t10;
   if ($[13] !== t5) {
-    t10 = /* @__PURE__ */ jsx_runtime428.jsxs(ThemedBox_default, {
+    t10 = /* @__PURE__ */ jsx_runtime429.jsxs(ThemedBox_default, {
       flexDirection: "column",
       marginTop: 1,
       children: [
@@ -469482,12 +469568,12 @@ function FeedbackSurveyView(t0) {
   }
   return t10;
 }
-var import_compiler_runtime338, jsx_runtime428, RESPONSE_INPUTS, inputToResponse, isValidResponseInput = (input) => RESPONSE_INPUTS.includes(input), DEFAULT_MESSAGE = "How is Claude doing this session? (optional)";
+var import_compiler_runtime338, jsx_runtime429, RESPONSE_INPUTS, inputToResponse, isValidResponseInput = (input) => RESPONSE_INPUTS.includes(input), DEFAULT_MESSAGE = "How is Claude doing this session? (optional)";
 var init_FeedbackSurveyView = __esm(() => {
   init_ink2();
   init_useDebouncedDigitInput();
   import_compiler_runtime338 = __toESM(require_compiler_runtime(), 1);
-  jsx_runtime428 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime429 = __toESM(require_jsx_runtime(), 1);
   RESPONSE_INPUTS = ["0", "1", "2", "3"];
   inputToResponse = {
     "0": "dismissed",
@@ -471595,7 +471681,7 @@ function BashModeProgress(t0) {
   const t1 = `<bash-input>${input}</bash-input>`;
   let t2;
   if ($[0] !== t1) {
-    t2 = /* @__PURE__ */ jsx_runtime429.jsx(UserBashInputMessage, {
+    t2 = /* @__PURE__ */ jsx_runtime430.jsx(UserBashInputMessage, {
       addMargin: false,
       param: {
         text: t1,
@@ -471609,7 +471695,7 @@ function BashModeProgress(t0) {
   }
   let t3;
   if ($[2] !== progress || $[3] !== verbose) {
-    t3 = progress ? /* @__PURE__ */ jsx_runtime429.jsx(ShellProgressMessage, {
+    t3 = progress ? /* @__PURE__ */ jsx_runtime430.jsx(ShellProgressMessage, {
       fullOutput: progress.fullOutput,
       output: progress.output,
       elapsedTimeSeconds: progress.elapsedTimeSeconds,
@@ -471628,7 +471714,7 @@ function BashModeProgress(t0) {
   }
   let t4;
   if ($[5] !== t2 || $[6] !== t3) {
-    t4 = /* @__PURE__ */ jsx_runtime429.jsxs(ThemedBox_default, {
+    t4 = /* @__PURE__ */ jsx_runtime430.jsxs(ThemedBox_default, {
       flexDirection: "column",
       marginTop: 1,
       children: [
@@ -471644,14 +471730,14 @@ function BashModeProgress(t0) {
   }
   return t4;
 }
-var import_compiler_runtime342, jsx_runtime429;
+var import_compiler_runtime342, jsx_runtime430;
 var init_BashModeProgress = __esm(() => {
   init_ink2();
   init_BashTool();
   init_UserBashInputMessage();
   init_ShellProgressMessage();
   import_compiler_runtime342 = __toESM(require_compiler_runtime(), 1);
-  jsx_runtime429 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime430 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/utils/shell/resolveDefaultShell.ts
@@ -471677,7 +471763,7 @@ async function processBashCommand(inputString, precedingInputBlocks, attachmentM
   });
   let jsx;
   setToolJSX({
-    jsx: /* @__PURE__ */ jsx_runtime430.jsx(BashModeProgress, {
+    jsx: /* @__PURE__ */ jsx_runtime431.jsx(BashModeProgress, {
       input: inputString,
       progress: null,
       verbose: context.options.verbose
@@ -471693,9 +471779,9 @@ async function processBashCommand(inputString, precedingInputBlocks, attachmentM
     };
     const onProgress = (progress) => {
       setToolJSX({
-        jsx: /* @__PURE__ */ jsx_runtime430.jsxs(jsx_runtime430.Fragment, {
+        jsx: /* @__PURE__ */ jsx_runtime431.jsxs(jsx_runtime431.Fragment, {
           children: [
-            /* @__PURE__ */ jsx_runtime430.jsx(BashModeProgress, {
+            /* @__PURE__ */ jsx_runtime431.jsx(BashModeProgress, {
               input: inputString,
               progress: progress.data,
               verbose: context.options.verbose
@@ -471762,7 +471848,7 @@ async function processBashCommand(inputString, precedingInputBlocks, attachmentM
     setToolJSX(null);
   }
 }
-var jsx_runtime430;
+var jsx_runtime431;
 var init_processBashCommand = __esm(() => {
   init_BashModeProgress();
   init_BashTool();
@@ -471772,7 +471858,7 @@ var init_processBashCommand = __esm(() => {
   init_resolveDefaultShell();
   init_shellToolUtils();
   init_toolResultStorage();
-  jsx_runtime430 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime431 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/utils/processUserInput/processUserInput.ts
@@ -472962,7 +473048,7 @@ function TeammateViewHeader() {
   const nameColor = t0;
   let t1;
   if ($[2] === Symbol.for("react.memo_cache_sentinel")) {
-    t1 = /* @__PURE__ */ jsx_runtime431.jsx(ThemedText, {
+    t1 = /* @__PURE__ */ jsx_runtime432.jsx(ThemedText, {
       children: "Viewing "
     });
     $[2] = t1;
@@ -472971,7 +473057,7 @@ function TeammateViewHeader() {
   }
   let t2;
   if ($[3] !== nameColor || $[4] !== viewedTeammate.identity.agentName) {
-    t2 = /* @__PURE__ */ jsx_runtime431.jsxs(ThemedText, {
+    t2 = /* @__PURE__ */ jsx_runtime432.jsxs(ThemedText, {
       color: nameColor,
       bold: true,
       children: [
@@ -472987,11 +473073,11 @@ function TeammateViewHeader() {
   }
   let t3;
   if ($[6] === Symbol.for("react.memo_cache_sentinel")) {
-    t3 = /* @__PURE__ */ jsx_runtime431.jsxs(ThemedText, {
+    t3 = /* @__PURE__ */ jsx_runtime432.jsxs(ThemedText, {
       dimColor: true,
       children: [
         " \xB7 ",
-        /* @__PURE__ */ jsx_runtime431.jsx(KeyboardShortcutHint, {
+        /* @__PURE__ */ jsx_runtime432.jsx(KeyboardShortcutHint, {
           shortcut: "esc",
           action: "return"
         })
@@ -473003,7 +473089,7 @@ function TeammateViewHeader() {
   }
   let t4;
   if ($[7] !== t2) {
-    t4 = /* @__PURE__ */ jsx_runtime431.jsxs(ThemedBox_default, {
+    t4 = /* @__PURE__ */ jsx_runtime432.jsxs(ThemedBox_default, {
       children: [
         t1,
         t2,
@@ -473017,7 +473103,7 @@ function TeammateViewHeader() {
   }
   let t5;
   if ($[9] !== viewedTeammate.prompt) {
-    t5 = /* @__PURE__ */ jsx_runtime431.jsx(ThemedText, {
+    t5 = /* @__PURE__ */ jsx_runtime432.jsx(ThemedText, {
       dimColor: true,
       children: viewedTeammate.prompt
     });
@@ -473028,8 +473114,8 @@ function TeammateViewHeader() {
   }
   let t6;
   if ($[11] !== t4 || $[12] !== t5) {
-    t6 = /* @__PURE__ */ jsx_runtime431.jsx(OffscreenFreeze, {
-      children: /* @__PURE__ */ jsx_runtime431.jsxs(ThemedBox_default, {
+    t6 = /* @__PURE__ */ jsx_runtime432.jsx(OffscreenFreeze, {
+      children: /* @__PURE__ */ jsx_runtime432.jsxs(ThemedBox_default, {
         flexDirection: "column",
         marginBottom: 1,
         children: [
@@ -473049,7 +473135,7 @@ function TeammateViewHeader() {
 function _temp193(s) {
   return getViewedTeammateTask(s);
 }
-var import_compiler_runtime343, jsx_runtime431;
+var import_compiler_runtime343, jsx_runtime432;
 var init_TeammateViewHeader = __esm(() => {
   init_ink2();
   init_AppState();
@@ -473058,7 +473144,7 @@ var init_TeammateViewHeader = __esm(() => {
   init_KeyboardShortcutHint();
   init_OffscreenFreeze();
   import_compiler_runtime343 = __toESM(require_compiler_runtime(), 1);
-  jsx_runtime431 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime432 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/hooks/useIdeSelection.ts
@@ -474095,11 +474181,11 @@ function SessionBackgroundHint(t0) {
   }
   let t5;
   if ($[8] !== shortcut) {
-    t5 = /* @__PURE__ */ jsx_runtime432.jsx(ThemedBox_default, {
+    t5 = /* @__PURE__ */ jsx_runtime433.jsx(ThemedBox_default, {
       paddingLeft: 2,
-      children: /* @__PURE__ */ jsx_runtime432.jsx(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime433.jsx(ThemedText, {
         dimColor: true,
-        children: /* @__PURE__ */ jsx_runtime432.jsx(KeyboardShortcutHint, {
+        children: /* @__PURE__ */ jsx_runtime433.jsx(KeyboardShortcutHint, {
           shortcut,
           action: "background"
         })
@@ -474119,7 +474205,7 @@ function _temp282(c) {
   };
 }
 function _temp194() {}
-var import_compiler_runtime345, import_react287, jsx_runtime432;
+var import_compiler_runtime345, import_react287, jsx_runtime433;
 var init_SessionBackgroundHint = __esm(() => {
   init_useDoublePress();
   init_ink2();
@@ -474133,7 +474219,7 @@ var init_SessionBackgroundHint = __esm(() => {
   init_KeyboardShortcutHint();
   import_compiler_runtime345 = __toESM(require_compiler_runtime(), 1);
   import_react287 = __toESM(require_react(), 1);
-  jsx_runtime432 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime433 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/hooks/useSessionBackgrounding.ts
@@ -474349,19 +474435,19 @@ function EffortCallout(t0) {
   let t9;
   if ($[11] === Symbol.for("react.memo_cache_sentinel")) {
     t9 = [{
-      label: /* @__PURE__ */ jsx_runtime433.jsx(EffortOptionLabel, {
+      label: /* @__PURE__ */ jsx_runtime434.jsx(EffortOptionLabel, {
         level: "medium",
         text: "Medium (recommended)"
       }),
       value: "medium"
     }, {
-      label: /* @__PURE__ */ jsx_runtime433.jsx(EffortOptionLabel, {
+      label: /* @__PURE__ */ jsx_runtime434.jsx(EffortOptionLabel, {
         level: "high",
         text: "High"
       }),
       value: "high"
     }, {
-      label: /* @__PURE__ */ jsx_runtime433.jsx(EffortOptionLabel, {
+      label: /* @__PURE__ */ jsx_runtime434.jsx(EffortOptionLabel, {
         level: "low",
         text: "Low"
       }),
@@ -474374,10 +474460,10 @@ function EffortCallout(t0) {
   const options = t9;
   let t10;
   if ($[12] === Symbol.for("react.memo_cache_sentinel")) {
-    t10 = /* @__PURE__ */ jsx_runtime433.jsx(ThemedBox_default, {
+    t10 = /* @__PURE__ */ jsx_runtime434.jsx(ThemedBox_default, {
       marginBottom: 1,
       flexDirection: "column",
-      children: /* @__PURE__ */ jsx_runtime433.jsx(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime434.jsx(ThemedText, {
         children: defaultEffortConfig.dialogDescription
       })
     });
@@ -474387,7 +474473,7 @@ function EffortCallout(t0) {
   }
   let t11;
   if ($[13] === Symbol.for("react.memo_cache_sentinel")) {
-    t11 = /* @__PURE__ */ jsx_runtime433.jsx(EffortIndicatorSymbol, {
+    t11 = /* @__PURE__ */ jsx_runtime434.jsx(EffortIndicatorSymbol, {
       level: "low"
     });
     $[13] = t11;
@@ -474396,7 +474482,7 @@ function EffortCallout(t0) {
   }
   let t12;
   if ($[14] === Symbol.for("react.memo_cache_sentinel")) {
-    t12 = /* @__PURE__ */ jsx_runtime433.jsx(EffortIndicatorSymbol, {
+    t12 = /* @__PURE__ */ jsx_runtime434.jsx(EffortIndicatorSymbol, {
       level: "medium"
     });
     $[14] = t12;
@@ -474405,9 +474491,9 @@ function EffortCallout(t0) {
   }
   let t13;
   if ($[15] === Symbol.for("react.memo_cache_sentinel")) {
-    t13 = /* @__PURE__ */ jsx_runtime433.jsx(ThemedBox_default, {
+    t13 = /* @__PURE__ */ jsx_runtime434.jsx(ThemedBox_default, {
       marginBottom: 1,
-      children: /* @__PURE__ */ jsx_runtime433.jsxs(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime434.jsxs(ThemedText, {
         dimColor: true,
         children: [
           t11,
@@ -474418,7 +474504,7 @@ function EffortCallout(t0) {
           " medium ",
           "\xB7",
           " ",
-          /* @__PURE__ */ jsx_runtime433.jsx(EffortIndicatorSymbol, {
+          /* @__PURE__ */ jsx_runtime434.jsx(EffortIndicatorSymbol, {
             level: "high"
           }),
           " high"
@@ -474431,16 +474517,16 @@ function EffortCallout(t0) {
   }
   let t14;
   if ($[16] !== handleSelect) {
-    t14 = /* @__PURE__ */ jsx_runtime433.jsx(PermissionDialog, {
+    t14 = /* @__PURE__ */ jsx_runtime434.jsx(PermissionDialog, {
       title: defaultEffortConfig.dialogTitle,
-      children: /* @__PURE__ */ jsx_runtime433.jsxs(ThemedBox_default, {
+      children: /* @__PURE__ */ jsx_runtime434.jsxs(ThemedBox_default, {
         flexDirection: "column",
         paddingX: 2,
         paddingY: 1,
         children: [
           t10,
           t13,
-          /* @__PURE__ */ jsx_runtime433.jsx(Select, {
+          /* @__PURE__ */ jsx_runtime434.jsx(Select, {
             options,
             onChange: handleSelect,
             onCancel: handleCancel
@@ -474473,7 +474559,7 @@ function EffortIndicatorSymbol(t0) {
   }
   let t2;
   if ($[2] !== t1) {
-    t2 = /* @__PURE__ */ jsx_runtime433.jsx(ThemedText, {
+    t2 = /* @__PURE__ */ jsx_runtime434.jsx(ThemedText, {
       color: "suggestion",
       children: t1
     });
@@ -474492,7 +474578,7 @@ function EffortOptionLabel(t0) {
   } = t0;
   let t1;
   if ($[0] !== level) {
-    t1 = /* @__PURE__ */ jsx_runtime433.jsx(EffortIndicatorSymbol, {
+    t1 = /* @__PURE__ */ jsx_runtime434.jsx(EffortIndicatorSymbol, {
       level
     });
     $[0] = level;
@@ -474502,7 +474588,7 @@ function EffortOptionLabel(t0) {
   }
   let t2;
   if ($[2] !== t1 || $[3] !== text) {
-    t2 = /* @__PURE__ */ jsx_runtime433.jsxs(jsx_runtime433.Fragment, {
+    t2 = /* @__PURE__ */ jsx_runtime434.jsxs(jsx_runtime434.Fragment, {
       children: [
         t1,
         " ",
@@ -474552,7 +474638,7 @@ function markV2Dismissed() {
     };
   });
 }
-var import_compiler_runtime346, import_react289, jsx_runtime433, AUTO_DISMISS_MS = 30000;
+var import_compiler_runtime346, import_react289, jsx_runtime434, AUTO_DISMISS_MS = 30000;
 var init_EffortCallout = __esm(() => {
   init_ink2();
   init_auth();
@@ -474565,7 +474651,7 @@ var init_EffortCallout = __esm(() => {
   init_PermissionDialog();
   import_compiler_runtime346 = __toESM(require_compiler_runtime(), 1);
   import_react289 = __toESM(require_react(), 1);
-  jsx_runtime433 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime434 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/RemoteCallout.tsx
@@ -474599,30 +474685,30 @@ function RemoteCallout({
     description: "You can always enable it later with /remote-control.",
     value: "dismiss"
   }];
-  return /* @__PURE__ */ jsx_runtime434.jsx(PermissionDialog, {
+  return /* @__PURE__ */ jsx_runtime435.jsx(PermissionDialog, {
     title: "Remote Control",
-    children: /* @__PURE__ */ jsx_runtime434.jsxs(ThemedBox_default, {
+    children: /* @__PURE__ */ jsx_runtime435.jsxs(ThemedBox_default, {
       flexDirection: "column",
       paddingX: 2,
       paddingY: 1,
       children: [
-        /* @__PURE__ */ jsx_runtime434.jsxs(ThemedBox_default, {
+        /* @__PURE__ */ jsx_runtime435.jsxs(ThemedBox_default, {
           marginBottom: 1,
           flexDirection: "column",
           children: [
-            /* @__PURE__ */ jsx_runtime434.jsx(ThemedText, {
+            /* @__PURE__ */ jsx_runtime435.jsx(ThemedText, {
               children: "Remote Control lets you access this CLI session from the web (claude.ai/code) or the Claude app, so you can pick up where you left off on any device."
             }),
-            /* @__PURE__ */ jsx_runtime434.jsx(ThemedText, {
+            /* @__PURE__ */ jsx_runtime435.jsx(ThemedText, {
               children: " "
             }),
-            /* @__PURE__ */ jsx_runtime434.jsx(ThemedText, {
+            /* @__PURE__ */ jsx_runtime435.jsx(ThemedText, {
               children: "You can disconnect remote access anytime by running /remote-control again."
             })
           ]
         }),
-        /* @__PURE__ */ jsx_runtime434.jsx(ThemedBox_default, {
-          children: /* @__PURE__ */ jsx_runtime434.jsx(Select, {
+        /* @__PURE__ */ jsx_runtime435.jsx(ThemedBox_default, {
+          children: /* @__PURE__ */ jsx_runtime435.jsx(Select, {
             options,
             onChange: handleSelect,
             onCancel: handleCancel
@@ -474632,7 +474718,7 @@ function RemoteCallout({
     })
   });
 }
-var import_react290, jsx_runtime434;
+var import_react290, jsx_runtime435;
 var init_RemoteCallout = __esm(() => {
   init_bridgeEnabled();
   init_ink2();
@@ -474641,7 +474727,7 @@ var init_RemoteCallout = __esm(() => {
   init_select();
   init_PermissionDialog();
   import_react290 = __toESM(require_react(), 1);
-  jsx_runtime434 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime435 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/hooks/useDynamicConfig.ts
@@ -475485,16 +475571,16 @@ function TranscriptSharePrompt(t0) {
   useDebouncedDigitInput(t2);
   let t3;
   if ($[6] === Symbol.for("react.memo_cache_sentinel")) {
-    t3 = /* @__PURE__ */ jsx_runtime435.jsxs(ThemedBox_default, {
+    t3 = /* @__PURE__ */ jsx_runtime436.jsxs(ThemedBox_default, {
       children: [
-        /* @__PURE__ */ jsx_runtime435.jsxs(ThemedText, {
+        /* @__PURE__ */ jsx_runtime436.jsxs(ThemedText, {
           color: "ansi:cyan",
           children: [
             BLACK_CIRCLE,
             " "
           ]
         }),
-        /* @__PURE__ */ jsx_runtime435.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime436.jsx(ThemedText, {
           bold: true,
           children: "Can Anthropic look at your session transcript to help us improve Claude Code?"
         })
@@ -475506,9 +475592,9 @@ function TranscriptSharePrompt(t0) {
   }
   let t4;
   if ($[7] === Symbol.for("react.memo_cache_sentinel")) {
-    t4 = /* @__PURE__ */ jsx_runtime435.jsx(ThemedBox_default, {
+    t4 = /* @__PURE__ */ jsx_runtime436.jsx(ThemedBox_default, {
       marginLeft: 2,
-      children: /* @__PURE__ */ jsx_runtime435.jsx(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime436.jsx(ThemedText, {
         dimColor: true,
         children: "Learn more: https://code.claude.com/docs/en/data-usage#session-quality-surveys"
       })
@@ -475519,11 +475605,11 @@ function TranscriptSharePrompt(t0) {
   }
   let t5;
   if ($[8] === Symbol.for("react.memo_cache_sentinel")) {
-    t5 = /* @__PURE__ */ jsx_runtime435.jsx(ThemedBox_default, {
+    t5 = /* @__PURE__ */ jsx_runtime436.jsx(ThemedBox_default, {
       width: 10,
-      children: /* @__PURE__ */ jsx_runtime435.jsxs(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime436.jsxs(ThemedText, {
         children: [
-          /* @__PURE__ */ jsx_runtime435.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime436.jsx(ThemedText, {
             color: "ansi:cyan",
             children: "1"
           }),
@@ -475537,11 +475623,11 @@ function TranscriptSharePrompt(t0) {
   }
   let t6;
   if ($[9] === Symbol.for("react.memo_cache_sentinel")) {
-    t6 = /* @__PURE__ */ jsx_runtime435.jsx(ThemedBox_default, {
+    t6 = /* @__PURE__ */ jsx_runtime436.jsx(ThemedBox_default, {
       width: 10,
-      children: /* @__PURE__ */ jsx_runtime435.jsxs(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime436.jsxs(ThemedText, {
         children: [
-          /* @__PURE__ */ jsx_runtime435.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime436.jsx(ThemedText, {
             color: "ansi:cyan",
             children: "2"
           }),
@@ -475555,21 +475641,21 @@ function TranscriptSharePrompt(t0) {
   }
   let t7;
   if ($[10] === Symbol.for("react.memo_cache_sentinel")) {
-    t7 = /* @__PURE__ */ jsx_runtime435.jsxs(ThemedBox_default, {
+    t7 = /* @__PURE__ */ jsx_runtime436.jsxs(ThemedBox_default, {
       flexDirection: "column",
       marginTop: 1,
       children: [
         t3,
         t4,
-        /* @__PURE__ */ jsx_runtime435.jsxs(ThemedBox_default, {
+        /* @__PURE__ */ jsx_runtime436.jsxs(ThemedBox_default, {
           marginLeft: 2,
           children: [
             t5,
             t6,
-            /* @__PURE__ */ jsx_runtime435.jsx(ThemedBox_default, {
-              children: /* @__PURE__ */ jsx_runtime435.jsxs(ThemedText, {
+            /* @__PURE__ */ jsx_runtime436.jsx(ThemedBox_default, {
+              children: /* @__PURE__ */ jsx_runtime436.jsxs(ThemedText, {
                 children: [
-                  /* @__PURE__ */ jsx_runtime435.jsx(ThemedText, {
+                  /* @__PURE__ */ jsx_runtime436.jsx(ThemedText, {
                     color: "ansi:cyan",
                     children: "3"
                   }),
@@ -475587,13 +475673,13 @@ function TranscriptSharePrompt(t0) {
   }
   return t7;
 }
-var import_compiler_runtime348, jsx_runtime435, RESPONSE_INPUTS2, inputToResponse2, isValidResponseInput2 = (input) => RESPONSE_INPUTS2.includes(input);
+var import_compiler_runtime348, jsx_runtime436, RESPONSE_INPUTS2, inputToResponse2, isValidResponseInput2 = (input) => RESPONSE_INPUTS2.includes(input);
 var init_TranscriptSharePrompt = __esm(() => {
   init_figures2();
   init_ink2();
   init_useDebouncedDigitInput();
   import_compiler_runtime348 = __toESM(require_compiler_runtime(), 1);
-  jsx_runtime435 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime436 = __toESM(require_jsx_runtime(), 1);
   RESPONSE_INPUTS2 = ["1", "2", "3"];
   inputToResponse2 = {
     "1": "yes",
@@ -475621,7 +475707,7 @@ function FeedbackSurvey(t0) {
   if (state === "thanks") {
     let t1;
     if ($[0] !== inputValue || $[1] !== lastResponse || $[2] !== onRequestFeedback || $[3] !== setInputValue) {
-      t1 = /* @__PURE__ */ jsx_runtime436.jsx(FeedbackSurveyThanks, {
+      t1 = /* @__PURE__ */ jsx_runtime437.jsx(FeedbackSurveyThanks, {
         lastResponse,
         inputValue,
         setInputValue,
@@ -475640,9 +475726,9 @@ function FeedbackSurvey(t0) {
   if (state === "submitted") {
     let t1;
     if ($[5] === Symbol.for("react.memo_cache_sentinel")) {
-      t1 = /* @__PURE__ */ jsx_runtime436.jsx(ThemedBox_default, {
+      t1 = /* @__PURE__ */ jsx_runtime437.jsx(ThemedBox_default, {
         marginTop: 1,
-        children: /* @__PURE__ */ jsx_runtime436.jsxs(ThemedText, {
+        children: /* @__PURE__ */ jsx_runtime437.jsxs(ThemedText, {
           color: "success",
           children: [
             "\u2713",
@@ -475659,9 +475745,9 @@ function FeedbackSurvey(t0) {
   if (state === "submitting") {
     let t1;
     if ($[6] === Symbol.for("react.memo_cache_sentinel")) {
-      t1 = /* @__PURE__ */ jsx_runtime436.jsx(ThemedBox_default, {
+      t1 = /* @__PURE__ */ jsx_runtime437.jsx(ThemedBox_default, {
         marginTop: 1,
-        children: /* @__PURE__ */ jsx_runtime436.jsxs(ThemedText, {
+        children: /* @__PURE__ */ jsx_runtime437.jsxs(ThemedText, {
           dimColor: true,
           children: [
             "Sharing transcript",
@@ -475684,7 +475770,7 @@ function FeedbackSurvey(t0) {
     }
     let t1;
     if ($[7] !== handleTranscriptSelect || $[8] !== inputValue || $[9] !== setInputValue) {
-      t1 = /* @__PURE__ */ jsx_runtime436.jsx(TranscriptSharePrompt, {
+      t1 = /* @__PURE__ */ jsx_runtime437.jsx(TranscriptSharePrompt, {
         onSelect: handleTranscriptSelect,
         inputValue,
         setInputValue
@@ -475703,7 +475789,7 @@ function FeedbackSurvey(t0) {
   }
   let t1;
   if ($[11] !== handleSelect || $[12] !== inputValue || $[13] !== message || $[14] !== setInputValue) {
-    t1 = /* @__PURE__ */ jsx_runtime436.jsx(FeedbackSurveyView, {
+    t1 = /* @__PURE__ */ jsx_runtime437.jsx(FeedbackSurveyView, {
       onSelect: handleSelect,
       inputValue,
       setInputValue,
@@ -475766,7 +475852,7 @@ function FeedbackSurveyThanks(t0) {
   const feedbackCommand = "/feedback";
   let t4;
   if ($[8] === Symbol.for("react.memo_cache_sentinel")) {
-    t4 = /* @__PURE__ */ jsx_runtime436.jsx(ThemedText, {
+    t4 = /* @__PURE__ */ jsx_runtime437.jsx(ThemedText, {
       color: "success",
       children: "Thanks for the feedback!"
     });
@@ -475776,16 +475862,16 @@ function FeedbackSurveyThanks(t0) {
   }
   let t5;
   if ($[9] !== lastResponse || $[10] !== showFollowUp) {
-    t5 = /* @__PURE__ */ jsx_runtime436.jsxs(ThemedBox_default, {
+    t5 = /* @__PURE__ */ jsx_runtime437.jsxs(ThemedBox_default, {
       marginTop: 1,
       flexDirection: "column",
       children: [
         t4,
-        showFollowUp ? /* @__PURE__ */ jsx_runtime436.jsxs(ThemedText, {
+        showFollowUp ? /* @__PURE__ */ jsx_runtime437.jsxs(ThemedText, {
           dimColor: true,
           children: [
             "(Optional) Press [",
-            /* @__PURE__ */ jsx_runtime436.jsx(ThemedText, {
+            /* @__PURE__ */ jsx_runtime437.jsx(ThemedText, {
               color: "ansi:cyan",
               children: "1"
             }),
@@ -475793,10 +475879,10 @@ function FeedbackSurveyThanks(t0) {
             " \xB7 ",
             feedbackCommand
           ]
-        }) : lastResponse === "bad" ? /* @__PURE__ */ jsx_runtime436.jsx(ThemedText, {
+        }) : lastResponse === "bad" ? /* @__PURE__ */ jsx_runtime437.jsx(ThemedText, {
           dimColor: true,
           children: "Use /issue to report model behavior issues."
-        }) : /* @__PURE__ */ jsx_runtime436.jsxs(ThemedText, {
+        }) : /* @__PURE__ */ jsx_runtime437.jsxs(ThemedText, {
           dimColor: true,
           children: [
             "Use ",
@@ -475814,7 +475900,7 @@ function FeedbackSurveyThanks(t0) {
   }
   return t5;
 }
-var import_compiler_runtime349, jsx_runtime436, isFollowUpDigit = (char) => char === "1";
+var import_compiler_runtime349, jsx_runtime437, isFollowUpDigit = (char) => char === "1";
 var init_FeedbackSurvey = __esm(() => {
   init_analytics();
   init_ink2();
@@ -475822,7 +475908,7 @@ var init_FeedbackSurvey = __esm(() => {
   init_TranscriptSharePrompt();
   init_useDebouncedDigitInput();
   import_compiler_runtime349 = __toESM(require_compiler_runtime(), 1);
-  jsx_runtime436 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime437 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/hooks/notifs/useStartupNotification.ts
@@ -476057,7 +476143,7 @@ async function _temp198() {
   if (!isClaudeAISubscriber()) {
     return {
       key: "chrome-requires-subscription",
-      jsx: /* @__PURE__ */ jsx_runtime437.jsx(ThemedText, {
+      jsx: /* @__PURE__ */ jsx_runtime438.jsx(ThemedText, {
         color: "error",
         children: "Claude in Chrome requires a claude.ai subscription"
       }),
@@ -476069,7 +476155,7 @@ async function _temp198() {
   if (!installed && !isRunningOnHomespace()) {
     return {
       key: "chrome-extension-not-detected",
-      jsx: /* @__PURE__ */ jsx_runtime437.jsx(ThemedText, {
+      jsx: /* @__PURE__ */ jsx_runtime438.jsx(ThemedText, {
         color: "warning",
         children: "Chrome extension not detected \xB7 https://claude.ai/chrome to install"
       }),
@@ -476086,14 +476172,14 @@ async function _temp198() {
   }
   return null;
 }
-var jsx_runtime437;
+var jsx_runtime438;
 var init_useChromeExtensionNotification = __esm(() => {
   init_ink2();
   init_auth();
   init_setup2();
   init_envUtils();
   init_useStartupNotification();
-  jsx_runtime437 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime438 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/utils/plugins/officialMarketplaceStartupCheck.ts
@@ -476371,7 +476457,7 @@ async function _temp199() {
     logForDebugging("Showing marketplace config save failure notification");
     notifs.push({
       key: "marketplace-config-save-failed",
-      jsx: /* @__PURE__ */ jsx_runtime438.jsx(ThemedText, {
+      jsx: /* @__PURE__ */ jsx_runtime439.jsx(ThemedText, {
         color: "error",
         children: "Failed to save marketplace retry info \xB7 Check ~/.claude.json permissions"
       }),
@@ -476383,7 +476469,7 @@ async function _temp199() {
     logForDebugging("Showing marketplace installation success notification");
     notifs.push({
       key: "marketplace-installed",
-      jsx: /* @__PURE__ */ jsx_runtime438.jsx(ThemedText, {
+      jsx: /* @__PURE__ */ jsx_runtime439.jsx(ThemedText, {
         color: "success",
         children: "\u2713 Anthropic marketplace installed \xB7 /plugin to see available plugins"
       }),
@@ -476395,7 +476481,7 @@ async function _temp199() {
       logForDebugging("Showing marketplace installation failure notification");
       notifs.push({
         key: "marketplace-install-failed",
-        jsx: /* @__PURE__ */ jsx_runtime438.jsx(ThemedText, {
+        jsx: /* @__PURE__ */ jsx_runtime439.jsx(ThemedText, {
           color: "warning",
           children: "Failed to install Anthropic marketplace \xB7 Will retry on next startup"
         }),
@@ -476406,13 +476492,13 @@ async function _temp199() {
   }
   return notifs;
 }
-var jsx_runtime438;
+var jsx_runtime439;
 var init_useOfficialMarketplaceNotification = __esm(() => {
   init_ink2();
   init_debug();
   init_officialMarketplaceStartupCheck();
   init_useStartupNotification();
-  jsx_runtime438 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime439 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/hooks/usePromptsFromClaudeInChrome.tsx
@@ -476534,7 +476620,7 @@ function DesktopUpsellStartup(t0) {
   if (showHandoff) {
     let t2;
     if ($[1] !== onDone) {
-      t2 = /* @__PURE__ */ jsx_runtime439.jsx(DesktopHandoff, {
+      t2 = /* @__PURE__ */ jsx_runtime440.jsx(DesktopHandoff, {
         onDone: () => onDone()
       });
       $[1] = onDone;
@@ -476602,9 +476688,9 @@ function DesktopUpsellStartup(t0) {
   const options = t5;
   let t6;
   if ($[8] === Symbol.for("react.memo_cache_sentinel")) {
-    t6 = /* @__PURE__ */ jsx_runtime439.jsx(ThemedBox_default, {
+    t6 = /* @__PURE__ */ jsx_runtime440.jsx(ThemedBox_default, {
       marginBottom: 1,
-      children: /* @__PURE__ */ jsx_runtime439.jsx(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime440.jsx(ThemedText, {
         children: "Same Claude Code with visual diffs, live app preview, parallel sessions, and more."
       })
     });
@@ -476622,15 +476708,15 @@ function DesktopUpsellStartup(t0) {
   }
   let t8;
   if ($[11] !== handleSelect || $[12] !== t7) {
-    t8 = /* @__PURE__ */ jsx_runtime439.jsx(PermissionDialog, {
+    t8 = /* @__PURE__ */ jsx_runtime440.jsx(PermissionDialog, {
       title: "Try Claude Code Desktop",
-      children: /* @__PURE__ */ jsx_runtime439.jsxs(ThemedBox_default, {
+      children: /* @__PURE__ */ jsx_runtime440.jsxs(ThemedBox_default, {
         flexDirection: "column",
         paddingX: 2,
         paddingY: 1,
         children: [
           t6,
-          /* @__PURE__ */ jsx_runtime439.jsx(Select, {
+          /* @__PURE__ */ jsx_runtime440.jsx(Select, {
             options,
             onChange: handleSelect,
             onCancel: t7
@@ -476670,7 +476756,7 @@ function _temp201() {
     seen_count: newCount
   });
 }
-var import_compiler_runtime351, import_react299, jsx_runtime439, DESKTOP_UPSELL_DEFAULT;
+var import_compiler_runtime351, import_react299, jsx_runtime440, DESKTOP_UPSELL_DEFAULT;
 var init_DesktopUpsellStartup = __esm(() => {
   init_ink2();
   init_growthbook();
@@ -476681,7 +476767,7 @@ var init_DesktopUpsellStartup = __esm(() => {
   init_PermissionDialog();
   import_compiler_runtime351 = __toESM(require_compiler_runtime(), 1);
   import_react299 = __toESM(require_react(), 1);
-  jsx_runtime439 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime440 = __toESM(require_jsx_runtime(), 1);
   DESKTOP_UPSELL_DEFAULT = {
     enable_shortcut_tip: false,
     enable_startup_dialog: false
@@ -478239,10 +478325,10 @@ function SandboxPermissionRequest(t0) {
   let t5;
   if ($[4] !== host) {
     t5 = !managedDomainsOnly ? [{
-      label: /* @__PURE__ */ jsx_runtime440.jsxs(ThemedText, {
+      label: /* @__PURE__ */ jsx_runtime441.jsxs(ThemedText, {
         children: [
           "Yes, and don't ask again for ",
-          /* @__PURE__ */ jsx_runtime440.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime441.jsx(ThemedText, {
             bold: true,
             children: host
           })
@@ -478258,10 +478344,10 @@ function SandboxPermissionRequest(t0) {
   let t6;
   if ($[6] === Symbol.for("react.memo_cache_sentinel")) {
     t6 = {
-      label: /* @__PURE__ */ jsx_runtime440.jsxs(ThemedText, {
+      label: /* @__PURE__ */ jsx_runtime441.jsxs(ThemedText, {
         children: [
           "No, and tell Claude what to do differently ",
-          /* @__PURE__ */ jsx_runtime440.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime441.jsx(ThemedText, {
             bold: true,
             children: "(esc)"
           })
@@ -478284,7 +478370,7 @@ function SandboxPermissionRequest(t0) {
   const options = t7;
   let t8;
   if ($[9] === Symbol.for("react.memo_cache_sentinel")) {
-    t8 = /* @__PURE__ */ jsx_runtime440.jsx(ThemedText, {
+    t8 = /* @__PURE__ */ jsx_runtime441.jsx(ThemedText, {
       dimColor: true,
       children: "Host:"
     });
@@ -478294,10 +478380,10 @@ function SandboxPermissionRequest(t0) {
   }
   let t9;
   if ($[10] !== host) {
-    t9 = /* @__PURE__ */ jsx_runtime440.jsxs(ThemedBox_default, {
+    t9 = /* @__PURE__ */ jsx_runtime441.jsxs(ThemedBox_default, {
       children: [
         t8,
-        /* @__PURE__ */ jsx_runtime440.jsxs(ThemedText, {
+        /* @__PURE__ */ jsx_runtime441.jsxs(ThemedText, {
           children: [
             " ",
             host
@@ -478312,9 +478398,9 @@ function SandboxPermissionRequest(t0) {
   }
   let t10;
   if ($[12] === Symbol.for("react.memo_cache_sentinel")) {
-    t10 = /* @__PURE__ */ jsx_runtime440.jsx(ThemedBox_default, {
+    t10 = /* @__PURE__ */ jsx_runtime441.jsx(ThemedBox_default, {
       marginTop: 1,
-      children: /* @__PURE__ */ jsx_runtime440.jsx(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime441.jsx(ThemedText, {
         children: "Do you want to allow this connection?"
       })
     });
@@ -478337,8 +478423,8 @@ function SandboxPermissionRequest(t0) {
   }
   let t12;
   if ($[15] !== onSelect || $[16] !== options || $[17] !== t11) {
-    t12 = /* @__PURE__ */ jsx_runtime440.jsx(ThemedBox_default, {
-      children: /* @__PURE__ */ jsx_runtime440.jsx(Select, {
+    t12 = /* @__PURE__ */ jsx_runtime441.jsx(ThemedBox_default, {
+      children: /* @__PURE__ */ jsx_runtime441.jsx(Select, {
         options,
         onChange: onSelect,
         onCancel: t11
@@ -478353,9 +478439,9 @@ function SandboxPermissionRequest(t0) {
   }
   let t13;
   if ($[19] !== t12 || $[20] !== t9) {
-    t13 = /* @__PURE__ */ jsx_runtime440.jsx(PermissionDialog, {
+    t13 = /* @__PURE__ */ jsx_runtime441.jsx(PermissionDialog, {
       title: "Network request outside of sandbox",
-      children: /* @__PURE__ */ jsx_runtime440.jsxs(ThemedBox_default, {
+      children: /* @__PURE__ */ jsx_runtime441.jsxs(ThemedBox_default, {
         flexDirection: "column",
         paddingX: 2,
         paddingY: 1,
@@ -478374,14 +478460,14 @@ function SandboxPermissionRequest(t0) {
   }
   return t13;
 }
-var import_compiler_runtime352, jsx_runtime440;
+var import_compiler_runtime352, jsx_runtime441;
 var init_SandboxPermissionRequest = __esm(() => {
   init_ink2();
   init_sandbox_adapter();
   init_select();
   init_PermissionDialog();
   import_compiler_runtime352 = __toESM(require_compiler_runtime(), 1);
-  jsx_runtime440 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime441 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/SandboxViolationExpandedView.tsx
@@ -478431,9 +478517,9 @@ function SandboxViolationExpandedView() {
   const t3 = totalCount === 1 ? "operation" : "operations";
   let t4;
   if ($[3] !== t3 || $[4] !== totalCount) {
-    t4 = /* @__PURE__ */ jsx_runtime441.jsx(ThemedBox_default, {
+    t4 = /* @__PURE__ */ jsx_runtime442.jsx(ThemedBox_default, {
       marginLeft: 0,
-      children: /* @__PURE__ */ jsx_runtime441.jsxs(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime442.jsxs(ThemedText, {
         color: "permission",
         children: [
           "\u29C8 Sandbox blocked ",
@@ -478461,9 +478547,9 @@ function SandboxViolationExpandedView() {
   const t6 = Math.min(10, violations.length);
   let t7;
   if ($[8] !== t6 || $[9] !== totalCount) {
-    t7 = /* @__PURE__ */ jsx_runtime441.jsx(ThemedBox_default, {
+    t7 = /* @__PURE__ */ jsx_runtime442.jsx(ThemedBox_default, {
       paddingLeft: 2,
-      children: /* @__PURE__ */ jsx_runtime441.jsxs(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime442.jsxs(ThemedText, {
         dimColor: true,
         children: [
           "\u2026 showing last ",
@@ -478481,7 +478567,7 @@ function SandboxViolationExpandedView() {
   }
   let t8;
   if ($[11] !== t4 || $[12] !== t5 || $[13] !== t7) {
-    t8 = /* @__PURE__ */ jsx_runtime441.jsxs(ThemedBox_default, {
+    t8 = /* @__PURE__ */ jsx_runtime442.jsxs(ThemedBox_default, {
       flexDirection: "column",
       marginTop: 1,
       children: [
@@ -478500,9 +478586,9 @@ function SandboxViolationExpandedView() {
   return t8;
 }
 function _temp202(v, i) {
-  return /* @__PURE__ */ jsx_runtime441.jsx(ThemedBox_default, {
+  return /* @__PURE__ */ jsx_runtime442.jsx(ThemedBox_default, {
     paddingLeft: 2,
-    children: /* @__PURE__ */ jsx_runtime441.jsxs(ThemedText, {
+    children: /* @__PURE__ */ jsx_runtime442.jsxs(ThemedText, {
       dimColor: true,
       children: [
         formatTime(v.timestamp),
@@ -478513,14 +478599,14 @@ function _temp202(v, i) {
     })
   }, `${v.timestamp.getTime()}-${i}`);
 }
-var import_compiler_runtime353, import_react301, jsx_runtime441;
+var import_compiler_runtime353, import_react301, jsx_runtime442;
 var init_SandboxViolationExpandedView = __esm(() => {
   init_ink2();
   init_sandbox_adapter();
   init_platform2();
   import_compiler_runtime353 = __toESM(require_compiler_runtime(), 1);
   import_react301 = __toESM(require_react(), 1);
-  jsx_runtime441 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime442 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/hooks/notifs/useMcpConnectivityStatus.tsx
@@ -478550,9 +478636,9 @@ function useMcpConnectivityStatus(t0) {
       if (failedLocalClients.length > 0) {
         addNotification({
           key: "mcp-failed",
-          jsx: /* @__PURE__ */ jsx_runtime442.jsxs(jsx_runtime442.Fragment, {
+          jsx: /* @__PURE__ */ jsx_runtime443.jsxs(jsx_runtime443.Fragment, {
             children: [
-              /* @__PURE__ */ jsx_runtime442.jsxs(ThemedText, {
+              /* @__PURE__ */ jsx_runtime443.jsxs(ThemedText, {
                 color: "error",
                 children: [
                   failedLocalClients.length,
@@ -478562,7 +478648,7 @@ function useMcpConnectivityStatus(t0) {
                   " failed"
                 ]
               }),
-              /* @__PURE__ */ jsx_runtime442.jsx(ThemedText, {
+              /* @__PURE__ */ jsx_runtime443.jsx(ThemedText, {
                 dimColor: true,
                 children: " \xB7 /mcp"
               })
@@ -478574,9 +478660,9 @@ function useMcpConnectivityStatus(t0) {
       if (failedClaudeAiClients.length > 0) {
         addNotification({
           key: "mcp-claudeai-failed",
-          jsx: /* @__PURE__ */ jsx_runtime442.jsxs(jsx_runtime442.Fragment, {
+          jsx: /* @__PURE__ */ jsx_runtime443.jsxs(jsx_runtime443.Fragment, {
             children: [
-              /* @__PURE__ */ jsx_runtime442.jsxs(ThemedText, {
+              /* @__PURE__ */ jsx_runtime443.jsxs(ThemedText, {
                 color: "error",
                 children: [
                   failedClaudeAiClients.length,
@@ -478587,7 +478673,7 @@ function useMcpConnectivityStatus(t0) {
                   "unavailable"
                 ]
               }),
-              /* @__PURE__ */ jsx_runtime442.jsx(ThemedText, {
+              /* @__PURE__ */ jsx_runtime443.jsx(ThemedText, {
                 dimColor: true,
                 children: " \xB7 /mcp"
               })
@@ -478599,9 +478685,9 @@ function useMcpConnectivityStatus(t0) {
       if (needsAuthLocalServers.length > 0) {
         addNotification({
           key: "mcp-needs-auth",
-          jsx: /* @__PURE__ */ jsx_runtime442.jsxs(jsx_runtime442.Fragment, {
+          jsx: /* @__PURE__ */ jsx_runtime443.jsxs(jsx_runtime443.Fragment, {
             children: [
-              /* @__PURE__ */ jsx_runtime442.jsxs(ThemedText, {
+              /* @__PURE__ */ jsx_runtime443.jsxs(ThemedText, {
                 color: "warning",
                 children: [
                   needsAuthLocalServers.length,
@@ -478612,7 +478698,7 @@ function useMcpConnectivityStatus(t0) {
                   "auth"
                 ]
               }),
-              /* @__PURE__ */ jsx_runtime442.jsx(ThemedText, {
+              /* @__PURE__ */ jsx_runtime443.jsx(ThemedText, {
                 dimColor: true,
                 children: " \xB7 /mcp"
               })
@@ -478624,9 +478710,9 @@ function useMcpConnectivityStatus(t0) {
       if (needsAuthClaudeAiServers.length > 0) {
         addNotification({
           key: "mcp-claudeai-needs-auth",
-          jsx: /* @__PURE__ */ jsx_runtime442.jsxs(jsx_runtime442.Fragment, {
+          jsx: /* @__PURE__ */ jsx_runtime443.jsxs(jsx_runtime443.Fragment, {
             children: [
-              /* @__PURE__ */ jsx_runtime442.jsxs(ThemedText, {
+              /* @__PURE__ */ jsx_runtime443.jsxs(ThemedText, {
                 color: "warning",
                 children: [
                   needsAuthClaudeAiServers.length,
@@ -478637,7 +478723,7 @@ function useMcpConnectivityStatus(t0) {
                   "auth"
                 ]
               }),
-              /* @__PURE__ */ jsx_runtime442.jsx(ThemedText, {
+              /* @__PURE__ */ jsx_runtime443.jsx(ThemedText, {
                 dimColor: true,
                 children: " \xB7 /mcp"
               })
@@ -478670,7 +478756,7 @@ function _temp286(client_0) {
 function _temp203(client) {
   return client.type === "failed" && client.config.type !== "sse-ide" && client.config.type !== "ws-ide" && client.config.type !== "claudeai-proxy";
 }
-var import_compiler_runtime354, import_react302, jsx_runtime442, EMPTY_MCP_CLIENTS;
+var import_compiler_runtime354, import_react302, jsx_runtime443, EMPTY_MCP_CLIENTS;
 var init_useMcpConnectivityStatus = __esm(() => {
   init_notifications();
   init_state();
@@ -478678,7 +478764,7 @@ var init_useMcpConnectivityStatus = __esm(() => {
   init_claudeai();
   import_compiler_runtime354 = __toESM(require_compiler_runtime(), 1);
   import_react302 = __toESM(require_react(), 1);
-  jsx_runtime442 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime443 = __toESM(require_jsx_runtime(), 1);
   EMPTY_MCP_CLIENTS = [];
 });
 
@@ -478730,7 +478816,7 @@ function useLspInitializationNotification() {
     addNotification
   } = useNotifications();
   const setAppState = useSetAppState();
-  const [shouldPoll, setShouldPoll] = React146.useState(_temp204);
+  const [shouldPoll, setShouldPoll] = React147.useState(_temp204);
   let t0;
   if ($[0] === Symbol.for("react.memo_cache_sentinel")) {
     t0 = new Set;
@@ -478738,7 +478824,7 @@ function useLspInitializationNotification() {
   } else {
     t0 = $[0];
   }
-  const notifiedErrorsRef = React146.useRef(t0);
+  const notifiedErrorsRef = React147.useRef(t0);
   let t1;
   if ($[1] !== addNotification || $[2] !== setAppState) {
     t1 = (source, errorMessage) => {
@@ -478769,9 +478855,9 @@ function useLspInitializationNotification() {
       const displayName = source.startsWith("plugin:") ? source.split(":")[1] ?? source : source;
       addNotification({
         key: `lsp-error-${source}`,
-        jsx: /* @__PURE__ */ jsx_runtime443.jsxs(jsx_runtime443.Fragment, {
+        jsx: /* @__PURE__ */ jsx_runtime444.jsxs(jsx_runtime444.Fragment, {
           children: [
-            /* @__PURE__ */ jsx_runtime443.jsxs(ThemedText, {
+            /* @__PURE__ */ jsx_runtime444.jsxs(ThemedText, {
               color: "error",
               children: [
                 "LSP for ",
@@ -478779,7 +478865,7 @@ function useLspInitializationNotification() {
                 " failed"
               ]
             }),
-            /* @__PURE__ */ jsx_runtime443.jsx(ThemedText, {
+            /* @__PURE__ */ jsx_runtime444.jsx(ThemedText, {
               dimColor: true,
               children: " \xB7 /plugin for details"
             })
@@ -478849,7 +478935,7 @@ function useLspInitializationNotification() {
     t3 = $[8];
     t4 = $[9];
   }
-  React146.useEffect(t3, t4);
+  React147.useEffect(t3, t4);
 }
 function _temp287(e) {
   if (e.type === "generic-error") {
@@ -478860,7 +478946,7 @@ function _temp287(e) {
 function _temp204() {
   return isEnvTruthy("true");
 }
-var import_compiler_runtime355, React146, jsx_runtime443, LSP_POLL_INTERVAL_MS = 5000;
+var import_compiler_runtime355, React147, jsx_runtime444, LSP_POLL_INTERVAL_MS = 5000;
 var init_useLspInitializationNotification = __esm(() => {
   init_dist5();
   init_state();
@@ -478871,8 +478957,8 @@ var init_useLspInitializationNotification = __esm(() => {
   init_debug();
   init_envUtils();
   import_compiler_runtime355 = __toESM(require_compiler_runtime(), 1);
-  React146 = __toESM(require_react(), 1);
-  jsx_runtime443 = __toESM(require_jsx_runtime(), 1);
+  React147 = __toESM(require_react(), 1);
+  jsx_runtime444 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/utils/binaryCheck.ts
@@ -479084,8 +479170,8 @@ var init_lspRecommendation = __esm(() => {
 // src/hooks/usePluginRecommendationBase.tsx
 function usePluginRecommendationBase() {
   const $ = import_compiler_runtime356.c(6);
-  const [recommendation, setRecommendation] = React147.useState(null);
-  const isCheckingRef = React147.useRef(false);
+  const [recommendation, setRecommendation] = React148.useState(null);
+  const isCheckingRef = React148.useRef(false);
   let t0;
   if ($[0] !== recommendation) {
     t0 = (resolve) => {
@@ -479145,7 +479231,7 @@ async function installPluginAndNotify(pluginId, pluginName, keyPrefix, addNotifi
     await install(pluginData);
     addNotification({
       key: `${keyPrefix}-installed`,
-      jsx: /* @__PURE__ */ jsx_runtime444.jsxs(ThemedText, {
+      jsx: /* @__PURE__ */ jsx_runtime445.jsxs(ThemedText, {
         color: "success",
         children: [
           figures_default.tick,
@@ -479161,7 +479247,7 @@ async function installPluginAndNotify(pluginId, pluginName, keyPrefix, addNotifi
     logError2(error);
     addNotification({
       key: `${keyPrefix}-install-failed`,
-      jsx: /* @__PURE__ */ jsx_runtime444.jsxs(ThemedText, {
+      jsx: /* @__PURE__ */ jsx_runtime445.jsxs(ThemedText, {
         color: "error",
         children: [
           "Failed to install ",
@@ -479173,7 +479259,7 @@ async function installPluginAndNotify(pluginId, pluginName, keyPrefix, addNotifi
     });
   }
 }
-var import_compiler_runtime356, React147, jsx_runtime444;
+var import_compiler_runtime356, React148, jsx_runtime445;
 var init_usePluginRecommendationBase = __esm(() => {
   init_figures();
   init_state();
@@ -479181,8 +479267,8 @@ var init_usePluginRecommendationBase = __esm(() => {
   init_log3();
   init_marketplaceManager();
   import_compiler_runtime356 = __toESM(require_compiler_runtime(), 1);
-  React147 = __toESM(require_react(), 1);
-  jsx_runtime444 = __toESM(require_jsx_runtime(), 1);
+  React148 = __toESM(require_react(), 1);
+  jsx_runtime445 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/hooks/useLspPluginRecommendation.tsx
@@ -479200,7 +479286,7 @@ function useLspPluginRecommendation() {
   } else {
     t0 = $[0];
   }
-  const checkedFilesRef = React148.useRef(t0);
+  const checkedFilesRef = React149.useRef(t0);
   const {
     recommendation,
     clearRecommendation,
@@ -479253,7 +479339,7 @@ function useLspPluginRecommendation() {
     t1 = $[3];
     t2 = $[4];
   }
-  React148.useEffect(t1, t2);
+  React149.useEffect(t1, t2);
   let t3;
   if ($[5] !== addNotification || $[6] !== clearRecommendation || $[7] !== recommendation) {
     t3 = (response) => {
@@ -479336,7 +479422,7 @@ function _temp288(current) {
 function _temp205(s) {
   return s.fileHistory.trackedFiles;
 }
-var import_compiler_runtime357, React148, TIMEOUT_THRESHOLD_MS = 28000;
+var import_compiler_runtime357, React149, TIMEOUT_THRESHOLD_MS = 28000;
 var init_useLspPluginRecommendation = __esm(() => {
   init_state();
   init_notifications();
@@ -479349,7 +479435,7 @@ var init_useLspPluginRecommendation = __esm(() => {
   init_settings2();
   init_usePluginRecommendationBase();
   import_compiler_runtime357 = __toESM(require_compiler_runtime(), 1);
-  React148 = __toESM(require_react(), 1);
+  React149 = __toESM(require_react(), 1);
 });
 
 // src/components/LspRecommendation/LspRecommendationMenu.tsx
@@ -479359,9 +479445,9 @@ function LspRecommendationMenu({
   fileExtension,
   onResponse
 }) {
-  const onResponseRef = React149.useRef(onResponse);
+  const onResponseRef = React150.useRef(onResponse);
   onResponseRef.current = onResponse;
-  React149.useEffect(() => {
+  React150.useEffect(() => {
     const timeoutId = setTimeout((ref) => ref.current("no"), AUTO_DISMISS_MS2, onResponseRef);
     return () => clearTimeout(timeoutId);
   }, []);
@@ -479382,10 +479468,10 @@ function LspRecommendationMenu({
     }
   }
   const options = [{
-    label: /* @__PURE__ */ jsx_runtime445.jsxs(ThemedText, {
+    label: /* @__PURE__ */ jsx_runtime446.jsxs(ThemedText, {
       children: [
         "Yes, install ",
-        /* @__PURE__ */ jsx_runtime445.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime446.jsx(ThemedText, {
           bold: true,
           children: pluginName
         })
@@ -479396,10 +479482,10 @@ function LspRecommendationMenu({
     label: "No, not now",
     value: "no"
   }, {
-    label: /* @__PURE__ */ jsx_runtime445.jsxs(ThemedText, {
+    label: /* @__PURE__ */ jsx_runtime446.jsxs(ThemedText, {
       children: [
         "Never for ",
-        /* @__PURE__ */ jsx_runtime445.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime446.jsx(ThemedText, {
           bold: true,
           children: pluginName
         })
@@ -479410,27 +479496,27 @@ function LspRecommendationMenu({
     label: "Disable all LSP recommendations",
     value: "disable"
   }];
-  return /* @__PURE__ */ jsx_runtime445.jsx(PermissionDialog, {
+  return /* @__PURE__ */ jsx_runtime446.jsx(PermissionDialog, {
     title: "LSP Plugin Recommendation",
-    children: /* @__PURE__ */ jsx_runtime445.jsxs(ThemedBox_default, {
+    children: /* @__PURE__ */ jsx_runtime446.jsxs(ThemedBox_default, {
       flexDirection: "column",
       paddingX: 2,
       paddingY: 1,
       children: [
-        /* @__PURE__ */ jsx_runtime445.jsx(ThemedBox_default, {
+        /* @__PURE__ */ jsx_runtime446.jsx(ThemedBox_default, {
           marginBottom: 1,
-          children: /* @__PURE__ */ jsx_runtime445.jsx(ThemedText, {
+          children: /* @__PURE__ */ jsx_runtime446.jsx(ThemedText, {
             dimColor: true,
             children: "LSP provides code intelligence like go-to-definition and error checking"
           })
         }),
-        /* @__PURE__ */ jsx_runtime445.jsxs(ThemedBox_default, {
+        /* @__PURE__ */ jsx_runtime446.jsxs(ThemedBox_default, {
           children: [
-            /* @__PURE__ */ jsx_runtime445.jsx(ThemedText, {
+            /* @__PURE__ */ jsx_runtime446.jsx(ThemedText, {
               dimColor: true,
               children: "Plugin:"
             }),
-            /* @__PURE__ */ jsx_runtime445.jsxs(ThemedText, {
+            /* @__PURE__ */ jsx_runtime446.jsxs(ThemedText, {
               children: [
                 " ",
                 pluginName
@@ -479438,19 +479524,19 @@ function LspRecommendationMenu({
             })
           ]
         }),
-        pluginDescription && /* @__PURE__ */ jsx_runtime445.jsx(ThemedBox_default, {
-          children: /* @__PURE__ */ jsx_runtime445.jsx(ThemedText, {
+        pluginDescription && /* @__PURE__ */ jsx_runtime446.jsx(ThemedBox_default, {
+          children: /* @__PURE__ */ jsx_runtime446.jsx(ThemedText, {
             dimColor: true,
             children: pluginDescription
           })
         }),
-        /* @__PURE__ */ jsx_runtime445.jsxs(ThemedBox_default, {
+        /* @__PURE__ */ jsx_runtime446.jsxs(ThemedBox_default, {
           children: [
-            /* @__PURE__ */ jsx_runtime445.jsx(ThemedText, {
+            /* @__PURE__ */ jsx_runtime446.jsx(ThemedText, {
               dimColor: true,
               children: "Triggered by:"
             }),
-            /* @__PURE__ */ jsx_runtime445.jsxs(ThemedText, {
+            /* @__PURE__ */ jsx_runtime446.jsxs(ThemedText, {
               children: [
                 " ",
                 fileExtension,
@@ -479459,14 +479545,14 @@ function LspRecommendationMenu({
             })
           ]
         }),
-        /* @__PURE__ */ jsx_runtime445.jsx(ThemedBox_default, {
+        /* @__PURE__ */ jsx_runtime446.jsx(ThemedBox_default, {
           marginTop: 1,
-          children: /* @__PURE__ */ jsx_runtime445.jsx(ThemedText, {
+          children: /* @__PURE__ */ jsx_runtime446.jsx(ThemedText, {
             children: "Would you like to install this LSP plugin?"
           })
         }),
-        /* @__PURE__ */ jsx_runtime445.jsx(ThemedBox_default, {
-          children: /* @__PURE__ */ jsx_runtime445.jsx(Select, {
+        /* @__PURE__ */ jsx_runtime446.jsx(ThemedBox_default, {
+          children: /* @__PURE__ */ jsx_runtime446.jsx(Select, {
             options,
             onChange: onSelect,
             onCancel: () => onResponse("no")
@@ -479476,19 +479562,19 @@ function LspRecommendationMenu({
     })
   });
 }
-var React149, jsx_runtime445, AUTO_DISMISS_MS2 = 30000;
+var React150, jsx_runtime446, AUTO_DISMISS_MS2 = 30000;
 var init_LspRecommendationMenu = __esm(() => {
   init_ink2();
   init_select();
   init_PermissionDialog();
-  React149 = __toESM(require_react(), 1);
-  jsx_runtime445 = __toESM(require_jsx_runtime(), 1);
+  React150 = __toESM(require_react(), 1);
+  jsx_runtime446 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/hooks/useClaudeCodeHintRecommendation.tsx
 function useClaudeCodeHintRecommendation() {
   const $ = import_compiler_runtime358.c(11);
-  const pendingHint = React150.useSyncExternalStore(subscribeToPendingHint, getPendingHintSnapshot);
+  const pendingHint = React151.useSyncExternalStore(subscribeToPendingHint, getPendingHintSnapshot);
   const {
     addNotification
   } = useNotifications();
@@ -479525,7 +479611,7 @@ function useClaudeCodeHintRecommendation() {
     t0 = $[2];
     t1 = $[3];
   }
-  React150.useEffect(t0, t1);
+  React151.useEffect(t0, t1);
   let t2;
   if ($[4] !== addNotification || $[5] !== clearRecommendation || $[6] !== recommendation) {
     t2 = (response) => {
@@ -479590,7 +479676,7 @@ function useClaudeCodeHintRecommendation() {
   }
   return t3;
 }
-var import_compiler_runtime358, React150;
+var import_compiler_runtime358, React151;
 var init_useClaudeCodeHintRecommendation = __esm(() => {
   init_notifications();
   init_analytics();
@@ -479600,7 +479686,7 @@ var init_useClaudeCodeHintRecommendation = __esm(() => {
   init_pluginInstallationHelpers();
   init_usePluginRecommendationBase();
   import_compiler_runtime358 = __toESM(require_compiler_runtime(), 1);
-  React150 = __toESM(require_react(), 1);
+  React151 = __toESM(require_react(), 1);
 });
 
 // src/components/ClaudeCodeHint/PluginHintMenu.tsx
@@ -479611,9 +479697,9 @@ function PluginHintMenu({
   sourceCommand,
   onResponse
 }) {
-  const onResponseRef = React151.useRef(onResponse);
+  const onResponseRef = React152.useRef(onResponse);
   onResponseRef.current = onResponse;
-  React151.useEffect(() => {
+  React152.useEffect(() => {
     const timeoutId = setTimeout((ref) => ref.current("no"), AUTO_DISMISS_MS3, onResponseRef);
     return () => clearTimeout(timeoutId);
   }, []);
@@ -479630,10 +479716,10 @@ function PluginHintMenu({
     }
   }
   const options = [{
-    label: /* @__PURE__ */ jsx_runtime446.jsxs(ThemedText, {
+    label: /* @__PURE__ */ jsx_runtime447.jsxs(ThemedText, {
       children: [
         "Yes, install ",
-        /* @__PURE__ */ jsx_runtime446.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime447.jsx(ThemedText, {
           bold: true,
           children: pluginName
         })
@@ -479647,20 +479733,20 @@ function PluginHintMenu({
     label: "No, and don't show plugin installation hints again",
     value: "disable"
   }];
-  return /* @__PURE__ */ jsx_runtime446.jsx(PermissionDialog, {
+  return /* @__PURE__ */ jsx_runtime447.jsx(PermissionDialog, {
     title: "Plugin Recommendation",
-    children: /* @__PURE__ */ jsx_runtime446.jsxs(ThemedBox_default, {
+    children: /* @__PURE__ */ jsx_runtime447.jsxs(ThemedBox_default, {
       flexDirection: "column",
       paddingX: 2,
       paddingY: 1,
       children: [
-        /* @__PURE__ */ jsx_runtime446.jsx(ThemedBox_default, {
+        /* @__PURE__ */ jsx_runtime447.jsx(ThemedBox_default, {
           marginBottom: 1,
-          children: /* @__PURE__ */ jsx_runtime446.jsxs(ThemedText, {
+          children: /* @__PURE__ */ jsx_runtime447.jsxs(ThemedText, {
             dimColor: true,
             children: [
               "The ",
-              /* @__PURE__ */ jsx_runtime446.jsx(ThemedText, {
+              /* @__PURE__ */ jsx_runtime447.jsx(ThemedText, {
                 bold: true,
                 children: sourceCommand
               }),
@@ -479668,13 +479754,13 @@ function PluginHintMenu({
             ]
           })
         }),
-        /* @__PURE__ */ jsx_runtime446.jsxs(ThemedBox_default, {
+        /* @__PURE__ */ jsx_runtime447.jsxs(ThemedBox_default, {
           children: [
-            /* @__PURE__ */ jsx_runtime446.jsx(ThemedText, {
+            /* @__PURE__ */ jsx_runtime447.jsx(ThemedText, {
               dimColor: true,
               children: "Plugin:"
             }),
-            /* @__PURE__ */ jsx_runtime446.jsxs(ThemedText, {
+            /* @__PURE__ */ jsx_runtime447.jsxs(ThemedText, {
               children: [
                 " ",
                 pluginName
@@ -479682,13 +479768,13 @@ function PluginHintMenu({
             })
           ]
         }),
-        /* @__PURE__ */ jsx_runtime446.jsxs(ThemedBox_default, {
+        /* @__PURE__ */ jsx_runtime447.jsxs(ThemedBox_default, {
           children: [
-            /* @__PURE__ */ jsx_runtime446.jsx(ThemedText, {
+            /* @__PURE__ */ jsx_runtime447.jsx(ThemedText, {
               dimColor: true,
               children: "Marketplace:"
             }),
-            /* @__PURE__ */ jsx_runtime446.jsxs(ThemedText, {
+            /* @__PURE__ */ jsx_runtime447.jsxs(ThemedText, {
               children: [
                 " ",
                 marketplaceName
@@ -479696,20 +479782,20 @@ function PluginHintMenu({
             })
           ]
         }),
-        pluginDescription && /* @__PURE__ */ jsx_runtime446.jsx(ThemedBox_default, {
-          children: /* @__PURE__ */ jsx_runtime446.jsx(ThemedText, {
+        pluginDescription && /* @__PURE__ */ jsx_runtime447.jsx(ThemedBox_default, {
+          children: /* @__PURE__ */ jsx_runtime447.jsx(ThemedText, {
             dimColor: true,
             children: pluginDescription
           })
         }),
-        /* @__PURE__ */ jsx_runtime446.jsx(ThemedBox_default, {
+        /* @__PURE__ */ jsx_runtime447.jsx(ThemedBox_default, {
           marginTop: 1,
-          children: /* @__PURE__ */ jsx_runtime446.jsx(ThemedText, {
+          children: /* @__PURE__ */ jsx_runtime447.jsx(ThemedText, {
             children: "Would you like to install it?"
           })
         }),
-        /* @__PURE__ */ jsx_runtime446.jsx(ThemedBox_default, {
-          children: /* @__PURE__ */ jsx_runtime446.jsx(Select, {
+        /* @__PURE__ */ jsx_runtime447.jsx(ThemedBox_default, {
+          children: /* @__PURE__ */ jsx_runtime447.jsx(Select, {
             options,
             onChange: onSelect,
             onCancel: () => onResponse("no")
@@ -479719,13 +479805,13 @@ function PluginHintMenu({
     })
   });
 }
-var React151, jsx_runtime446, AUTO_DISMISS_MS3 = 30000;
+var React152, jsx_runtime447, AUTO_DISMISS_MS3 = 30000;
 var init_PluginHintMenu = __esm(() => {
   init_ink2();
   init_select();
   init_PermissionDialog();
-  React151 = __toESM(require_react(), 1);
-  jsx_runtime446 = __toESM(require_jsx_runtime(), 1);
+  React152 = __toESM(require_react(), 1);
+  jsx_runtime447 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/hooks/notifs/usePluginInstallationStatus.tsx
@@ -479812,9 +479898,9 @@ function usePluginInstallationStatus() {
       logForDebugging(`Adding notification for ${totalFailed} failed installations`);
       addNotification({
         key: "plugin-install-failed",
-        jsx: /* @__PURE__ */ jsx_runtime447.jsxs(jsx_runtime447.Fragment, {
+        jsx: /* @__PURE__ */ jsx_runtime448.jsxs(jsx_runtime448.Fragment, {
           children: [
-            /* @__PURE__ */ jsx_runtime447.jsxs(ThemedText, {
+            /* @__PURE__ */ jsx_runtime448.jsxs(ThemedText, {
               color: "error",
               children: [
                 totalFailed,
@@ -479823,7 +479909,7 @@ function usePluginInstallationStatus() {
                 " failed to install"
               ]
             }),
-            /* @__PURE__ */ jsx_runtime447.jsx(ThemedText, {
+            /* @__PURE__ */ jsx_runtime448.jsx(ThemedText, {
               dimColor: true,
               children: " \xB7 /plugin for details"
             })
@@ -479863,7 +479949,7 @@ function _temp289(m) {
 function _temp206(s) {
   return s.plugins.installationStatus;
 }
-var import_compiler_runtime359, import_react304, jsx_runtime447;
+var import_compiler_runtime359, import_react304, jsx_runtime448;
 var init_usePluginInstallationStatus = __esm(() => {
   init_state();
   init_notifications();
@@ -479873,7 +479959,7 @@ var init_usePluginInstallationStatus = __esm(() => {
   init_stringUtils();
   import_compiler_runtime359 = __toESM(require_compiler_runtime(), 1);
   import_react304 = __toESM(require_react(), 1);
-  jsx_runtime447 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime448 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/hooks/notifs/usePluginAutoupdateNotification.tsx
@@ -479925,9 +480011,9 @@ function usePluginAutoupdateNotification() {
       const displayNames = pluginNames.length <= 2 ? pluginNames.join(" and ") : `${pluginNames.length} plugins`;
       addNotification({
         key: "plugin-autoupdate-restart",
-        jsx: /* @__PURE__ */ jsx_runtime448.jsxs(jsx_runtime448.Fragment, {
+        jsx: /* @__PURE__ */ jsx_runtime449.jsxs(jsx_runtime449.Fragment, {
           children: [
-            /* @__PURE__ */ jsx_runtime448.jsxs(ThemedText, {
+            /* @__PURE__ */ jsx_runtime449.jsxs(ThemedText, {
               color: "success",
               children: [
                 pluginNames.length === 1 ? "Plugin" : "Plugins",
@@ -479936,7 +480022,7 @@ function usePluginAutoupdateNotification() {
                 displayNames
               ]
             }),
-            /* @__PURE__ */ jsx_runtime448.jsx(ThemedText, {
+            /* @__PURE__ */ jsx_runtime449.jsx(ThemedText, {
               dimColor: true,
               children: " \xB7 Run /reload-plugins to apply"
             })
@@ -479962,7 +480048,7 @@ function _temp207(id) {
   const atIndex = id.indexOf("@");
   return atIndex > 0 ? id.substring(0, atIndex) : id;
 }
-var import_compiler_runtime360, import_react305, jsx_runtime448;
+var import_compiler_runtime360, import_react305, jsx_runtime449;
 var init_usePluginAutoupdateNotification = __esm(() => {
   init_state();
   init_notifications();
@@ -479971,7 +480057,7 @@ var init_usePluginAutoupdateNotification = __esm(() => {
   init_pluginAutoupdate();
   import_compiler_runtime360 = __toESM(require_compiler_runtime(), 1);
   import_react305 = __toESM(require_react(), 1);
-  jsx_runtime448 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime449 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/utils/plugins/reconciler.ts
@@ -480285,7 +480371,7 @@ function AwsAuthStatusBox() {
   }
   let t3;
   if ($[3] === Symbol.for("react.memo_cache_sentinel")) {
-    t3 = /* @__PURE__ */ jsx_runtime449.jsx(ThemedText, {
+    t3 = /* @__PURE__ */ jsx_runtime450.jsx(ThemedText, {
       bold: true,
       color: "permission",
       children: "Cloud Authentication"
@@ -480296,7 +480382,7 @@ function AwsAuthStatusBox() {
   }
   let t4;
   if ($[4] !== status.output) {
-    t4 = status.output.length > 0 && /* @__PURE__ */ jsx_runtime449.jsx(ThemedBox_default, {
+    t4 = status.output.length > 0 && /* @__PURE__ */ jsx_runtime450.jsx(ThemedBox_default, {
       flexDirection: "column",
       marginTop: 1,
       children: status.output.slice(-5).map(_temp208)
@@ -480308,9 +480394,9 @@ function AwsAuthStatusBox() {
   }
   let t5;
   if ($[6] !== status.error) {
-    t5 = status.error && /* @__PURE__ */ jsx_runtime449.jsx(ThemedBox_default, {
+    t5 = status.error && /* @__PURE__ */ jsx_runtime450.jsx(ThemedBox_default, {
       marginTop: 1,
-      children: /* @__PURE__ */ jsx_runtime449.jsx(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime450.jsx(ThemedText, {
         color: "error",
         children: status.error
       })
@@ -480322,7 +480408,7 @@ function AwsAuthStatusBox() {
   }
   let t6;
   if ($[8] !== t4 || $[9] !== t5) {
-    t6 = /* @__PURE__ */ jsx_runtime449.jsxs(ThemedBox_default, {
+    t6 = /* @__PURE__ */ jsx_runtime450.jsxs(ThemedBox_default, {
       flexDirection: "column",
       borderStyle: "round",
       borderColor: "permission",
@@ -480345,7 +480431,7 @@ function AwsAuthStatusBox() {
 function _temp208(line, index) {
   const m = line.match(URL_RE);
   if (!m) {
-    return /* @__PURE__ */ jsx_runtime449.jsx(ThemedText, {
+    return /* @__PURE__ */ jsx_runtime450.jsx(ThemedText, {
       dimColor: true,
       children: line
     }, index);
@@ -480354,11 +480440,11 @@ function _temp208(line, index) {
   const start = m.index ?? 0;
   const before = line.slice(0, start);
   const after = line.slice(start + url.length);
-  return /* @__PURE__ */ jsx_runtime449.jsxs(ThemedText, {
+  return /* @__PURE__ */ jsx_runtime450.jsxs(ThemedText, {
     dimColor: true,
     children: [
       before,
-      /* @__PURE__ */ jsx_runtime449.jsx(Link, {
+      /* @__PURE__ */ jsx_runtime450.jsx(Link, {
         url,
         children: url
       }),
@@ -480366,13 +480452,13 @@ function _temp208(line, index) {
     ]
   }, index);
 }
-var import_compiler_runtime361, import_react306, jsx_runtime449, URL_RE;
+var import_compiler_runtime361, import_react306, jsx_runtime450, URL_RE;
 var init_AwsAuthStatusBox = __esm(() => {
   init_ink2();
   init_awsAuthStatusManager();
   import_compiler_runtime361 = __toESM(require_compiler_runtime(), 1);
   import_react306 = __toESM(require_react(), 1);
-  jsx_runtime449 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime450 = __toESM(require_jsx_runtime(), 1);
   URL_RE = /https?:\/\/\S+/;
 });
 
@@ -480464,8 +480550,8 @@ function useRateLimitWarningNotification(model) {
         shownWarningRef.current = rateLimitWarning;
         addNotification({
           key: "rate-limit-warning",
-          jsx: /* @__PURE__ */ jsx_runtime450.jsx(ThemedText, {
-            children: /* @__PURE__ */ jsx_runtime450.jsx(ThemedText, {
+          jsx: /* @__PURE__ */ jsx_runtime451.jsx(ThemedText, {
+            children: /* @__PURE__ */ jsx_runtime451.jsx(ThemedText, {
               color: "warning",
               children: rateLimitWarning
             })
@@ -480485,7 +480571,7 @@ function useRateLimitWarningNotification(model) {
   }
   import_react307.useEffect(t6, t7);
 }
-var import_compiler_runtime362, import_react307, jsx_runtime450;
+var import_compiler_runtime362, import_react307, jsx_runtime451;
 var init_useRateLimitWarningNotification = __esm(() => {
   init_notifications();
   init_ink2();
@@ -480496,7 +480582,7 @@ var init_useRateLimitWarningNotification = __esm(() => {
   init_state();
   import_compiler_runtime362 = __toESM(require_compiler_runtime(), 1);
   import_react307 = __toESM(require_react(), 1);
-  jsx_runtime450 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime451 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/utils/model/deprecation.ts
@@ -480793,11 +480879,11 @@ function _temp290(hasShownHintRef_0, addNotification_0) {
       saveGlobalConfig(_temp291);
       addNotification_0({
         key: "ide-status-hint",
-        jsx: /* @__PURE__ */ jsx_runtime451.jsxs(ThemedText, {
+        jsx: /* @__PURE__ */ jsx_runtime452.jsxs(ThemedText, {
           dimColor: true,
           children: [
             "/ide for ",
-            /* @__PURE__ */ jsx_runtime451.jsx(ThemedText, {
+            /* @__PURE__ */ jsx_runtime452.jsx(ThemedText, {
               color: "ide",
               children: ideName_0
             })
@@ -480814,7 +480900,7 @@ function _temp291(current) {
     ideHintShownCount: (current.ideHintShownCount ?? 0) + 1
   };
 }
-var import_compiler_runtime364, import_react309, jsx_runtime451, MAX_IDE_HINT_SHOW_COUNT = 5;
+var import_compiler_runtime364, import_react309, jsx_runtime452, MAX_IDE_HINT_SHOW_COUNT = 5;
 var init_useIDEStatusIndicator = __esm(() => {
   init_notifications();
   init_ink2();
@@ -480824,7 +480910,7 @@ var init_useIDEStatusIndicator = __esm(() => {
   init_useIdeConnectionStatus();
   import_compiler_runtime364 = __toESM(require_compiler_runtime(), 1);
   import_react309 = __toESM(require_react(), 1);
-  jsx_runtime451 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime452 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/hooks/notifs/useModelMigrationNotifications.tsx
@@ -480893,13 +480979,13 @@ async function _temp293() {
   logEvent("tengu_switch_to_subscription_notice_shown", {});
   return {
     key: "switch-to-subscription",
-    jsx: /* @__PURE__ */ jsx_runtime452.jsxs(ThemedText, {
+    jsx: /* @__PURE__ */ jsx_runtime453.jsxs(ThemedText, {
       color: "suggestion",
       children: [
         "Use your existing Claude ",
         subscriptionType,
         " plan with Claude Code",
-        /* @__PURE__ */ jsx_runtime452.jsxs(ThemedText, {
+        /* @__PURE__ */ jsx_runtime453.jsxs(ThemedText, {
           color: "text",
           dimColor: true,
           children: [
@@ -480934,7 +481020,7 @@ async function getExistingClaudeSubscription() {
   }
   return null;
 }
-var jsx_runtime452, MAX_SHOW_COUNT = 3;
+var jsx_runtime453, MAX_SHOW_COUNT = 3;
 var init_useCanSwitchToExistingSubscription = __esm(() => {
   init_getOauthProfile();
   init_auth();
@@ -480942,7 +481028,7 @@ var init_useCanSwitchToExistingSubscription = __esm(() => {
   init_analytics();
   init_config2();
   init_useStartupNotification();
-  jsx_runtime452 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime453 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/hooks/notifs/useTeammateShutdownNotification.ts
@@ -481209,8 +481295,8 @@ function AutoRunIssueNotification(t0) {
   import_react312.useEffect(t2, t3);
   let t4;
   if ($[4] === Symbol.for("react.memo_cache_sentinel")) {
-    t4 = /* @__PURE__ */ jsx_runtime453.jsx(ThemedBox_default, {
-      children: /* @__PURE__ */ jsx_runtime453.jsx(ThemedText, {
+    t4 = /* @__PURE__ */ jsx_runtime454.jsx(ThemedBox_default, {
+      children: /* @__PURE__ */ jsx_runtime454.jsx(ThemedText, {
         bold: true,
         children: "Running feedback capture..."
       })
@@ -481221,12 +481307,12 @@ function AutoRunIssueNotification(t0) {
   }
   let t5;
   if ($[5] === Symbol.for("react.memo_cache_sentinel")) {
-    t5 = /* @__PURE__ */ jsx_runtime453.jsx(ThemedBox_default, {
-      children: /* @__PURE__ */ jsx_runtime453.jsxs(ThemedText, {
+    t5 = /* @__PURE__ */ jsx_runtime454.jsx(ThemedBox_default, {
+      children: /* @__PURE__ */ jsx_runtime454.jsxs(ThemedText, {
         dimColor: true,
         children: [
           "Press ",
-          /* @__PURE__ */ jsx_runtime453.jsx(KeyboardShortcutHint, {
+          /* @__PURE__ */ jsx_runtime454.jsx(KeyboardShortcutHint, {
             shortcut: "Esc",
             action: "cancel"
           }),
@@ -481240,14 +481326,14 @@ function AutoRunIssueNotification(t0) {
   }
   let t6;
   if ($[6] !== reason) {
-    t6 = /* @__PURE__ */ jsx_runtime453.jsxs(ThemedBox_default, {
+    t6 = /* @__PURE__ */ jsx_runtime454.jsxs(ThemedBox_default, {
       flexDirection: "column",
       marginTop: 1,
       children: [
         t4,
         t5,
-        /* @__PURE__ */ jsx_runtime453.jsx(ThemedBox_default, {
-          children: /* @__PURE__ */ jsx_runtime453.jsxs(ThemedText, {
+        /* @__PURE__ */ jsx_runtime454.jsx(ThemedBox_default, {
+          children: /* @__PURE__ */ jsx_runtime454.jsxs(ThemedText, {
             dimColor: true,
             children: [
               "Reason: ",
@@ -481291,14 +481377,14 @@ function getAutoRunIssueReasonText(reason) {
       return "Unknown reason";
   }
 }
-var import_compiler_runtime366, import_react312, jsx_runtime453;
+var import_compiler_runtime366, import_react312, jsx_runtime454;
 var init_autoRunIssue = __esm(() => {
   init_KeyboardShortcutHint();
   init_ink2();
   init_useKeybinding();
   import_compiler_runtime366 = __toESM(require_compiler_runtime(), 1);
   import_react312 = __toESM(require_react(), 1);
-  jsx_runtime453 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime454 = __toESM(require_jsx_runtime(), 1);
 });
 // src/components/PromptInput/IssueFlagBanner.tsx
 function IssueFlagBanner() {
@@ -481457,7 +481543,7 @@ function AlternateScreen(t0) {
   const t4 = size?.rows ?? 24;
   let t5;
   if ($[4] !== children2 || $[5] !== t4) {
-    t5 = /* @__PURE__ */ jsx_runtime454.jsx(Box_default, {
+    t5 = /* @__PURE__ */ jsx_runtime455.jsx(Box_default, {
       flexDirection: "column",
       height: t4,
       width: "100%",
@@ -481472,7 +481558,7 @@ function AlternateScreen(t0) {
   }
   return t5;
 }
-var import_compiler_runtime368, import_react315, jsx_runtime454;
+var import_compiler_runtime368, import_react315, jsx_runtime455;
 var init_AlternateScreen = __esm(() => {
   init_instances();
   init_dec();
@@ -481481,7 +481567,7 @@ var init_AlternateScreen = __esm(() => {
   init_TerminalSizeContext();
   import_compiler_runtime368 = __toESM(require_compiler_runtime(), 1);
   import_react315 = __toESM(require_react(), 1);
-  jsx_runtime454 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime455 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/hooks/useCopyOnSelect.ts
@@ -482626,7 +482712,7 @@ function TranscriptModeFooter(t0) {
   const t2 = searchBadge ? " \xB7 n/N to navigate" : virtualScroll ? ` \xB7 ${figures_default.arrowUp}${figures_default.arrowDown} scroll \xB7 home/end top/bottom` : suppressShowAll ? "" : ` \xB7 ${showAllShortcut} to ${showAllInTranscript ? "collapse" : "show all"}`;
   let t3;
   if ($[0] !== t2 || $[1] !== toggleShortcut) {
-    t3 = /* @__PURE__ */ jsx_runtime455.jsxs(ThemedText, {
+    t3 = /* @__PURE__ */ jsx_runtime456.jsxs(ThemedText, {
       dimColor: true,
       children: [
         "Showing detailed transcript \xB7 ",
@@ -482643,24 +482729,24 @@ function TranscriptModeFooter(t0) {
   }
   let t4;
   if ($[3] !== searchBadge || $[4] !== status) {
-    t4 = status ? /* @__PURE__ */ jsx_runtime455.jsxs(jsx_runtime455.Fragment, {
+    t4 = status ? /* @__PURE__ */ jsx_runtime456.jsxs(jsx_runtime456.Fragment, {
       children: [
-        /* @__PURE__ */ jsx_runtime455.jsx(ThemedBox_default, {
+        /* @__PURE__ */ jsx_runtime456.jsx(ThemedBox_default, {
           flexGrow: 1
         }),
-        /* @__PURE__ */ jsx_runtime455.jsxs(ThemedText, {
+        /* @__PURE__ */ jsx_runtime456.jsxs(ThemedText, {
           children: [
             status,
             " "
           ]
         })
       ]
-    }) : searchBadge ? /* @__PURE__ */ jsx_runtime455.jsxs(jsx_runtime455.Fragment, {
+    }) : searchBadge ? /* @__PURE__ */ jsx_runtime456.jsxs(jsx_runtime456.Fragment, {
       children: [
-        /* @__PURE__ */ jsx_runtime455.jsx(ThemedBox_default, {
+        /* @__PURE__ */ jsx_runtime456.jsx(ThemedBox_default, {
           flexGrow: 1
         }),
-        /* @__PURE__ */ jsx_runtime455.jsxs(ThemedText, {
+        /* @__PURE__ */ jsx_runtime456.jsxs(ThemedText, {
           dimColor: true,
           children: [
             searchBadge.current,
@@ -482679,7 +482765,7 @@ function TranscriptModeFooter(t0) {
   }
   let t5;
   if ($[6] !== t3 || $[7] !== t4) {
-    t5 = /* @__PURE__ */ jsx_runtime455.jsxs(ThemedBox_default, {
+    t5 = /* @__PURE__ */ jsx_runtime456.jsxs(ThemedBox_default, {
       noSelect: true,
       alignItems: "center",
       alignSelf: "center",
@@ -482722,8 +482808,8 @@ function TranscriptSearchBar({
     onExit: () => onClose(query),
     onCancel
   });
-  const [indexStatus, setIndexStatus] = React156.useState("building");
-  React156.useEffect(() => {
+  const [indexStatus, setIndexStatus] = React157.useState("building");
+  React157.useEffect(() => {
     let alive = true;
     const warm = jumpRef.current?.warmSearchIndex;
     if (!warm) {
@@ -482756,7 +482842,7 @@ function TranscriptSearchBar({
   }, [query, warmDone]);
   const off = cursorOffset;
   const cursorChar = off < query.length ? query[off] : " ";
-  return /* @__PURE__ */ jsx_runtime455.jsxs(ThemedBox_default, {
+  return /* @__PURE__ */ jsx_runtime456.jsxs(ThemedBox_default, {
     borderTopDimColor: true,
     borderBottom: false,
     borderLeft: false,
@@ -482767,36 +482853,36 @@ function TranscriptSearchBar({
     width: "100%",
     noSelect: true,
     children: [
-      /* @__PURE__ */ jsx_runtime455.jsx(ThemedText, {
+      /* @__PURE__ */ jsx_runtime456.jsx(ThemedText, {
         children: "/"
       }),
-      /* @__PURE__ */ jsx_runtime455.jsx(ThemedText, {
+      /* @__PURE__ */ jsx_runtime456.jsx(ThemedText, {
         children: query.slice(0, off)
       }),
-      /* @__PURE__ */ jsx_runtime455.jsx(ThemedText, {
+      /* @__PURE__ */ jsx_runtime456.jsx(ThemedText, {
         inverse: true,
         children: cursorChar
       }),
-      off < query.length && /* @__PURE__ */ jsx_runtime455.jsx(ThemedText, {
+      off < query.length && /* @__PURE__ */ jsx_runtime456.jsx(ThemedText, {
         children: query.slice(off + 1)
       }),
-      /* @__PURE__ */ jsx_runtime455.jsx(ThemedBox_default, {
+      /* @__PURE__ */ jsx_runtime456.jsx(ThemedBox_default, {
         flexGrow: 1
       }),
-      indexStatus === "building" ? /* @__PURE__ */ jsx_runtime455.jsx(ThemedText, {
+      indexStatus === "building" ? /* @__PURE__ */ jsx_runtime456.jsx(ThemedText, {
         dimColor: true,
         children: "indexing\u2026 "
-      }) : indexStatus ? /* @__PURE__ */ jsx_runtime455.jsxs(ThemedText, {
+      }) : indexStatus ? /* @__PURE__ */ jsx_runtime456.jsxs(ThemedText, {
         dimColor: true,
         children: [
           "indexed in ",
           indexStatus.ms,
           "ms "
         ]
-      }) : count === 0 && query ? /* @__PURE__ */ jsx_runtime455.jsx(ThemedText, {
+      }) : count === 0 && query ? /* @__PURE__ */ jsx_runtime456.jsx(ThemedText, {
         color: "error",
         children: "no matches "
-      }) : count > 0 ? /* @__PURE__ */ jsx_runtime455.jsxs(ThemedText, {
+      }) : count > 0 ? /* @__PURE__ */ jsx_runtime456.jsxs(ThemedText, {
         dimColor: true,
         children: [
           current,
@@ -482940,7 +483026,7 @@ function REPL({
   const mainLoopModel = useMainLoopModel();
   const [localCommands, setLocalCommands] = import_react319.useState(initialCommands);
   useSkillsChange(isRemoteSession ? undefined : getProjectRoot(), setLocalCommands);
-  const proactiveActive = React156.useSyncExternalStore(proactiveModule5?.subscribeToProactiveChanges ?? PROACTIVE_NO_OP_SUBSCRIBE, proactiveModule5?.isProactiveActive ?? PROACTIVE_FALSE);
+  const proactiveActive = React157.useSyncExternalStore(proactiveModule5?.subscribeToProactiveChanges ?? PROACTIVE_NO_OP_SUBSCRIBE, proactiveModule5?.isProactiveActive ?? PROACTIVE_FALSE);
   const isBriefOnly = useAppState((s) => s.isBriefOnly);
   const localTools = import_react319.useMemo(() => getTools(toolPermissionContext), [toolPermissionContext, proactiveActive, isBriefOnly]);
   useKickOffCheckAndDisableBypassPermissionsIfNeeded();
@@ -483068,36 +483154,36 @@ function REPL({
   const scrollRef = import_react319.useRef(null);
   const modalScrollRef = import_react319.useRef(null);
   const lastUserScrollTsRef = import_react319.useRef(0);
-  const queryGuard = React156.useRef(new QueryGuard).current;
-  const isQueryActive = React156.useSyncExternalStore(queryGuard.subscribe, queryGuard.getSnapshot);
-  const [isExternalLoading, setIsExternalLoadingRaw] = React156.useState(remoteSessionConfig?.hasInitialPrompt ?? false);
+  const queryGuard = React157.useRef(new QueryGuard).current;
+  const isQueryActive = React157.useSyncExternalStore(queryGuard.subscribe, queryGuard.getSnapshot);
+  const [isExternalLoading, setIsExternalLoadingRaw] = React157.useState(remoteSessionConfig?.hasInitialPrompt ?? false);
   const isLoading = isQueryActive || isExternalLoading;
-  const [userInputOnProcessing, setUserInputOnProcessingRaw] = React156.useState(undefined);
-  const userInputBaselineRef = React156.useRef(0);
-  const userMessagePendingRef = React156.useRef(false);
-  const loadingStartTimeRef = React156.useRef(0);
-  const totalPausedMsRef = React156.useRef(0);
-  const pauseStartTimeRef = React156.useRef(null);
-  const resetTimingRefs = React156.useCallback(() => {
+  const [userInputOnProcessing, setUserInputOnProcessingRaw] = React157.useState(undefined);
+  const userInputBaselineRef = React157.useRef(0);
+  const userMessagePendingRef = React157.useRef(false);
+  const loadingStartTimeRef = React157.useRef(0);
+  const totalPausedMsRef = React157.useRef(0);
+  const pauseStartTimeRef = React157.useRef(null);
+  const resetTimingRefs = React157.useCallback(() => {
     loadingStartTimeRef.current = Date.now();
     totalPausedMsRef.current = 0;
     pauseStartTimeRef.current = null;
   }, []);
-  const wasQueryActiveRef = React156.useRef(false);
+  const wasQueryActiveRef = React157.useRef(false);
   if (isQueryActive && !wasQueryActiveRef.current) {
     resetTimingRefs();
   }
   wasQueryActiveRef.current = isQueryActive;
-  const setIsExternalLoading = React156.useCallback((value) => {
+  const setIsExternalLoading = React157.useCallback((value) => {
     setIsExternalLoadingRaw(value);
     if (value)
       resetTimingRefs();
   }, [resetTimingRefs]);
-  const swarmStartTimeRef = React156.useRef(null);
-  const swarmBudgetInfoRef = React156.useRef(undefined);
-  const focusedInputDialogRef = React156.useRef(undefined);
+  const swarmStartTimeRef = React157.useRef(null);
+  const swarmBudgetInfoRef = React157.useRef(undefined);
+  const focusedInputDialogRef = React157.useRef(undefined);
   const PROMPT_SUPPRESSION_MS = 1500;
-  const [isPromptInputActive, setIsPromptInputActive] = React156.useState(false);
+  const [isPromptInputActive, setIsPromptInputActive] = React157.useState(false);
   const [autoUpdaterResult, setAutoUpdaterResult] = import_react319.useState(null);
   import_react319.useEffect(() => {
     if (autoUpdaterResult?.notifications) {
@@ -483373,7 +483459,7 @@ function REPL({
   const terminalFocusRef = import_react319.useRef(isTerminalFocused);
   terminalFocusRef.current = isTerminalFocused;
   const [theme] = useTheme();
-  const tipPickedThisTurnRef = React156.useRef(false);
+  const tipPickedThisTurnRef = React157.useRef(false);
   const pickNewSpinnerTip = import_react319.useCallback(() => {
     if (tipPickedThisTurnRef.current)
       return;
@@ -483830,13 +483916,13 @@ Error: sandbox required but unavailable: ${reason}
     });
     addNotification({
       key: "sandbox-unavailable",
-      jsx: /* @__PURE__ */ jsx_runtime455.jsxs(jsx_runtime455.Fragment, {
+      jsx: /* @__PURE__ */ jsx_runtime456.jsxs(jsx_runtime456.Fragment, {
         children: [
-          /* @__PURE__ */ jsx_runtime455.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime456.jsx(ThemedText, {
             color: "warning",
             children: "sandbox disabled"
           }),
-          /* @__PURE__ */ jsx_runtime455.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime456.jsx(ThemedText, {
             dimColor: true,
             children: " \xB7 /sandbox"
           })
@@ -484659,7 +484745,7 @@ Error: sandbox required but unavailable: ${reason}
           logForDebugging(`resumeAgentBackground failed: ${errorMessage(err)}`);
           addNotification({
             key: `resume-agent-failed-${task.id}`,
-            jsx: /* @__PURE__ */ jsx_runtime455.jsxs(ThemedText, {
+            jsx: /* @__PURE__ */ jsx_runtime456.jsxs(ThemedText, {
               color: "error",
               children: [
                 "Failed to resume agent: ",
@@ -484715,7 +484801,7 @@ Error: sandbox required but unavailable: ${reason}
     if (false) {}
     const showWorktree = getCurrentWorktreeSession() !== null;
     if (showWorktree) {
-      setExitFlow(/* @__PURE__ */ jsx_runtime455.jsx(ExitFlow, {
+      setExitFlow(/* @__PURE__ */ jsx_runtime456.jsx(ExitFlow, {
         showWorktree: true,
         onDone: () => {},
         onCancel: () => {
@@ -484961,21 +485047,21 @@ ${fileList}`);
       const idleMinutes = (Date.now() - lqct) / 60000;
       addNotif({
         key: "idle-return-hint",
-        jsx: mode === "hint_v2" ? /* @__PURE__ */ jsx_runtime455.jsxs(jsx_runtime455.Fragment, {
+        jsx: mode === "hint_v2" ? /* @__PURE__ */ jsx_runtime456.jsxs(jsx_runtime456.Fragment, {
           children: [
-            /* @__PURE__ */ jsx_runtime455.jsx(ThemedText, {
+            /* @__PURE__ */ jsx_runtime456.jsx(ThemedText, {
               dimColor: true,
               children: "new task? "
             }),
-            /* @__PURE__ */ jsx_runtime455.jsx(ThemedText, {
+            /* @__PURE__ */ jsx_runtime456.jsx(ThemedText, {
               color: "suggestion",
               children: "/clear"
             }),
-            /* @__PURE__ */ jsx_runtime455.jsx(ThemedText, {
+            /* @__PURE__ */ jsx_runtime456.jsx(ThemedText, {
               dimColor: true,
               children: " to save "
             }),
-            /* @__PURE__ */ jsx_runtime455.jsxs(ThemedText, {
+            /* @__PURE__ */ jsx_runtime456.jsxs(ThemedText, {
               color: "suggestion",
               children: [
                 formattedTokens,
@@ -484983,7 +485069,7 @@ ${fileList}`);
               ]
             })
           ]
-        }) : /* @__PURE__ */ jsx_runtime455.jsxs(ThemedText, {
+        }) : /* @__PURE__ */ jsx_runtime456.jsxs(ThemedText, {
           color: "warning",
           children: [
             "new task? /clear to save ",
@@ -485154,8 +485240,8 @@ Note: ctrl + z now suspends Claude Code, ctrl + _ undoes input.
     setPositions
   } = useSearchHighlight();
   const transcriptCols = useTerminalSize().columns;
-  const prevColsRef = React156.useRef(transcriptCols);
-  React156.useEffect(() => {
+  const prevColsRef = React157.useRef(transcriptCols);
+  React157.useEffect(() => {
     if (prevColsRef.current !== transcriptCols) {
       prevColsRef.current = transcriptCols;
       if (searchQuery || searchOpen) {
@@ -485251,7 +485337,7 @@ Note: ctrl + z now suspends Claude Code, ctrl + _ undoes input.
   useTeammateViewAutoExit();
   if (screen === "transcript") {
     const transcriptScrollRef = isFullscreenEnvEnabled() && !disableVirtualScroll && !dumpMode ? scrollRef : undefined;
-    const transcriptMessagesElement = /* @__PURE__ */ jsx_runtime455.jsx(Messages4, {
+    const transcriptMessagesElement = /* @__PURE__ */ jsx_runtime456.jsx(Messages4, {
       messages: transcriptMessages,
       tools,
       commands,
@@ -485276,46 +485362,46 @@ Note: ctrl + z now suspends Claude Code, ctrl + _ undoes input.
       setPositions,
       disableRenderCap: dumpMode
     });
-    const transcriptToolJSX = toolJSX && /* @__PURE__ */ jsx_runtime455.jsx(ThemedBox_default, {
+    const transcriptToolJSX = toolJSX && /* @__PURE__ */ jsx_runtime456.jsx(ThemedBox_default, {
       flexDirection: "column",
       width: "100%",
       children: toolJSX.jsx
     });
-    const transcriptReturn = /* @__PURE__ */ jsx_runtime455.jsxs(KeybindingSetup, {
+    const transcriptReturn = /* @__PURE__ */ jsx_runtime456.jsxs(KeybindingSetup, {
       children: [
-        /* @__PURE__ */ jsx_runtime455.jsx(AnimatedTerminalTitle, {
+        /* @__PURE__ */ jsx_runtime456.jsx(AnimatedTerminalTitle, {
           isAnimating: titleIsAnimating,
           title: terminalTitle,
           disabled: titleDisabled,
           noPrefix: showStatusInTerminalTab
         }),
-        /* @__PURE__ */ jsx_runtime455.jsx(GlobalKeybindingHandlers, {
+        /* @__PURE__ */ jsx_runtime456.jsx(GlobalKeybindingHandlers, {
           ...globalKeybindingProps
         }),
         null,
-        /* @__PURE__ */ jsx_runtime455.jsx(CommandKeybindingHandlers, {
+        /* @__PURE__ */ jsx_runtime456.jsx(CommandKeybindingHandlers, {
           onSubmit,
           isActive: !toolJSX?.isLocalJSXCommand
         }),
-        transcriptScrollRef ? /* @__PURE__ */ jsx_runtime455.jsx(ScrollKeybindingHandler, {
+        transcriptScrollRef ? /* @__PURE__ */ jsx_runtime456.jsx(ScrollKeybindingHandler, {
           scrollRef,
           isActive: focusedInputDialog !== "ultraplan-choice",
           isModal: !searchOpen,
           onScroll: () => jumpRef.current?.disarmSearch()
         }) : null,
-        /* @__PURE__ */ jsx_runtime455.jsx(CancelRequestHandler, {
+        /* @__PURE__ */ jsx_runtime456.jsx(CancelRequestHandler, {
           ...cancelRequestProps
         }),
-        transcriptScrollRef ? /* @__PURE__ */ jsx_runtime455.jsx(FullscreenLayout, {
+        transcriptScrollRef ? /* @__PURE__ */ jsx_runtime456.jsx(FullscreenLayout, {
           scrollRef,
-          scrollable: /* @__PURE__ */ jsx_runtime455.jsxs(jsx_runtime455.Fragment, {
+          scrollable: /* @__PURE__ */ jsx_runtime456.jsxs(jsx_runtime456.Fragment, {
             children: [
               transcriptMessagesElement,
               transcriptToolJSX,
-              /* @__PURE__ */ jsx_runtime455.jsx(SandboxViolationExpandedView, {})
+              /* @__PURE__ */ jsx_runtime456.jsx(SandboxViolationExpandedView, {})
             ]
           }),
-          bottom: searchOpen ? /* @__PURE__ */ jsx_runtime455.jsx(TranscriptSearchBar, {
+          bottom: searchOpen ? /* @__PURE__ */ jsx_runtime456.jsx(TranscriptSearchBar, {
             jumpRef,
             initialQuery: "",
             count: searchCount,
@@ -485336,7 +485422,7 @@ Note: ctrl + z now suspends Claude Code, ctrl + _ undoes input.
               setHighlight(searchQuery);
             },
             setHighlight
-          }) : /* @__PURE__ */ jsx_runtime455.jsx(TranscriptModeFooter, {
+          }) : /* @__PURE__ */ jsx_runtime456.jsx(TranscriptModeFooter, {
             showAllInTranscript,
             virtualScroll: true,
             status: editorStatus || undefined,
@@ -485345,12 +485431,12 @@ Note: ctrl + z now suspends Claude Code, ctrl + _ undoes input.
               count: searchCount
             } : undefined
           })
-        }) : /* @__PURE__ */ jsx_runtime455.jsxs(jsx_runtime455.Fragment, {
+        }) : /* @__PURE__ */ jsx_runtime456.jsxs(jsx_runtime456.Fragment, {
           children: [
             transcriptMessagesElement,
             transcriptToolJSX,
-            /* @__PURE__ */ jsx_runtime455.jsx(SandboxViolationExpandedView, {}),
-            /* @__PURE__ */ jsx_runtime455.jsx(TranscriptModeFooter, {
+            /* @__PURE__ */ jsx_runtime456.jsx(SandboxViolationExpandedView, {}),
+            /* @__PURE__ */ jsx_runtime456.jsx(TranscriptModeFooter, {
               showAllInTranscript,
               virtualScroll: false,
               suppressShowAll: dumpMode,
@@ -485361,7 +485447,7 @@ Note: ctrl + z now suspends Claude Code, ctrl + _ undoes input.
       ]
     });
     if (transcriptScrollRef) {
-      return /* @__PURE__ */ jsx_runtime455.jsx(AlternateScreen, {
+      return /* @__PURE__ */ jsx_runtime456.jsx(AlternateScreen, {
         mouseTracking: isMouseTrackingEnabled(),
         children: transcriptReturn
       });
@@ -485374,7 +485460,7 @@ Note: ctrl + z now suspends Claude Code, ctrl + _ undoes input.
   const usesSyncMessages = showStreamingText || !isLoading;
   const displayedMessages = viewedAgentTask ? viewedAgentTask.messages ?? [] : usesSyncMessages ? messages : deferredMessages;
   const placeholderText = userInputOnProcessing && !viewedAgentTask && displayedMessages.length <= userInputBaselineRef.current ? userInputOnProcessing : undefined;
-  const toolPermissionOverlay = focusedInputDialog === "tool-permission" ? /* @__PURE__ */ jsx_runtime455.jsx(PermissionRequest, {
+  const toolPermissionOverlay = focusedInputDialog === "tool-permission" ? /* @__PURE__ */ jsx_runtime456.jsx(PermissionRequest, {
     onDone: () => setToolUseConfirmQueue(([_, ...tail]) => tail),
     onReject: handleQueuedCommandOnCancel,
     toolUseConfirm: toolUseConfirmQueue[0],
@@ -485387,38 +485473,38 @@ Note: ctrl + z now suspends Claude Code, ctrl + _ undoes input.
   const companionVisible = !toolJSX?.shouldHidePromptInput && !focusedInputDialog && !showBashesDialog;
   const toolJsxCentered = isFullscreenEnvEnabled() && toolJSX?.isLocalJSXCommand === true;
   const centeredModal = toolJsxCentered ? toolJSX.jsx : null;
-  const mainReturn = /* @__PURE__ */ jsx_runtime455.jsxs(KeybindingSetup, {
+  const mainReturn = /* @__PURE__ */ jsx_runtime456.jsxs(KeybindingSetup, {
     children: [
-      /* @__PURE__ */ jsx_runtime455.jsx(AnimatedTerminalTitle, {
+      /* @__PURE__ */ jsx_runtime456.jsx(AnimatedTerminalTitle, {
         isAnimating: titleIsAnimating,
         title: terminalTitle,
         disabled: titleDisabled,
         noPrefix: showStatusInTerminalTab
       }),
-      /* @__PURE__ */ jsx_runtime455.jsx(GlobalKeybindingHandlers, {
+      /* @__PURE__ */ jsx_runtime456.jsx(GlobalKeybindingHandlers, {
         ...globalKeybindingProps
       }),
       null,
-      /* @__PURE__ */ jsx_runtime455.jsx(CommandKeybindingHandlers, {
+      /* @__PURE__ */ jsx_runtime456.jsx(CommandKeybindingHandlers, {
         onSubmit,
         isActive: !toolJSX?.isLocalJSXCommand
       }),
-      /* @__PURE__ */ jsx_runtime455.jsx(ScrollKeybindingHandler, {
+      /* @__PURE__ */ jsx_runtime456.jsx(ScrollKeybindingHandler, {
         scrollRef,
         isActive: isFullscreenEnvEnabled() && (centeredModal != null || !focusedInputDialog || focusedInputDialog === "tool-permission"),
         onScroll: centeredModal || toolPermissionOverlay || viewedAgentTask ? undefined : composedOnScroll
       }),
-      isFullscreenEnvEnabled() && !disableMessageActions ? /* @__PURE__ */ jsx_runtime455.jsx(MessageActionsKeybindings, {
+      isFullscreenEnvEnabled() && !disableMessageActions ? /* @__PURE__ */ jsx_runtime456.jsx(MessageActionsKeybindings, {
         handlers: messageActionHandlers,
         isActive: cursor !== null
       }) : null,
-      /* @__PURE__ */ jsx_runtime455.jsx(CancelRequestHandler, {
+      /* @__PURE__ */ jsx_runtime456.jsx(CancelRequestHandler, {
         ...cancelRequestProps
       }),
-      /* @__PURE__ */ jsx_runtime455.jsx(MCPConnectionManager, {
+      /* @__PURE__ */ jsx_runtime456.jsx(MCPConnectionManager, {
         dynamicMcpConfig,
         isStrictMcpConfig: strictMcpConfig,
-        children: /* @__PURE__ */ jsx_runtime455.jsx(FullscreenLayout, {
+        children: /* @__PURE__ */ jsx_runtime456.jsx(FullscreenLayout, {
           scrollRef,
           overlay: toolPermissionOverlay,
           bottomFloat: undefined,
@@ -485432,10 +485518,10 @@ Note: ctrl + z now suspends Claude Code, ctrl + _ undoes input.
             setCursor(null);
             jumpToNew(scrollRef.current);
           },
-          scrollable: /* @__PURE__ */ jsx_runtime455.jsxs(jsx_runtime455.Fragment, {
+          scrollable: /* @__PURE__ */ jsx_runtime456.jsxs(jsx_runtime456.Fragment, {
             children: [
-              /* @__PURE__ */ jsx_runtime455.jsx(TeammateViewHeader, {}),
-              /* @__PURE__ */ jsx_runtime455.jsx(Messages4, {
+              /* @__PURE__ */ jsx_runtime456.jsx(TeammateViewHeader, {}),
+              /* @__PURE__ */ jsx_runtime456.jsx(Messages4, {
                 messages: displayedMessages,
                 tools,
                 commands,
@@ -485460,8 +485546,8 @@ Note: ctrl + z now suspends Claude Code, ctrl + _ undoes input.
                 setCursor,
                 cursorNavRef
               }),
-              /* @__PURE__ */ jsx_runtime455.jsx(AwsAuthStatusBox, {}),
-              !disabled && placeholderText && !centeredModal && /* @__PURE__ */ jsx_runtime455.jsx(UserTextMessage, {
+              /* @__PURE__ */ jsx_runtime456.jsx(AwsAuthStatusBox, {}),
+              !disabled && placeholderText && !centeredModal && /* @__PURE__ */ jsx_runtime456.jsx(UserTextMessage, {
                 param: {
                   text: placeholderText,
                   type: "text"
@@ -485469,17 +485555,17 @@ Note: ctrl + z now suspends Claude Code, ctrl + _ undoes input.
                 addMargin: true,
                 verbose
               }),
-              toolJSX && !(toolJSX.isLocalJSXCommand && toolJSX.isImmediate) && !toolJsxCentered && /* @__PURE__ */ jsx_runtime455.jsx(ThemedBox_default, {
+              toolJSX && !(toolJSX.isLocalJSXCommand && toolJSX.isImmediate) && !toolJsxCentered && /* @__PURE__ */ jsx_runtime456.jsx(ThemedBox_default, {
                 flexDirection: "column",
                 width: "100%",
                 children: toolJSX.jsx
               }),
               false,
               null,
-              /* @__PURE__ */ jsx_runtime455.jsx(ThemedBox_default, {
+              /* @__PURE__ */ jsx_runtime456.jsx(ThemedBox_default, {
                 flexGrow: 1
               }),
-              showSpinner && /* @__PURE__ */ jsx_runtime455.jsx(SpinnerWithVerb, {
+              showSpinner && /* @__PURE__ */ jsx_runtime456.jsx(SpinnerWithVerb, {
                 mode: streamMode,
                 spinnerTip,
                 responseLengthRef,
@@ -485495,35 +485581,35 @@ Note: ctrl + z now suspends Claude Code, ctrl + _ undoes input.
                 hasActiveTools: inProgressToolUseIDs.size > 0,
                 leaderIsIdle: !isLoading
               }),
-              !showSpinner && !isLoading && !userInputOnProcessing && !hasRunningTeammates && isBriefOnly && !viewedAgentTask && /* @__PURE__ */ jsx_runtime455.jsx(BriefIdleStatus, {}),
-              isFullscreenEnvEnabled() && /* @__PURE__ */ jsx_runtime455.jsx(PromptInputQueuedCommands, {})
+              !showSpinner && !isLoading && !userInputOnProcessing && !hasRunningTeammates && isBriefOnly && !viewedAgentTask && /* @__PURE__ */ jsx_runtime456.jsx(BriefIdleStatus, {}),
+              isFullscreenEnvEnabled() && /* @__PURE__ */ jsx_runtime456.jsx(PromptInputQueuedCommands, {})
             ]
           }),
-          bottom: /* @__PURE__ */ jsx_runtime455.jsxs(ThemedBox_default, {
+          bottom: /* @__PURE__ */ jsx_runtime456.jsxs(ThemedBox_default, {
             flexDirection: "row",
             width: "100%",
             alignItems: "flex-end",
             children: [
               null,
-              /* @__PURE__ */ jsx_runtime455.jsxs(ThemedBox_default, {
+              /* @__PURE__ */ jsx_runtime456.jsxs(ThemedBox_default, {
                 flexDirection: "column",
                 flexGrow: 1,
                 children: [
                   permissionStickyFooter,
-                  toolJSX?.isLocalJSXCommand && toolJSX.isImmediate && !toolJsxCentered && /* @__PURE__ */ jsx_runtime455.jsx(ThemedBox_default, {
+                  toolJSX?.isLocalJSXCommand && toolJSX.isImmediate && !toolJsxCentered && /* @__PURE__ */ jsx_runtime456.jsx(ThemedBox_default, {
                     flexDirection: "column",
                     width: "100%",
                     children: toolJSX.jsx
                   }),
-                  !showSpinner && !toolJSX?.isLocalJSXCommand && showExpandedTodos && tasksV2 && tasksV2.length > 0 && /* @__PURE__ */ jsx_runtime455.jsx(ThemedBox_default, {
+                  !showSpinner && !toolJSX?.isLocalJSXCommand && showExpandedTodos && tasksV2 && tasksV2.length > 0 && /* @__PURE__ */ jsx_runtime456.jsx(ThemedBox_default, {
                     width: "100%",
                     flexDirection: "column",
-                    children: /* @__PURE__ */ jsx_runtime455.jsx(TaskListV2, {
+                    children: /* @__PURE__ */ jsx_runtime456.jsx(TaskListV2, {
                       tasks: tasksV2,
                       isStandalone: true
                     })
                   }),
-                  focusedInputDialog === "sandbox-permission" && /* @__PURE__ */ jsx_runtime455.jsx(SandboxPermissionRequest, {
+                  focusedInputDialog === "sandbox-permission" && /* @__PURE__ */ jsx_runtime456.jsx(SandboxPermissionRequest, {
                     hostPattern: sandboxPermissionRequestQueue[0].hostPattern,
                     onUserResponse: (response) => {
                       const {
@@ -485564,7 +485650,7 @@ Note: ctrl + z now suspends Claude Code, ctrl + _ undoes input.
                       }
                     }
                   }, sandboxPermissionRequestQueue[0].hostPattern.host),
-                  focusedInputDialog === "prompt" && /* @__PURE__ */ jsx_runtime455.jsx(PromptDialog, {
+                  focusedInputDialog === "prompt" && /* @__PURE__ */ jsx_runtime456.jsx(PromptDialog, {
                     title: promptQueue[0].title,
                     toolInputSummary: promptQueue[0].toolInputSummary,
                     request: promptQueue[0].request,
@@ -485586,15 +485672,15 @@ Note: ctrl + z now suspends Claude Code, ctrl + _ undoes input.
                       setPromptQueue(([, ...tail]) => tail);
                     }
                   }, promptQueue[0].request.prompt),
-                  pendingWorkerRequest && /* @__PURE__ */ jsx_runtime455.jsx(WorkerPendingPermission, {
+                  pendingWorkerRequest && /* @__PURE__ */ jsx_runtime456.jsx(WorkerPendingPermission, {
                     toolName: pendingWorkerRequest.toolName,
                     description: pendingWorkerRequest.description
                   }),
-                  pendingSandboxRequest && /* @__PURE__ */ jsx_runtime455.jsx(WorkerPendingPermission, {
+                  pendingSandboxRequest && /* @__PURE__ */ jsx_runtime456.jsx(WorkerPendingPermission, {
                     toolName: "Network Access",
                     description: `Waiting for leader to approve network access to ${pendingSandboxRequest.host}`
                   }),
-                  focusedInputDialog === "worker-sandbox-permission" && /* @__PURE__ */ jsx_runtime455.jsx(SandboxPermissionRequest, {
+                  focusedInputDialog === "worker-sandbox-permission" && /* @__PURE__ */ jsx_runtime456.jsx(SandboxPermissionRequest, {
                     hostPattern: {
                       host: workerSandboxPermissions.queue[0].host,
                       port: undefined
@@ -485635,7 +485721,7 @@ Note: ctrl + z now suspends Claude Code, ctrl + _ undoes input.
                       }));
                     }
                   }, workerSandboxPermissions.queue[0].requestId),
-                  focusedInputDialog === "elicitation" && /* @__PURE__ */ jsx_runtime455.jsx(ElicitationDialog, {
+                  focusedInputDialog === "elicitation" && /* @__PURE__ */ jsx_runtime456.jsx(ElicitationDialog, {
                     event: elicitation.queue[0],
                     onResponse: (action, content) => {
                       const currentRequest = elicitation.queue[0];
@@ -485666,7 +485752,7 @@ Note: ctrl + z now suspends Claude Code, ctrl + _ undoes input.
                       currentRequest?.onWaitingDismiss?.(action);
                     }
                   }, elicitation.queue[0].serverName + ":" + String(elicitation.queue[0].requestId)),
-                  focusedInputDialog === "cost" && /* @__PURE__ */ jsx_runtime455.jsx(CostThresholdDialog, {
+                  focusedInputDialog === "cost" && /* @__PURE__ */ jsx_runtime456.jsx(CostThresholdDialog, {
                     onDone: () => {
                       setShowCostDialog(false);
                       setHaveShownCostDialog(true);
@@ -485677,7 +485763,7 @@ Note: ctrl + z now suspends Claude Code, ctrl + _ undoes input.
                       logEvent("tengu_cost_threshold_acknowledged", {});
                     }
                   }),
-                  focusedInputDialog === "idle-return" && idleReturnPending && /* @__PURE__ */ jsx_runtime455.jsx(IdleReturnDialog, {
+                  focusedInputDialog === "idle-return" && idleReturnPending && /* @__PURE__ */ jsx_runtime456.jsx(IdleReturnDialog, {
                     idleMinutes: idleReturnPending.idleMinutes,
                     totalInputTokens: getTotalInputTokens(),
                     onDone: async (action) => {
@@ -485727,13 +485813,13 @@ Note: ctrl + z now suspends Claude Code, ctrl + _ undoes input.
                       });
                     }
                   }),
-                  focusedInputDialog === "ide-onboarding" && /* @__PURE__ */ jsx_runtime455.jsx(IdeOnboardingDialog, {
+                  focusedInputDialog === "ide-onboarding" && /* @__PURE__ */ jsx_runtime456.jsx(IdeOnboardingDialog, {
                     onDone: () => setShowIdeOnboarding(false),
                     installationStatus: ideInstallationStatus
                   }),
                   false,
                   false,
-                  focusedInputDialog === "effort-callout" && /* @__PURE__ */ jsx_runtime455.jsx(EffortCallout, {
+                  focusedInputDialog === "effort-callout" && /* @__PURE__ */ jsx_runtime456.jsx(EffortCallout, {
                     model: mainLoopModel,
                     onDone: (selection) => {
                       setShowEffortCallout(false);
@@ -485745,7 +485831,7 @@ Note: ctrl + z now suspends Claude Code, ctrl + _ undoes input.
                       }
                     }
                   }),
-                  focusedInputDialog === "remote-callout" && /* @__PURE__ */ jsx_runtime455.jsx(RemoteCallout, {
+                  focusedInputDialog === "remote-callout" && /* @__PURE__ */ jsx_runtime456.jsx(RemoteCallout, {
                     onDone: (selection) => {
                       setAppState((prev) => {
                         if (!prev.showRemoteCallout)
@@ -485763,23 +485849,23 @@ Note: ctrl + z now suspends Claude Code, ctrl + _ undoes input.
                     }
                   }),
                   exitFlow,
-                  focusedInputDialog === "plugin-hint" && hintRecommendation && /* @__PURE__ */ jsx_runtime455.jsx(PluginHintMenu, {
+                  focusedInputDialog === "plugin-hint" && hintRecommendation && /* @__PURE__ */ jsx_runtime456.jsx(PluginHintMenu, {
                     pluginName: hintRecommendation.pluginName,
                     pluginDescription: hintRecommendation.pluginDescription,
                     marketplaceName: hintRecommendation.marketplaceName,
                     sourceCommand: hintRecommendation.sourceCommand,
                     onResponse: handleHintResponse
                   }),
-                  focusedInputDialog === "lsp-recommendation" && lspRecommendation && /* @__PURE__ */ jsx_runtime455.jsx(LspRecommendationMenu, {
+                  focusedInputDialog === "lsp-recommendation" && lspRecommendation && /* @__PURE__ */ jsx_runtime456.jsx(LspRecommendationMenu, {
                     pluginName: lspRecommendation.pluginName,
                     pluginDescription: lspRecommendation.pluginDescription,
                     fileExtension: lspRecommendation.fileExtension,
                     onResponse: handleLspResponse
                   }),
-                  focusedInputDialog === "desktop-upsell" && /* @__PURE__ */ jsx_runtime455.jsx(DesktopUpsellStartup, {
+                  focusedInputDialog === "desktop-upsell" && /* @__PURE__ */ jsx_runtime456.jsx(DesktopUpsellStartup, {
                     onDone: () => setShowDesktopUpsellStartup(false)
                   }),
-                  focusedInputDialog === "ultraplan-choice" && ultraplanPendingChoice && /* @__PURE__ */ jsx_runtime455.jsx(UltraplanChoiceDialog, {
+                  focusedInputDialog === "ultraplan-choice" && ultraplanPendingChoice && /* @__PURE__ */ jsx_runtime456.jsx(UltraplanChoiceDialog, {
                     plan: ultraplanPendingChoice.plan,
                     sessionId: ultraplanPendingChoice.sessionId,
                     taskId: ultraplanPendingChoice.taskId,
@@ -485788,7 +485874,7 @@ Note: ctrl + z now suspends Claude Code, ctrl + _ undoes input.
                     getAppState: () => store.getState(),
                     setConversationId
                   }),
-                  focusedInputDialog === "ultraplan-launch" && ultraplanLaunchPending && /* @__PURE__ */ jsx_runtime455.jsx(UltraplanLaunchDialog, {
+                  focusedInputDialog === "ultraplan-launch" && ultraplanLaunchPending && /* @__PURE__ */ jsx_runtime456.jsx(UltraplanLaunchDialog, {
                     onChoice: (choice, opts) => {
                       const blurb = ultraplanLaunchPending.blurb;
                       setAppState((prev) => prev.ultraplanLaunchPending ? {
@@ -485824,21 +485910,21 @@ Note: ctrl + z now suspends Claude Code, ctrl + _ undoes input.
                     }
                   }),
                   mrRender(),
-                  !toolJSX?.shouldHidePromptInput && !focusedInputDialog && !isExiting && !disabled && !cursor && /* @__PURE__ */ jsx_runtime455.jsxs(jsx_runtime455.Fragment, {
+                  !toolJSX?.shouldHidePromptInput && !focusedInputDialog && !isExiting && !disabled && !cursor && /* @__PURE__ */ jsx_runtime456.jsxs(jsx_runtime456.Fragment, {
                     children: [
-                      autoRunIssueReason && /* @__PURE__ */ jsx_runtime455.jsx(AutoRunIssueNotification, {
+                      autoRunIssueReason && /* @__PURE__ */ jsx_runtime456.jsx(AutoRunIssueNotification, {
                         onRun: handleAutoRunIssue,
                         onCancel: handleCancelAutoRunIssue,
                         reason: getAutoRunIssueReasonText(autoRunIssueReason)
                       }),
-                      postCompactSurvey.state !== "closed" ? /* @__PURE__ */ jsx_runtime455.jsx(FeedbackSurvey, {
+                      postCompactSurvey.state !== "closed" ? /* @__PURE__ */ jsx_runtime456.jsx(FeedbackSurvey, {
                         state: postCompactSurvey.state,
                         lastResponse: postCompactSurvey.lastResponse,
                         handleSelect: postCompactSurvey.handleSelect,
                         inputValue,
                         setInputValue,
                         onRequestFeedback: handleSurveyRequestFeedback
-                      }) : memorySurvey.state !== "closed" ? /* @__PURE__ */ jsx_runtime455.jsx(FeedbackSurvey, {
+                      }) : memorySurvey.state !== "closed" ? /* @__PURE__ */ jsx_runtime456.jsx(FeedbackSurvey, {
                         state: memorySurvey.state,
                         lastResponse: memorySurvey.lastResponse,
                         handleSelect: memorySurvey.handleSelect,
@@ -485847,7 +485933,7 @@ Note: ctrl + z now suspends Claude Code, ctrl + _ undoes input.
                         setInputValue,
                         onRequestFeedback: handleSurveyRequestFeedback,
                         message: "How well did Claude use its memory? (optional)"
-                      }) : /* @__PURE__ */ jsx_runtime455.jsx(FeedbackSurvey, {
+                      }) : /* @__PURE__ */ jsx_runtime456.jsx(FeedbackSurvey, {
                         state: feedbackSurvey.state,
                         lastResponse: feedbackSurvey.lastResponse,
                         handleSelect: feedbackSurvey.handleSelect,
@@ -485856,7 +485942,7 @@ Note: ctrl + z now suspends Claude Code, ctrl + _ undoes input.
                         setInputValue,
                         onRequestFeedback: didAutoRunIssueRef.current ? undefined : handleSurveyRequestFeedback
                       }),
-                      frustrationDetection.state !== "closed" && /* @__PURE__ */ jsx_runtime455.jsx(FeedbackSurvey, {
+                      frustrationDetection.state !== "closed" && /* @__PURE__ */ jsx_runtime456.jsx(FeedbackSurvey, {
                         state: frustrationDetection.state,
                         lastResponse: null,
                         handleSelect: () => {},
@@ -485865,8 +485951,8 @@ Note: ctrl + z now suspends Claude Code, ctrl + _ undoes input.
                         setInputValue
                       }),
                       false,
-                      showIssueFlagBanner && /* @__PURE__ */ jsx_runtime455.jsx(IssueFlagBanner, {}),
-                      /* @__PURE__ */ jsx_runtime455.jsx(PromptInput_default, {
+                      showIssueFlagBanner && /* @__PURE__ */ jsx_runtime456.jsx(IssueFlagBanner, {}),
+                      /* @__PURE__ */ jsx_runtime456.jsx(PromptInput_default, {
                         debug,
                         ideSelection,
                         hasSuppressedDialogs: !!hasSuppressedDialogs,
@@ -485908,16 +485994,16 @@ Note: ctrl + z now suspends Claude Code, ctrl + _ undoes input.
                         insertTextRef: undefined,
                         voiceInterimRange: voice.interimRange
                       }),
-                      /* @__PURE__ */ jsx_runtime455.jsx(SessionBackgroundHint, {
+                      /* @__PURE__ */ jsx_runtime456.jsx(SessionBackgroundHint, {
                         onBackgroundSession: handleBackgroundSession,
                         isLoading
                       })
                     ]
                   }),
-                  cursor && /* @__PURE__ */ jsx_runtime455.jsx(MessageActionsBar, {
+                  cursor && /* @__PURE__ */ jsx_runtime456.jsx(MessageActionsBar, {
                     cursor
                   }),
-                  focusedInputDialog === "message-selector" && /* @__PURE__ */ jsx_runtime455.jsx(MessageSelector, {
+                  focusedInputDialog === "message-selector" && /* @__PURE__ */ jsx_runtime456.jsx(MessageSelector, {
                     messages,
                     preselectedMessage: messageSelectorPreselect,
                     onPreRestore: onCancel,
@@ -486001,14 +486087,14 @@ Note: ctrl + z now suspends Claude Code, ctrl + _ undoes input.
     ]
   });
   if (isFullscreenEnvEnabled()) {
-    return /* @__PURE__ */ jsx_runtime455.jsx(AlternateScreen, {
+    return /* @__PURE__ */ jsx_runtime456.jsx(AlternateScreen, {
       mouseTracking: isMouseTrackingEnabled(),
       children: mainReturn
     });
   }
   return mainReturn;
 }
-var import_compiler_runtime369, React156, import_react319, jsx_runtime455, useFrustrationDetection = () => ({
+var import_compiler_runtime369, React157, import_react319, jsx_runtime456, useFrustrationDetection = () => ({
   state: "closed",
   handleTranscriptSelect: () => {}
 }), useAntOrgWarningNotification = () => {}, getCoordinatorUserContext = () => ({}), proactiveModule5 = null, PROACTIVE_NO_OP_SUBSCRIBE = (_cb) => () => {}, PROACTIVE_FALSE = () => false, SUGGEST_BG_PR_NOOP = (_p, _n) => false, useScheduledTasks2, EMPTY_MCP_CLIENTS2, HISTORY_STUB, RECENT_SCROLL_REPIN_WINDOW_MS = 3000, TITLE_ANIMATION_FRAMES, TITLE_STATIC_PREFIX = "\u2733", TITLE_ANIMATION_INTERVAL_MS = 960;
@@ -486214,9 +486300,9 @@ var init_REPL = __esm(() => {
   init_osc();
   init_attachments2();
   import_compiler_runtime369 = __toESM(require_compiler_runtime(), 1);
-  React156 = __toESM(require_react(), 1);
+  React157 = __toESM(require_react(), 1);
   import_react319 = __toESM(require_react(), 1);
-  jsx_runtime455 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime456 = __toESM(require_jsx_runtime(), 1);
   useScheduledTasks2 = (init_useScheduledTasks(), __toCommonJS(exports_useScheduledTasks)).useScheduledTasks;
   EMPTY_MCP_CLIENTS2 = [];
   HISTORY_STUB = {
@@ -486229,16 +486315,16 @@ var init_REPL = __esm(() => {
 async function launchRepl(root, appProps, replProps, renderAndRun) {
   await Promise.resolve().then(() => init_App2());
   await Promise.resolve().then(() => init_REPL());
-  await renderAndRun(root, /* @__PURE__ */ jsx_runtime456.jsx(App2, {
+  await renderAndRun(root, /* @__PURE__ */ jsx_runtime457.jsx(App2, {
     ...appProps,
-    children: /* @__PURE__ */ jsx_runtime456.jsx(REPL, {
+    children: /* @__PURE__ */ jsx_runtime457.jsx(REPL, {
       ...replProps
     })
   }));
 }
-var jsx_runtime456;
+var jsx_runtime457;
 var init_replLauncher = __esm(() => {
-  jsx_runtime456 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime457 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/services/api/bootstrap.ts
@@ -486414,11 +486500,11 @@ function MCPServerDialogCopy() {
   const $ = import_compiler_runtime370.c(1);
   let t0;
   if ($[0] === Symbol.for("react.memo_cache_sentinel")) {
-    t0 = /* @__PURE__ */ jsx_runtime457.jsxs(ThemedText, {
+    t0 = /* @__PURE__ */ jsx_runtime458.jsxs(ThemedText, {
       children: [
         "MCP servers may execute code or access system resources. All tool calls require approval. Learn more in the",
         " ",
-        /* @__PURE__ */ jsx_runtime457.jsx(Link, {
+        /* @__PURE__ */ jsx_runtime458.jsx(Link, {
           url: "https://code.claude.com/docs/en/mcp",
           children: "MCP documentation"
         }),
@@ -486431,11 +486517,11 @@ function MCPServerDialogCopy() {
   }
   return t0;
 }
-var import_compiler_runtime370, jsx_runtime457;
+var import_compiler_runtime370, jsx_runtime458;
 var init_MCPServerDialogCopy = __esm(() => {
   init_ink2();
   import_compiler_runtime370 = __toESM(require_compiler_runtime(), 1);
-  jsx_runtime457 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime458 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/MCPServerApprovalDialog.tsx
@@ -486500,7 +486586,7 @@ function MCPServerApprovalDialog(t0) {
   }
   let t4;
   if ($[5] === Symbol.for("react.memo_cache_sentinel")) {
-    t4 = /* @__PURE__ */ jsx_runtime458.jsx(MCPServerDialogCopy, {});
+    t4 = /* @__PURE__ */ jsx_runtime459.jsx(MCPServerDialogCopy, {});
     $[5] = t4;
   } else {
     t4 = $[5];
@@ -486523,7 +486609,7 @@ function MCPServerApprovalDialog(t0) {
   }
   let t6;
   if ($[7] !== onChange) {
-    t6 = /* @__PURE__ */ jsx_runtime458.jsx(Select, {
+    t6 = /* @__PURE__ */ jsx_runtime459.jsx(Select, {
       options: t5,
       onChange: (value_0) => onChange(value_0),
       onCancel: () => onChange("no")
@@ -486535,7 +486621,7 @@ function MCPServerApprovalDialog(t0) {
   }
   let t7;
   if ($[9] !== t2 || $[10] !== t3 || $[11] !== t6) {
-    t7 = /* @__PURE__ */ jsx_runtime458.jsxs(Dialog, {
+    t7 = /* @__PURE__ */ jsx_runtime459.jsxs(Dialog, {
       title: t2,
       color: "warning",
       onCancel: t3,
@@ -486553,7 +486639,7 @@ function MCPServerApprovalDialog(t0) {
   }
   return t7;
 }
-var import_compiler_runtime371, jsx_runtime458;
+var import_compiler_runtime371, jsx_runtime459;
 var init_MCPServerApprovalDialog = __esm(() => {
   init_analytics();
   init_settings2();
@@ -486561,7 +486647,7 @@ var init_MCPServerApprovalDialog = __esm(() => {
   init_Dialog();
   init_MCPServerDialogCopy();
   import_compiler_runtime371 = __toESM(require_compiler_runtime(), 1);
-  jsx_runtime458 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime459 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/MCPServerMultiselectDialog.tsx
@@ -486624,7 +486710,7 @@ function MCPServerMultiselectDialog(t0) {
   const t3 = `${serverNames.length} new MCP servers found in .mcp.json`;
   let t4;
   if ($[6] === Symbol.for("react.memo_cache_sentinel")) {
-    t4 = /* @__PURE__ */ jsx_runtime459.jsx(MCPServerDialogCopy, {});
+    t4 = /* @__PURE__ */ jsx_runtime460.jsx(MCPServerDialogCopy, {});
     $[6] = t4;
   } else {
     t4 = $[6];
@@ -486639,7 +486725,7 @@ function MCPServerMultiselectDialog(t0) {
   }
   let t6;
   if ($[9] !== handleEscRejectAll || $[10] !== onSubmit || $[11] !== serverNames || $[12] !== t5) {
-    t6 = /* @__PURE__ */ jsx_runtime459.jsx(SelectMulti, {
+    t6 = /* @__PURE__ */ jsx_runtime460.jsx(SelectMulti, {
       options: t5,
       defaultValue: serverNames,
       onSubmit,
@@ -486656,7 +486742,7 @@ function MCPServerMultiselectDialog(t0) {
   }
   let t7;
   if ($[14] !== handleEscRejectAll || $[15] !== t3 || $[16] !== t6) {
-    t7 = /* @__PURE__ */ jsx_runtime459.jsxs(Dialog, {
+    t7 = /* @__PURE__ */ jsx_runtime460.jsxs(Dialog, {
       title: t3,
       subtitle: "Select any you wish to enable.",
       color: "warning",
@@ -486676,22 +486762,22 @@ function MCPServerMultiselectDialog(t0) {
   }
   let t8;
   if ($[18] === Symbol.for("react.memo_cache_sentinel")) {
-    t8 = /* @__PURE__ */ jsx_runtime459.jsx(ThemedBox_default, {
+    t8 = /* @__PURE__ */ jsx_runtime460.jsx(ThemedBox_default, {
       paddingX: 1,
-      children: /* @__PURE__ */ jsx_runtime459.jsx(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime460.jsx(ThemedText, {
         dimColor: true,
         italic: true,
-        children: /* @__PURE__ */ jsx_runtime459.jsxs(Byline, {
+        children: /* @__PURE__ */ jsx_runtime460.jsxs(Byline, {
           children: [
-            /* @__PURE__ */ jsx_runtime459.jsx(KeyboardShortcutHint, {
+            /* @__PURE__ */ jsx_runtime460.jsx(KeyboardShortcutHint, {
               shortcut: "Space",
               action: "select"
             }),
-            /* @__PURE__ */ jsx_runtime459.jsx(KeyboardShortcutHint, {
+            /* @__PURE__ */ jsx_runtime460.jsx(KeyboardShortcutHint, {
               shortcut: "Enter",
               action: "confirm"
             }),
-            /* @__PURE__ */ jsx_runtime459.jsx(ConfigurableShortcutHint, {
+            /* @__PURE__ */ jsx_runtime460.jsx(ConfigurableShortcutHint, {
               action: "confirm:no",
               context: "Confirmation",
               fallback: "Esc",
@@ -486707,7 +486793,7 @@ function MCPServerMultiselectDialog(t0) {
   }
   let t9;
   if ($[19] !== t7) {
-    t9 = /* @__PURE__ */ jsx_runtime459.jsxs(jsx_runtime459.Fragment, {
+    t9 = /* @__PURE__ */ jsx_runtime460.jsxs(jsx_runtime460.Fragment, {
       children: [
         t7,
         t8
@@ -486726,7 +486812,7 @@ function _temp299(server_0) {
     value: server_0
   };
 }
-var import_compiler_runtime372, jsx_runtime459;
+var import_compiler_runtime372, jsx_runtime460;
 var init_MCPServerMultiselectDialog = __esm(() => {
   init_partition();
   init_analytics();
@@ -486739,7 +486825,7 @@ var init_MCPServerMultiselectDialog = __esm(() => {
   init_KeyboardShortcutHint();
   init_MCPServerDialogCopy();
   import_compiler_runtime372 = __toESM(require_compiler_runtime(), 1);
-  jsx_runtime459 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime460 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/services/mcpServerApproval.tsx
@@ -486755,18 +486841,18 @@ async function handleMcpjsonServerApprovals(root) {
     const done = () => void resolve();
     if (pendingServers.length === 1 && pendingServers[0] !== undefined) {
       const serverName = pendingServers[0];
-      root.render(/* @__PURE__ */ jsx_runtime460.jsx(AppStateProvider, {
-        children: /* @__PURE__ */ jsx_runtime460.jsx(KeybindingSetup, {
-          children: /* @__PURE__ */ jsx_runtime460.jsx(MCPServerApprovalDialog, {
+      root.render(/* @__PURE__ */ jsx_runtime461.jsx(AppStateProvider, {
+        children: /* @__PURE__ */ jsx_runtime461.jsx(KeybindingSetup, {
+          children: /* @__PURE__ */ jsx_runtime461.jsx(MCPServerApprovalDialog, {
             serverName,
             onDone: done
           })
         })
       }));
     } else {
-      root.render(/* @__PURE__ */ jsx_runtime460.jsx(AppStateProvider, {
-        children: /* @__PURE__ */ jsx_runtime460.jsx(KeybindingSetup, {
-          children: /* @__PURE__ */ jsx_runtime460.jsx(MCPServerMultiselectDialog, {
+      root.render(/* @__PURE__ */ jsx_runtime461.jsx(AppStateProvider, {
+        children: /* @__PURE__ */ jsx_runtime461.jsx(KeybindingSetup, {
+          children: /* @__PURE__ */ jsx_runtime461.jsx(MCPServerMultiselectDialog, {
             serverNames: pendingServers,
             onDone: done
           })
@@ -486775,7 +486861,7 @@ async function handleMcpjsonServerApprovals(root) {
     }
   });
 }
-var jsx_runtime460;
+var jsx_runtime461;
 var init_mcpServerApproval = __esm(() => {
   init_MCPServerApprovalDialog();
   init_MCPServerMultiselectDialog();
@@ -486783,7 +486869,7 @@ var init_mcpServerApproval = __esm(() => {
   init_AppState();
   init_config3();
   init_utils5();
-  jsx_runtime460 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime461 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/utils/deepLink/terminalPreference.ts
@@ -487042,50 +487128,50 @@ function PreflightStep(t0) {
   import_react321.useEffect(t3, t4);
   let t5;
   if ($[6] !== isChecking || $[7] !== result || $[8] !== showSpinner) {
-    t5 = isChecking && showSpinner ? /* @__PURE__ */ jsx_runtime461.jsxs(ThemedBox_default, {
+    t5 = isChecking && showSpinner ? /* @__PURE__ */ jsx_runtime462.jsxs(ThemedBox_default, {
       paddingLeft: 1,
       children: [
-        /* @__PURE__ */ jsx_runtime461.jsx(Spinner, {}),
-        /* @__PURE__ */ jsx_runtime461.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime462.jsx(Spinner, {}),
+        /* @__PURE__ */ jsx_runtime462.jsx(ThemedText, {
           children: "Checking connectivity..."
         })
       ]
-    }) : !result?.success && !isChecking && /* @__PURE__ */ jsx_runtime461.jsxs(ThemedBox_default, {
+    }) : !result?.success && !isChecking && /* @__PURE__ */ jsx_runtime462.jsxs(ThemedBox_default, {
       flexDirection: "column",
       gap: 1,
       children: [
-        /* @__PURE__ */ jsx_runtime461.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime462.jsx(ThemedText, {
           color: "error",
           children: "Unable to connect to Anthropic services"
         }),
-        /* @__PURE__ */ jsx_runtime461.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime462.jsx(ThemedText, {
           color: "error",
           children: result?.error
         }),
-        result?.sslHint ? /* @__PURE__ */ jsx_runtime461.jsxs(ThemedBox_default, {
+        result?.sslHint ? /* @__PURE__ */ jsx_runtime462.jsxs(ThemedBox_default, {
           flexDirection: "column",
           gap: 1,
           children: [
-            /* @__PURE__ */ jsx_runtime461.jsx(ThemedText, {
+            /* @__PURE__ */ jsx_runtime462.jsx(ThemedText, {
               children: result.sslHint
             }),
-            /* @__PURE__ */ jsx_runtime461.jsx(ThemedText, {
+            /* @__PURE__ */ jsx_runtime462.jsx(ThemedText, {
               color: "suggestion",
               children: "See https://code.claude.com/docs/en/network-config"
             })
           ]
-        }) : /* @__PURE__ */ jsx_runtime461.jsxs(ThemedBox_default, {
+        }) : /* @__PURE__ */ jsx_runtime462.jsxs(ThemedBox_default, {
           flexDirection: "column",
           gap: 1,
           children: [
-            /* @__PURE__ */ jsx_runtime461.jsx(ThemedText, {
+            /* @__PURE__ */ jsx_runtime462.jsx(ThemedText, {
               children: "Please check your internet connection and network settings."
             }),
-            /* @__PURE__ */ jsx_runtime461.jsxs(ThemedText, {
+            /* @__PURE__ */ jsx_runtime462.jsxs(ThemedText, {
               children: [
                 "Note: Claude Code might not be available in your country. Check supported countries at",
                 " ",
-                /* @__PURE__ */ jsx_runtime461.jsx(ThemedText, {
+                /* @__PURE__ */ jsx_runtime462.jsx(ThemedText, {
                   color: "suggestion",
                   children: "https://anthropic.com/supported-countries"
                 })
@@ -487104,7 +487190,7 @@ function PreflightStep(t0) {
   }
   let t6;
   if ($[10] !== t5) {
-    t6 = /* @__PURE__ */ jsx_runtime461.jsx(ThemedBox_default, {
+    t6 = /* @__PURE__ */ jsx_runtime462.jsx(ThemedBox_default, {
       flexDirection: "column",
       gap: 1,
       paddingLeft: 1,
@@ -487120,7 +487206,7 @@ function PreflightStep(t0) {
 function _temp300() {
   return process.exit(1);
 }
-var import_compiler_runtime373, import_react321, jsx_runtime461;
+var import_compiler_runtime373, import_react321, jsx_runtime462;
 var init_preflightChecks = __esm(() => {
   init_axios2();
   init_analytics();
@@ -487133,7 +487219,7 @@ var init_preflightChecks = __esm(() => {
   init_log3();
   import_compiler_runtime373 = __toESM(require_compiler_runtime(), 1);
   import_react321 = __toESM(require_react(), 1);
-  jsx_runtime461 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime462 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/ApproveApiKey.tsx
@@ -487188,7 +487274,7 @@ function ApproveApiKey(t0) {
   }
   let t3;
   if ($[5] === Symbol.for("react.memo_cache_sentinel")) {
-    t3 = /* @__PURE__ */ jsx_runtime462.jsx(ThemedText, {
+    t3 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
       bold: true,
       children: "ANTHROPIC_API_KEY"
     });
@@ -487198,10 +487284,10 @@ function ApproveApiKey(t0) {
   }
   let t4;
   if ($[6] !== customApiKeyTruncated) {
-    t4 = /* @__PURE__ */ jsx_runtime462.jsxs(ThemedText, {
+    t4 = /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
       children: [
         t3,
-        /* @__PURE__ */ jsx_runtime462.jsxs(ThemedText, {
+        /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
           children: [
             ": sk-ant-...",
             customApiKeyTruncated
@@ -487216,7 +487302,7 @@ function ApproveApiKey(t0) {
   }
   let t5;
   if ($[8] === Symbol.for("react.memo_cache_sentinel")) {
-    t5 = /* @__PURE__ */ jsx_runtime462.jsx(ThemedText, {
+    t5 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
       children: "Do you want to use this API key?"
     });
     $[8] = t5;
@@ -487236,10 +487322,10 @@ function ApproveApiKey(t0) {
   let t7;
   if ($[10] === Symbol.for("react.memo_cache_sentinel")) {
     t7 = [t6, {
-      label: /* @__PURE__ */ jsx_runtime462.jsxs(ThemedText, {
+      label: /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
         children: [
           "No (",
-          /* @__PURE__ */ jsx_runtime462.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
             bold: true,
             children: "recommended"
           }),
@@ -487254,7 +487340,7 @@ function ApproveApiKey(t0) {
   }
   let t8;
   if ($[11] !== onChange) {
-    t8 = /* @__PURE__ */ jsx_runtime462.jsx(Select, {
+    t8 = /* @__PURE__ */ jsx_runtime463.jsx(Select, {
       defaultValue: "no",
       defaultFocusValue: "no",
       options: t7,
@@ -487268,7 +487354,7 @@ function ApproveApiKey(t0) {
   }
   let t9;
   if ($[13] !== t2 || $[14] !== t4 || $[15] !== t8) {
-    t9 = /* @__PURE__ */ jsx_runtime462.jsxs(Dialog, {
+    t9 = /* @__PURE__ */ jsx_runtime463.jsxs(Dialog, {
       title: "Detected a custom API key in your environment",
       color: "warning",
       onCancel: t2,
@@ -487287,14 +487373,14 @@ function ApproveApiKey(t0) {
   }
   return t9;
 }
-var import_compiler_runtime374, jsx_runtime462;
+var import_compiler_runtime374, jsx_runtime463;
 var init_ApproveApiKey = __esm(() => {
   init_ink2();
   init_config2();
   init_CustomSelect();
   init_Dialog();
   import_compiler_runtime374 = __toESM(require_compiler_runtime(), 1);
-  jsx_runtime462 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime463 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/LogoV2/WelcomeV2.tsx
@@ -487304,7 +487390,7 @@ function WelcomeV2() {
   if (env5.terminal === "Apple_Terminal") {
     let t0;
     if ($[0] !== theme) {
-      t0 = /* @__PURE__ */ jsx_runtime463.jsx(AppleTerminalWelcomeV2, {
+      t0 = /* @__PURE__ */ jsx_runtime464.jsx(AppleTerminalWelcomeV2, {
         theme,
         welcomeMessage: "Welcome to Claude Code"
       });
@@ -487326,16 +487412,16 @@ function WelcomeV2() {
     let t7;
     let t8;
     if ($[2] === Symbol.for("react.memo_cache_sentinel")) {
-      t0 = /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
+      t0 = /* @__PURE__ */ jsx_runtime464.jsxs(ThemedText, {
         children: [
-          /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
+          /* @__PURE__ */ jsx_runtime464.jsxs(ThemedText, {
             color: "claude",
             children: [
               "Welcome to Claude Code",
               " "
             ]
           }),
-          /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
+          /* @__PURE__ */ jsx_runtime464.jsxs(ThemedText, {
             dimColor: true,
             children: [
               "v",
@@ -487345,28 +487431,28 @@ function WelcomeV2() {
           })
         ]
       });
-      t1 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+      t1 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
         children: "\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026"
       });
-      t2 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+      t2 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
         children: "                                                          "
       });
-      t3 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+      t3 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
         children: "                                                          "
       });
-      t4 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+      t4 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
         children: "                                                          "
       });
-      t5 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+      t5 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
         children: "            \u2591\u2591\u2591\u2591\u2591\u2591                                        "
       });
-      t6 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+      t6 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
         children: "    \u2591\u2591\u2591   \u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591                                      "
       });
-      t7 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+      t7 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
         children: "   \u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591                                    "
       });
-      t8 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+      t8 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
         children: "                                                          "
       });
       $[2] = t0;
@@ -487391,13 +487477,13 @@ function WelcomeV2() {
     }
     let t9;
     if ($[11] === Symbol.for("react.memo_cache_sentinel")) {
-      t9 = /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
+      t9 = /* @__PURE__ */ jsx_runtime464.jsxs(ThemedText, {
         children: [
-          /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
             dimColor: true,
             children: "                           \u2591\u2591\u2591\u2591"
           }),
-          /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
             children: "                     \u2588\u2588    "
           })
         ]
@@ -487409,18 +487495,18 @@ function WelcomeV2() {
     let t10;
     let t11;
     if ($[12] === Symbol.for("react.memo_cache_sentinel")) {
-      t10 = /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
+      t10 = /* @__PURE__ */ jsx_runtime464.jsxs(ThemedText, {
         children: [
-          /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
             dimColor: true,
             children: "                         \u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591"
           }),
-          /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
             children: "               \u2588\u2588\u2592\u2592\u2588\u2588  "
           })
         ]
       });
-      t11 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+      t11 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
         children: "                                            \u2592\u2592      \u2588\u2588   \u2592"
       });
       $[12] = t10;
@@ -487431,10 +487517,10 @@ function WelcomeV2() {
     }
     let t12;
     if ($[14] === Symbol.for("react.memo_cache_sentinel")) {
-      t12 = /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
+      t12 = /* @__PURE__ */ jsx_runtime464.jsxs(ThemedText, {
         children: [
           "      ",
-          /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
             color: "clawd_body",
             children: " \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 "
           }),
@@ -487447,10 +487533,10 @@ function WelcomeV2() {
     }
     let t13;
     if ($[15] === Symbol.for("react.memo_cache_sentinel")) {
-      t13 = /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
+      t13 = /* @__PURE__ */ jsx_runtime464.jsxs(ThemedText, {
         children: [
           "      ",
-          /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
             color: "clawd_body",
             backgroundColor: "clawd_background",
             children: "\u2588\u2588\u2584\u2588\u2588\u2588\u2588\u2588\u2584\u2588\u2588"
@@ -487464,10 +487550,10 @@ function WelcomeV2() {
     }
     let t14;
     if ($[16] === Symbol.for("react.memo_cache_sentinel")) {
-      t14 = /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
+      t14 = /* @__PURE__ */ jsx_runtime464.jsxs(ThemedText, {
         children: [
           "      ",
-          /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
             color: "clawd_body",
             children: " \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 "
           }),
@@ -487480,9 +487566,9 @@ function WelcomeV2() {
     }
     let t15;
     if ($[17] === Symbol.for("react.memo_cache_sentinel")) {
-      t15 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedBox_default, {
+      t15 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedBox_default, {
         width: WELCOME_V2_WIDTH,
-        children: /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
+        children: /* @__PURE__ */ jsx_runtime464.jsxs(ThemedText, {
           children: [
             t0,
             t1,
@@ -487499,10 +487585,10 @@ function WelcomeV2() {
             t12,
             t13,
             t14,
-            /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
+            /* @__PURE__ */ jsx_runtime464.jsxs(ThemedText, {
               children: [
                 "\u2026\u2026\u2026\u2026\u2026\u2026\u2026",
-                /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+                /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
                   color: "clawd_body",
                   children: "\u2588 \u2588   \u2588 \u2588"
                 }),
@@ -487526,16 +487612,16 @@ function WelcomeV2() {
   let t5;
   let t6;
   if ($[18] === Symbol.for("react.memo_cache_sentinel")) {
-    t0 = /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
+    t0 = /* @__PURE__ */ jsx_runtime464.jsxs(ThemedText, {
       children: [
-        /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
+        /* @__PURE__ */ jsx_runtime464.jsxs(ThemedText, {
           color: "claude",
           children: [
             "Welcome to Claude Code",
             " "
           ]
         }),
-        /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
+        /* @__PURE__ */ jsx_runtime464.jsxs(ThemedText, {
           dimColor: true,
           children: [
             "v",
@@ -487545,22 +487631,22 @@ function WelcomeV2() {
         })
       ]
     });
-    t1 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+    t1 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
       children: "\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026"
     });
-    t2 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+    t2 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
       children: "                                                          "
     });
-    t3 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+    t3 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
       children: "     *                                       \u2588\u2588\u2588\u2588\u2588\u2593\u2593\u2591     "
     });
-    t4 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+    t4 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
       children: "                                 *         \u2588\u2588\u2588\u2593\u2591     \u2591\u2591   "
     });
-    t5 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+    t5 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
       children: "            \u2591\u2591\u2591\u2591\u2591\u2591                        \u2588\u2588\u2588\u2593\u2591           "
     });
-    t6 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+    t6 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
       children: "    \u2591\u2591\u2591   \u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591                      \u2588\u2588\u2588\u2593\u2591           "
     });
     $[18] = t0;
@@ -487585,32 +487671,32 @@ function WelcomeV2() {
   let t8;
   let t9;
   if ($[25] === Symbol.for("react.memo_cache_sentinel")) {
-    t7 = /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
+    t7 = /* @__PURE__ */ jsx_runtime464.jsxs(ThemedText, {
       children: [
-        /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
           children: "   \u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591    "
         }),
-        /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
           bold: true,
           children: "*"
         }),
-        /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
           children: "                \u2588\u2588\u2593\u2591\u2591      \u2593   "
         })
       ]
     });
-    t8 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+    t8 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
       children: "                                             \u2591\u2593\u2593\u2588\u2588\u2588\u2593\u2593\u2591    "
     });
-    t9 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+    t9 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
       dimColor: true,
       children: " *                                 \u2591\u2591\u2591\u2591                   "
     });
-    t10 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+    t10 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
       dimColor: true,
       children: "                                 \u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591                 "
     });
-    t11 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+    t11 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
       dimColor: true,
       children: "                               \u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591           "
     });
@@ -487628,7 +487714,7 @@ function WelcomeV2() {
   }
   let t12;
   if ($[30] === Symbol.for("react.memo_cache_sentinel")) {
-    t12 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+    t12 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
       color: "clawd_body",
       children: " \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 "
     });
@@ -487638,16 +487724,16 @@ function WelcomeV2() {
   }
   let t13;
   if ($[31] === Symbol.for("react.memo_cache_sentinel")) {
-    t13 = /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
+    t13 = /* @__PURE__ */ jsx_runtime464.jsxs(ThemedText, {
       children: [
         "      ",
         t12,
         "                                       ",
-        /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
           dimColor: true,
           children: "*"
         }),
-        /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
           children: " "
         })
       ]
@@ -487658,21 +487744,21 @@ function WelcomeV2() {
   }
   let t14;
   if ($[32] === Symbol.for("react.memo_cache_sentinel")) {
-    t14 = /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
+    t14 = /* @__PURE__ */ jsx_runtime464.jsxs(ThemedText, {
       children: [
         "      ",
-        /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
           color: "clawd_body",
           children: "\u2588\u2588\u2584\u2588\u2588\u2588\u2588\u2588\u2584\u2588\u2588"
         }),
-        /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
           children: "                        "
         }),
-        /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
           bold: true,
           children: "*"
         }),
-        /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
           children: "                "
         })
       ]
@@ -487683,10 +487769,10 @@ function WelcomeV2() {
   }
   let t15;
   if ($[33] === Symbol.for("react.memo_cache_sentinel")) {
-    t15 = /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
+    t15 = /* @__PURE__ */ jsx_runtime464.jsxs(ThemedText, {
       children: [
         "      ",
-        /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
           color: "clawd_body",
           children: " \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 "
         }),
@@ -487699,9 +487785,9 @@ function WelcomeV2() {
   }
   let t16;
   if ($[34] === Symbol.for("react.memo_cache_sentinel")) {
-    t16 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedBox_default, {
+    t16 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedBox_default, {
       width: WELCOME_V2_WIDTH,
-      children: /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime464.jsxs(ThemedText, {
         children: [
           t0,
           t1,
@@ -487718,10 +487804,10 @@ function WelcomeV2() {
           t13,
           t14,
           t15,
-          /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
+          /* @__PURE__ */ jsx_runtime464.jsxs(ThemedText, {
             children: [
               "\u2026\u2026\u2026\u2026\u2026\u2026\u2026",
-              /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+              /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
                 color: "clawd_body",
                 children: "\u2588 \u2588   \u2588 \u2588"
               }),
@@ -487747,7 +487833,7 @@ function AppleTerminalWelcomeV2(t0) {
   if (isLightTheme) {
     let t1;
     if ($[0] !== welcomeMessage) {
-      t1 = /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
+      t1 = /* @__PURE__ */ jsx_runtime464.jsxs(ThemedText, {
         color: "claude",
         children: [
           welcomeMessage,
@@ -487761,7 +487847,7 @@ function AppleTerminalWelcomeV2(t0) {
     }
     let t2;
     if ($[2] === Symbol.for("react.memo_cache_sentinel")) {
-      t2 = /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
+      t2 = /* @__PURE__ */ jsx_runtime464.jsxs(ThemedText, {
         dimColor: true,
         children: [
           "v",
@@ -487775,7 +487861,7 @@ function AppleTerminalWelcomeV2(t0) {
     }
     let t3;
     if ($[3] !== t1) {
-      t3 = /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
+      t3 = /* @__PURE__ */ jsx_runtime464.jsxs(ThemedText, {
         children: [
           t1,
           t2
@@ -487795,28 +487881,28 @@ function AppleTerminalWelcomeV2(t0) {
     let t8;
     let t9;
     if ($[5] === Symbol.for("react.memo_cache_sentinel")) {
-      t4 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+      t4 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
         children: "\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026"
       });
-      t5 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+      t5 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
         children: "                                                          "
       });
-      t6 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+      t6 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
         children: "                                                          "
       });
-      t7 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+      t7 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
         children: "                                                          "
       });
-      t8 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+      t8 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
         children: "            \u2591\u2591\u2591\u2591\u2591\u2591                                        "
       });
-      t9 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+      t9 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
         children: "    \u2591\u2591\u2591   \u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591                                      "
       });
-      t10 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+      t10 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
         children: "   \u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591                                    "
       });
-      t11 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+      t11 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
         children: "                                                          "
       });
       $[5] = t10;
@@ -487839,13 +487925,13 @@ function AppleTerminalWelcomeV2(t0) {
     }
     let t12;
     if ($[13] === Symbol.for("react.memo_cache_sentinel")) {
-      t12 = /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
+      t12 = /* @__PURE__ */ jsx_runtime464.jsxs(ThemedText, {
         children: [
-          /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
             dimColor: true,
             children: "                           \u2591\u2591\u2591\u2591"
           }),
-          /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
             children: "                     \u2588\u2588    "
           })
         ]
@@ -487858,21 +487944,21 @@ function AppleTerminalWelcomeV2(t0) {
     let t14;
     let t15;
     if ($[14] === Symbol.for("react.memo_cache_sentinel")) {
-      t13 = /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
+      t13 = /* @__PURE__ */ jsx_runtime464.jsxs(ThemedText, {
         children: [
-          /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
             dimColor: true,
             children: "                         \u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591"
           }),
-          /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
             children: "               \u2588\u2588\u2592\u2592\u2588\u2588  "
           })
         ]
       });
-      t14 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+      t14 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
         children: "                                            \u2592\u2592      \u2588\u2588   \u2592"
       });
-      t15 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+      t15 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
         children: "                                          \u2592\u2592\u2591\u2591\u2592\u2592      \u2592 \u2592\u2592"
       });
       $[14] = t13;
@@ -487885,14 +487971,14 @@ function AppleTerminalWelcomeV2(t0) {
     }
     let t16;
     if ($[17] === Symbol.for("react.memo_cache_sentinel")) {
-      t16 = /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
+      t16 = /* @__PURE__ */ jsx_runtime464.jsxs(ThemedText, {
         children: [
           "      ",
-          /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
             color: "clawd_body",
             children: "\u2597"
           }),
-          /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
+          /* @__PURE__ */ jsx_runtime464.jsxs(ThemedText, {
             color: "clawd_background",
             backgroundColor: "clawd_body",
             children: [
@@ -487903,7 +487989,7 @@ function AppleTerminalWelcomeV2(t0) {
               " "
             ]
           }),
-          /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
             color: "clawd_body",
             children: "\u2596"
           }),
@@ -487916,10 +488002,10 @@ function AppleTerminalWelcomeV2(t0) {
     }
     let t17;
     if ($[18] === Symbol.for("react.memo_cache_sentinel")) {
-      t17 = /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
+      t17 = /* @__PURE__ */ jsx_runtime464.jsxs(ThemedText, {
         children: [
           "       ",
-          /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
             backgroundColor: "clawd_body",
             children: " ".repeat(9)
           }),
@@ -487932,31 +488018,31 @@ function AppleTerminalWelcomeV2(t0) {
     }
     let t18;
     if ($[19] === Symbol.for("react.memo_cache_sentinel")) {
-      t18 = /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
+      t18 = /* @__PURE__ */ jsx_runtime464.jsxs(ThemedText, {
         children: [
           "\u2026\u2026\u2026\u2026\u2026\u2026\u2026",
-          /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
             backgroundColor: "clawd_body",
             children: " "
           }),
-          /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
             children: " "
           }),
-          /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
             backgroundColor: "clawd_body",
             children: " "
           }),
-          /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
             children: "   "
           }),
-          /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
             backgroundColor: "clawd_body",
             children: " "
           }),
-          /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
             children: " "
           }),
-          /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
             backgroundColor: "clawd_body",
             children: " "
           }),
@@ -487969,9 +488055,9 @@ function AppleTerminalWelcomeV2(t0) {
     }
     let t19;
     if ($[20] !== t3) {
-      t19 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedBox_default, {
+      t19 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedBox_default, {
         width: WELCOME_V2_WIDTH,
-        children: /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
+        children: /* @__PURE__ */ jsx_runtime464.jsxs(ThemedText, {
           children: [
             t3,
             t4,
@@ -488001,7 +488087,7 @@ function AppleTerminalWelcomeV2(t0) {
   }
   let t1;
   if ($[22] !== welcomeMessage) {
-    t1 = /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
+    t1 = /* @__PURE__ */ jsx_runtime464.jsxs(ThemedText, {
       color: "claude",
       children: [
         welcomeMessage,
@@ -488015,7 +488101,7 @@ function AppleTerminalWelcomeV2(t0) {
   }
   let t2;
   if ($[24] === Symbol.for("react.memo_cache_sentinel")) {
-    t2 = /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
+    t2 = /* @__PURE__ */ jsx_runtime464.jsxs(ThemedText, {
       dimColor: true,
       children: [
         "v",
@@ -488029,7 +488115,7 @@ function AppleTerminalWelcomeV2(t0) {
   }
   let t3;
   if ($[25] !== t1) {
-    t3 = /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
+    t3 = /* @__PURE__ */ jsx_runtime464.jsxs(ThemedText, {
       children: [
         t1,
         t2
@@ -488047,22 +488133,22 @@ function AppleTerminalWelcomeV2(t0) {
   let t8;
   let t9;
   if ($[27] === Symbol.for("react.memo_cache_sentinel")) {
-    t4 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+    t4 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
       children: "\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026"
     });
-    t5 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+    t5 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
       children: "                                                          "
     });
-    t6 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+    t6 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
       children: "     *                                       \u2588\u2588\u2588\u2588\u2588\u2593\u2593\u2591     "
     });
-    t7 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+    t7 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
       children: "                                 *         \u2588\u2588\u2588\u2593\u2591     \u2591\u2591   "
     });
-    t8 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+    t8 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
       children: "            \u2591\u2591\u2591\u2591\u2591\u2591                        \u2588\u2588\u2588\u2593\u2591           "
     });
-    t9 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+    t9 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
       children: "    \u2591\u2591\u2591   \u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591                      \u2588\u2588\u2588\u2593\u2591           "
     });
     $[27] = t4;
@@ -488085,32 +488171,32 @@ function AppleTerminalWelcomeV2(t0) {
   let t13;
   let t14;
   if ($[33] === Symbol.for("react.memo_cache_sentinel")) {
-    t10 = /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
+    t10 = /* @__PURE__ */ jsx_runtime464.jsxs(ThemedText, {
       children: [
-        /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
           children: "   \u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591    "
         }),
-        /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
           bold: true,
           children: "*"
         }),
-        /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
           children: "                \u2588\u2588\u2593\u2591\u2591      \u2593   "
         })
       ]
     });
-    t11 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+    t11 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
       children: "                                             \u2591\u2593\u2593\u2588\u2588\u2588\u2593\u2593\u2591    "
     });
-    t12 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+    t12 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
       dimColor: true,
       children: " *                                 \u2591\u2591\u2591\u2591                   "
     });
-    t13 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+    t13 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
       dimColor: true,
       children: "                                 \u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591                 "
     });
-    t14 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+    t14 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
       dimColor: true,
       children: "                               \u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591           "
     });
@@ -488128,14 +488214,14 @@ function AppleTerminalWelcomeV2(t0) {
   }
   let t15;
   if ($[38] === Symbol.for("react.memo_cache_sentinel")) {
-    t15 = /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
+    t15 = /* @__PURE__ */ jsx_runtime464.jsxs(ThemedText, {
       children: [
         "                                                      ",
-        /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
           dimColor: true,
           children: "*"
         }),
-        /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
           children: " "
         })
       ]
@@ -488146,14 +488232,14 @@ function AppleTerminalWelcomeV2(t0) {
   }
   let t16;
   if ($[39] === Symbol.for("react.memo_cache_sentinel")) {
-    t16 = /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
+    t16 = /* @__PURE__ */ jsx_runtime464.jsxs(ThemedText, {
       children: [
         "        ",
-        /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
           color: "clawd_body",
           children: "\u2597"
         }),
-        /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
+        /* @__PURE__ */ jsx_runtime464.jsxs(ThemedText, {
           color: "clawd_background",
           backgroundColor: "clawd_body",
           children: [
@@ -488164,18 +488250,18 @@ function AppleTerminalWelcomeV2(t0) {
             " "
           ]
         }),
-        /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
           color: "clawd_body",
           children: "\u2596"
         }),
-        /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
           children: "                       "
         }),
-        /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
           bold: true,
           children: "*"
         }),
-        /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
           children: "                "
         })
       ]
@@ -488186,10 +488272,10 @@ function AppleTerminalWelcomeV2(t0) {
   }
   let t17;
   if ($[40] === Symbol.for("react.memo_cache_sentinel")) {
-    t17 = /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
+    t17 = /* @__PURE__ */ jsx_runtime464.jsxs(ThemedText, {
       children: [
         "        ",
-        /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
           backgroundColor: "clawd_body",
           children: " ".repeat(9)
         }),
@@ -488202,31 +488288,31 @@ function AppleTerminalWelcomeV2(t0) {
   }
   let t18;
   if ($[41] === Symbol.for("react.memo_cache_sentinel")) {
-    t18 = /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
+    t18 = /* @__PURE__ */ jsx_runtime464.jsxs(ThemedText, {
       children: [
         "\u2026\u2026\u2026\u2026\u2026\u2026\u2026",
-        /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
           backgroundColor: "clawd_body",
           children: " "
         }),
-        /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
           children: " "
         }),
-        /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
           backgroundColor: "clawd_body",
           children: " "
         }),
-        /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
           children: "   "
         }),
-        /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
           backgroundColor: "clawd_body",
           children: " "
         }),
-        /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
           children: " "
         }),
-        /* @__PURE__ */ jsx_runtime463.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
           backgroundColor: "clawd_body",
           children: " "
         }),
@@ -488239,9 +488325,9 @@ function AppleTerminalWelcomeV2(t0) {
   }
   let t19;
   if ($[42] !== t3) {
-    t19 = /* @__PURE__ */ jsx_runtime463.jsx(ThemedBox_default, {
+    t19 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedBox_default, {
       width: WELCOME_V2_WIDTH,
-      children: /* @__PURE__ */ jsx_runtime463.jsxs(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime464.jsxs(ThemedText, {
         children: [
           t3,
           t4,
@@ -488269,12 +488355,12 @@ function AppleTerminalWelcomeV2(t0) {
   }
   return t19;
 }
-var import_compiler_runtime375, jsx_runtime463, WELCOME_V2_WIDTH = 58;
+var import_compiler_runtime375, jsx_runtime464, WELCOME_V2_WIDTH = 58;
 var init_WelcomeV2 = __esm(() => {
   init_ink2();
   init_env();
   import_compiler_runtime375 = __toESM(require_compiler_runtime(), 1);
-  jsx_runtime463 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime464 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/ui/OrderedListItem.tsx
@@ -488288,7 +488374,7 @@ function OrderedListItem(t0) {
   } = import_react322.useContext(OrderedListItemContext);
   let t1;
   if ($[0] !== marker) {
-    t1 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedText, {
+    t1 = /* @__PURE__ */ jsx_runtime465.jsx(ThemedText, {
       dimColor: true,
       children: marker
     });
@@ -488299,7 +488385,7 @@ function OrderedListItem(t0) {
   }
   let t2;
   if ($[2] !== children2) {
-    t2 = /* @__PURE__ */ jsx_runtime464.jsx(ThemedBox_default, {
+    t2 = /* @__PURE__ */ jsx_runtime465.jsx(ThemedBox_default, {
       flexDirection: "column",
       children: children2
     });
@@ -488310,7 +488396,7 @@ function OrderedListItem(t0) {
   }
   let t3;
   if ($[4] !== t1 || $[5] !== t2) {
-    t3 = /* @__PURE__ */ jsx_runtime464.jsxs(ThemedBox_default, {
+    t3 = /* @__PURE__ */ jsx_runtime465.jsxs(ThemedBox_default, {
       gap: 1,
       children: [
         t1,
@@ -488325,12 +488411,12 @@ function OrderedListItem(t0) {
   }
   return t3;
 }
-var import_compiler_runtime376, import_react322, jsx_runtime464, OrderedListItemContext;
+var import_compiler_runtime376, import_react322, jsx_runtime465, OrderedListItemContext;
 var init_OrderedListItem = __esm(() => {
   init_ink2();
   import_compiler_runtime376 = __toESM(require_compiler_runtime(), 1);
   import_react322 = __toESM(require_react(), 1);
-  jsx_runtime464 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime465 = __toESM(require_jsx_runtime(), 1);
   OrderedListItemContext = import_react322.createContext({
     marker: ""
   });
@@ -488363,11 +488449,11 @@ function OrderedListComponent(t0) {
         }
         const paddedMarker = `${String(index + 1).padStart(maxMarkerWidth)}.`;
         const marker = `${parentMarker}${paddedMarker}`;
-        return /* @__PURE__ */ jsx_runtime465.jsx(OrderedListContext.Provider, {
+        return /* @__PURE__ */ jsx_runtime466.jsx(OrderedListContext.Provider, {
           value: {
             marker
           },
-          children: /* @__PURE__ */ jsx_runtime465.jsx(OrderedListItemContext.Provider, {
+          children: /* @__PURE__ */ jsx_runtime466.jsx(OrderedListItemContext.Provider, {
             value: {
               marker
             },
@@ -488391,7 +488477,7 @@ function OrderedListComponent(t0) {
   }
   let t2;
   if ($[7] !== t1) {
-    t2 = /* @__PURE__ */ jsx_runtime465.jsx(ThemedBox_default, {
+    t2 = /* @__PURE__ */ jsx_runtime466.jsx(ThemedBox_default, {
       flexDirection: "column",
       children: t1
     });
@@ -488402,13 +488488,13 @@ function OrderedListComponent(t0) {
   }
   return t2;
 }
-var import_compiler_runtime377, import_react323, jsx_runtime465, OrderedListContext, OrderedList;
+var import_compiler_runtime377, import_react323, jsx_runtime466, OrderedListContext, OrderedList;
 var init_OrderedList = __esm(() => {
   init_ink2();
   init_OrderedListItem();
   import_compiler_runtime377 = __toESM(require_compiler_runtime(), 1);
   import_react323 = __toESM(require_react(), 1);
-  jsx_runtime465 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime466 = __toESM(require_jsx_runtime(), 1);
   OrderedListContext = import_react323.createContext({
     marker: ""
   });
@@ -488446,9 +488532,9 @@ function Onboarding({
     goToNextStep();
   }
   const exitState = useExitOnCtrlCDWithKeybindings();
-  const themeStep = /* @__PURE__ */ jsx_runtime466.jsx(ThemedBox_default, {
+  const themeStep = /* @__PURE__ */ jsx_runtime467.jsx(ThemedBox_default, {
     marginX: 1,
-    children: /* @__PURE__ */ jsx_runtime466.jsx(ThemePicker, {
+    children: /* @__PURE__ */ jsx_runtime467.jsx(ThemePicker, {
       onThemeSelect: handleThemeSelection,
       showIntroText: true,
       helpText: "To change this later, run /theme",
@@ -488456,49 +488542,49 @@ function Onboarding({
       skipExitHandling: true
     })
   });
-  const securityStep = /* @__PURE__ */ jsx_runtime466.jsxs(ThemedBox_default, {
+  const securityStep = /* @__PURE__ */ jsx_runtime467.jsxs(ThemedBox_default, {
     flexDirection: "column",
     gap: 1,
     paddingLeft: 1,
     children: [
-      /* @__PURE__ */ jsx_runtime466.jsx(ThemedText, {
+      /* @__PURE__ */ jsx_runtime467.jsx(ThemedText, {
         bold: true,
         children: "Security notes:"
       }),
-      /* @__PURE__ */ jsx_runtime466.jsx(ThemedBox_default, {
+      /* @__PURE__ */ jsx_runtime467.jsx(ThemedBox_default, {
         flexDirection: "column",
         width: 70,
-        children: /* @__PURE__ */ jsx_runtime466.jsxs(OrderedList, {
+        children: /* @__PURE__ */ jsx_runtime467.jsxs(OrderedList, {
           children: [
-            /* @__PURE__ */ jsx_runtime466.jsxs(OrderedList.Item, {
+            /* @__PURE__ */ jsx_runtime467.jsxs(OrderedList.Item, {
               children: [
-                /* @__PURE__ */ jsx_runtime466.jsx(ThemedText, {
+                /* @__PURE__ */ jsx_runtime467.jsx(ThemedText, {
                   children: "Claude can make mistakes"
                 }),
-                /* @__PURE__ */ jsx_runtime466.jsxs(ThemedText, {
+                /* @__PURE__ */ jsx_runtime467.jsxs(ThemedText, {
                   dimColor: true,
                   wrap: "wrap",
                   children: [
                     "You should always review Claude's responses, especially when",
-                    /* @__PURE__ */ jsx_runtime466.jsx(Newline, {}),
+                    /* @__PURE__ */ jsx_runtime467.jsx(Newline, {}),
                     "running code.",
-                    /* @__PURE__ */ jsx_runtime466.jsx(Newline, {})
+                    /* @__PURE__ */ jsx_runtime467.jsx(Newline, {})
                   ]
                 })
               ]
             }),
-            /* @__PURE__ */ jsx_runtime466.jsxs(OrderedList.Item, {
+            /* @__PURE__ */ jsx_runtime467.jsxs(OrderedList.Item, {
               children: [
-                /* @__PURE__ */ jsx_runtime466.jsx(ThemedText, {
+                /* @__PURE__ */ jsx_runtime467.jsx(ThemedText, {
                   children: "Due to prompt injection risks, only use it with code you trust"
                 }),
-                /* @__PURE__ */ jsx_runtime466.jsxs(ThemedText, {
+                /* @__PURE__ */ jsx_runtime467.jsxs(ThemedText, {
                   dimColor: true,
                   wrap: "wrap",
                   children: [
                     "For more details see:",
-                    /* @__PURE__ */ jsx_runtime466.jsx(Newline, {}),
-                    /* @__PURE__ */ jsx_runtime466.jsx(Link, {
+                    /* @__PURE__ */ jsx_runtime467.jsx(Newline, {}),
+                    /* @__PURE__ */ jsx_runtime467.jsx(Link, {
                       url: "https://code.claude.com/docs/en/security"
                     })
                   ]
@@ -488508,10 +488594,10 @@ function Onboarding({
           ]
         })
       }),
-      /* @__PURE__ */ jsx_runtime466.jsx(PressEnterToContinue, {})
+      /* @__PURE__ */ jsx_runtime467.jsx(PressEnterToContinue, {})
     ]
   });
-  const preflightStep = /* @__PURE__ */ jsx_runtime466.jsx(PreflightStep, {
+  const preflightStep = /* @__PURE__ */ jsx_runtime467.jsx(PreflightStep, {
     onSuccess: goToNextStep
   });
   const apiKeyNeedingApproval = import_react324.useMemo(() => {
@@ -488543,7 +488629,7 @@ function Onboarding({
   if (apiKeyNeedingApproval) {
     steps.push({
       id: "api-key",
-      component: /* @__PURE__ */ jsx_runtime466.jsx(ApproveApiKey, {
+      component: /* @__PURE__ */ jsx_runtime467.jsx(ApproveApiKey, {
         customApiKeyTruncated: apiKeyNeedingApproval,
         onDone: handleApiKeyDone
       })
@@ -488552,10 +488638,10 @@ function Onboarding({
   if (oauthEnabled) {
     steps.push({
       id: "oauth",
-      component: /* @__PURE__ */ jsx_runtime466.jsx(SkippableStep, {
+      component: /* @__PURE__ */ jsx_runtime467.jsx(SkippableStep, {
         skip: skipOAuth,
         onSkip: goToNextStep,
-        children: /* @__PURE__ */ jsx_runtime466.jsx(ConsoleOAuthFlow, {
+        children: /* @__PURE__ */ jsx_runtime467.jsx(ConsoleOAuthFlow, {
           onDone: goToNextStep
         })
       })
@@ -488568,30 +488654,30 @@ function Onboarding({
   if (shouldOfferTerminalSetup()) {
     steps.push({
       id: "terminal-setup",
-      component: /* @__PURE__ */ jsx_runtime466.jsxs(ThemedBox_default, {
+      component: /* @__PURE__ */ jsx_runtime467.jsxs(ThemedBox_default, {
         flexDirection: "column",
         gap: 1,
         paddingLeft: 1,
         children: [
-          /* @__PURE__ */ jsx_runtime466.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime467.jsx(ThemedText, {
             bold: true,
             children: "Use Claude Code's terminal setup?"
           }),
-          /* @__PURE__ */ jsx_runtime466.jsxs(ThemedBox_default, {
+          /* @__PURE__ */ jsx_runtime467.jsxs(ThemedBox_default, {
             flexDirection: "column",
             width: 70,
             gap: 1,
             children: [
-              /* @__PURE__ */ jsx_runtime466.jsxs(ThemedText, {
+              /* @__PURE__ */ jsx_runtime467.jsxs(ThemedText, {
                 children: [
                   "For the optimal coding experience, enable the recommended settings",
-                  /* @__PURE__ */ jsx_runtime466.jsx(Newline, {}),
+                  /* @__PURE__ */ jsx_runtime467.jsx(Newline, {}),
                   "for your terminal:",
                   " ",
                   env5.terminal === "Apple_Terminal" ? "Option+Enter for newlines and visual bell" : "Shift+Enter for newlines"
                 ]
               }),
-              /* @__PURE__ */ jsx_runtime466.jsx(Select, {
+              /* @__PURE__ */ jsx_runtime467.jsx(Select, {
                 options: [{
                   label: "Yes, use recommended settings",
                   value: "install"
@@ -488608,15 +488694,15 @@ function Onboarding({
                 },
                 onCancel: () => goToNextStep()
               }),
-              /* @__PURE__ */ jsx_runtime466.jsx(ThemedText, {
+              /* @__PURE__ */ jsx_runtime467.jsx(ThemedText, {
                 dimColor: true,
-                children: exitState.pending ? /* @__PURE__ */ jsx_runtime466.jsxs(jsx_runtime466.Fragment, {
+                children: exitState.pending ? /* @__PURE__ */ jsx_runtime467.jsxs(jsx_runtime467.Fragment, {
                   children: [
                     "Press ",
                     exitState.keyName,
                     " again to exit"
                   ]
-                }) : /* @__PURE__ */ jsx_runtime466.jsx(jsx_runtime466.Fragment, {
+                }) : /* @__PURE__ */ jsx_runtime467.jsx(jsx_runtime467.Fragment, {
                   children: "Enter to confirm \xB7 Esc to skip"
                 })
               })
@@ -488649,18 +488735,18 @@ function Onboarding({
     context: "Confirmation",
     isActive: currentStep?.id === "terminal-setup"
   });
-  return /* @__PURE__ */ jsx_runtime466.jsxs(ThemedBox_default, {
+  return /* @__PURE__ */ jsx_runtime467.jsxs(ThemedBox_default, {
     flexDirection: "column",
     children: [
-      /* @__PURE__ */ jsx_runtime466.jsx(WelcomeV2, {}),
-      /* @__PURE__ */ jsx_runtime466.jsxs(ThemedBox_default, {
+      /* @__PURE__ */ jsx_runtime467.jsx(WelcomeV2, {}),
+      /* @__PURE__ */ jsx_runtime467.jsxs(ThemedBox_default, {
         flexDirection: "column",
         marginTop: 1,
         children: [
           currentStep?.component,
-          exitState.pending && /* @__PURE__ */ jsx_runtime466.jsx(ThemedBox_default, {
+          exitState.pending && /* @__PURE__ */ jsx_runtime467.jsx(ThemedBox_default, {
             padding: 1,
-            children: /* @__PURE__ */ jsx_runtime466.jsxs(ThemedText, {
+            children: /* @__PURE__ */ jsx_runtime467.jsxs(ThemedText, {
               dimColor: true,
               children: [
                 "Press ",
@@ -488704,7 +488790,7 @@ function SkippableStep(t0) {
   }
   return children2;
 }
-var import_compiler_runtime378, import_react324, jsx_runtime466;
+var import_compiler_runtime378, import_react324, jsx_runtime467;
 var init_Onboarding = __esm(() => {
   init_analytics();
   init_terminalSetup();
@@ -488726,7 +488812,7 @@ var init_Onboarding = __esm(() => {
   init_OrderedList();
   import_compiler_runtime378 = __toESM(require_compiler_runtime(), 1);
   import_react324 = __toESM(require_react(), 1);
-  jsx_runtime466 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime467 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/TrustDialog/utils.ts
@@ -489047,18 +489133,18 @@ function TrustDialog(t0) {
   let t17;
   let t18;
   if ($[20] === Symbol.for("react.memo_cache_sentinel")) {
-    t16 = /* @__PURE__ */ jsx_runtime467.jsx(ThemedText, {
+    t16 = /* @__PURE__ */ jsx_runtime468.jsx(ThemedText, {
       bold: true,
       children: getFsImplementation().cwd()
     });
-    t17 = /* @__PURE__ */ jsx_runtime467.jsxs(ThemedText, {
+    t17 = /* @__PURE__ */ jsx_runtime468.jsxs(ThemedText, {
       children: [
         "Quick safety check: Is this a project you created or one you trust? (Like your own code, a well-known open source project, or work from your team). If not, take a moment to review what",
         "'",
         "s in this folder first."
       ]
     });
-    t18 = /* @__PURE__ */ jsx_runtime467.jsxs(ThemedText, {
+    t18 = /* @__PURE__ */ jsx_runtime468.jsxs(ThemedText, {
       children: [
         "Claude Code",
         "'",
@@ -489075,9 +489161,9 @@ function TrustDialog(t0) {
   }
   let t19;
   if ($[23] === Symbol.for("react.memo_cache_sentinel")) {
-    t19 = /* @__PURE__ */ jsx_runtime467.jsx(ThemedText, {
+    t19 = /* @__PURE__ */ jsx_runtime468.jsx(ThemedText, {
       dimColor: true,
-      children: /* @__PURE__ */ jsx_runtime467.jsx(Link, {
+      children: /* @__PURE__ */ jsx_runtime468.jsx(Link, {
         url: "https://code.claude.com/docs/en/security",
         children: "Security guide"
       })
@@ -489101,7 +489187,7 @@ function TrustDialog(t0) {
   }
   let t21;
   if ($[25] !== onChange) {
-    t21 = /* @__PURE__ */ jsx_runtime467.jsx(Select, {
+    t21 = /* @__PURE__ */ jsx_runtime468.jsx(Select, {
       options: t20,
       onChange: (value_0) => onChange(value_0),
       onCancel: () => onChange("exit")
@@ -489113,15 +489199,15 @@ function TrustDialog(t0) {
   }
   let t22;
   if ($[27] !== exitState.keyName || $[28] !== exitState.pending) {
-    t22 = /* @__PURE__ */ jsx_runtime467.jsx(ThemedText, {
+    t22 = /* @__PURE__ */ jsx_runtime468.jsx(ThemedText, {
       dimColor: true,
-      children: exitState.pending ? /* @__PURE__ */ jsx_runtime467.jsxs(jsx_runtime467.Fragment, {
+      children: exitState.pending ? /* @__PURE__ */ jsx_runtime468.jsxs(jsx_runtime468.Fragment, {
         children: [
           "Press ",
           exitState.keyName,
           " again to exit"
         ]
-      }) : /* @__PURE__ */ jsx_runtime467.jsx(jsx_runtime467.Fragment, {
+      }) : /* @__PURE__ */ jsx_runtime468.jsx(jsx_runtime468.Fragment, {
         children: "Enter to confirm \xB7 Esc to cancel"
       })
     });
@@ -489133,11 +489219,11 @@ function TrustDialog(t0) {
   }
   let t23;
   if ($[30] !== t21 || $[31] !== t22) {
-    t23 = /* @__PURE__ */ jsx_runtime467.jsx(PermissionDialog, {
+    t23 = /* @__PURE__ */ jsx_runtime468.jsx(PermissionDialog, {
       color: "warning",
       titleColor: "warning",
       title: "Accessing workspace:",
-      children: /* @__PURE__ */ jsx_runtime467.jsxs(ThemedBox_default, {
+      children: /* @__PURE__ */ jsx_runtime468.jsxs(ThemedBox_default, {
         flexDirection: "column",
         gap: 1,
         paddingTop: 1,
@@ -489183,7 +489269,7 @@ function _temp2100(command) {
 function _temp301(tool) {
   return tool === BASH_TOOL_NAME || tool.startsWith(BASH_TOOL_NAME + "(");
 }
-var import_compiler_runtime379, import_react325, jsx_runtime467;
+var import_compiler_runtime379, import_react325, jsx_runtime468;
 var init_TrustDialog = __esm(() => {
   init_analytics();
   init_state();
@@ -489200,7 +489286,7 @@ var init_TrustDialog = __esm(() => {
   init_utils16();
   import_compiler_runtime379 = __toESM(require_compiler_runtime(), 1);
   import_react325 = __toESM(require_react(), 1);
-  jsx_runtime467 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime468 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/BypassPermissionsModeDialog.tsx
@@ -489244,21 +489330,21 @@ function BypassPermissionsModeDialog(t0) {
   const handleEscape = _temp2101;
   let t3;
   if ($[3] === Symbol.for("react.memo_cache_sentinel")) {
-    t3 = /* @__PURE__ */ jsx_runtime468.jsxs(ThemedBox_default, {
+    t3 = /* @__PURE__ */ jsx_runtime469.jsxs(ThemedBox_default, {
       flexDirection: "column",
       gap: 1,
       children: [
-        /* @__PURE__ */ jsx_runtime468.jsxs(ThemedText, {
+        /* @__PURE__ */ jsx_runtime469.jsxs(ThemedText, {
           children: [
             "In Bypass Permissions mode, Claude Code will not ask for your approval before running potentially dangerous commands.",
-            /* @__PURE__ */ jsx_runtime468.jsx(Newline, {}),
+            /* @__PURE__ */ jsx_runtime469.jsx(Newline, {}),
             "This mode should only be used in a sandboxed container/VM that has restricted internet access and can easily be restored if damaged."
           ]
         }),
-        /* @__PURE__ */ jsx_runtime468.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime469.jsx(ThemedText, {
           children: "By proceeding, you accept all responsibility for actions taken while running in Bypass Permissions mode."
         }),
-        /* @__PURE__ */ jsx_runtime468.jsx(Link, {
+        /* @__PURE__ */ jsx_runtime469.jsx(Link, {
           url: "https://code.claude.com/docs/en/security"
         })
       ]
@@ -489282,13 +489368,13 @@ function BypassPermissionsModeDialog(t0) {
   }
   let t5;
   if ($[5] !== onChange) {
-    t5 = /* @__PURE__ */ jsx_runtime468.jsxs(Dialog, {
+    t5 = /* @__PURE__ */ jsx_runtime469.jsxs(Dialog, {
       title: "WARNING: Claude Code running in Bypass Permissions mode",
       color: "error",
       onCancel: handleEscape,
       children: [
         t3,
-        /* @__PURE__ */ jsx_runtime468.jsx(Select, {
+        /* @__PURE__ */ jsx_runtime469.jsx(Select, {
           options: t4,
           onChange: (value_0) => onChange(value_0)
         })
@@ -489307,7 +489393,7 @@ function _temp2101() {
 function _temp302() {
   logEvent("tengu_bypass_permissions_mode_dialog_shown", {});
 }
-var import_compiler_runtime380, import_react326, jsx_runtime468;
+var import_compiler_runtime380, import_react326, jsx_runtime469;
 var init_BypassPermissionsModeDialog = __esm(() => {
   init_analytics();
   init_ink2();
@@ -489317,7 +489403,7 @@ var init_BypassPermissionsModeDialog = __esm(() => {
   init_Dialog();
   import_compiler_runtime380 = __toESM(require_compiler_runtime(), 1);
   import_react326 = __toESM(require_react(), 1);
-  jsx_runtime468 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime469 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/ClaudeInChromeOnboarding.tsx
@@ -489358,13 +489444,13 @@ function ClaudeInChromeOnboarding(t0) {
   use_input_default(t3);
   let t4;
   if ($[4] !== isExtensionInstalled) {
-    t4 = !isExtensionInstalled && /* @__PURE__ */ jsx_runtime469.jsxs(jsx_runtime469.Fragment, {
+    t4 = !isExtensionInstalled && /* @__PURE__ */ jsx_runtime470.jsxs(jsx_runtime470.Fragment, {
       children: [
-        /* @__PURE__ */ jsx_runtime469.jsx(Newline, {}),
-        /* @__PURE__ */ jsx_runtime469.jsx(Newline, {}),
+        /* @__PURE__ */ jsx_runtime470.jsx(Newline, {}),
+        /* @__PURE__ */ jsx_runtime470.jsx(Newline, {}),
         "Requires the Chrome extension. Get started at",
         " ",
-        /* @__PURE__ */ jsx_runtime469.jsx(Link, {
+        /* @__PURE__ */ jsx_runtime470.jsx(Link, {
           url: CHROME_EXTENSION_URL2
         })
       ]
@@ -489376,7 +489462,7 @@ function ClaudeInChromeOnboarding(t0) {
   }
   let t5;
   if ($[6] !== t4) {
-    t5 = /* @__PURE__ */ jsx_runtime469.jsxs(ThemedText, {
+    t5 = /* @__PURE__ */ jsx_runtime470.jsxs(ThemedText, {
       children: [
         "Claude in Chrome works with the Chrome extension to let you control your browser directly from Claude Code. You can navigate websites, fill forms, capture screenshots, record GIFs, and debug with console logs and network requests.",
         t4
@@ -489389,11 +489475,11 @@ function ClaudeInChromeOnboarding(t0) {
   }
   let t6;
   if ($[8] !== isExtensionInstalled) {
-    t6 = isExtensionInstalled && /* @__PURE__ */ jsx_runtime469.jsxs(jsx_runtime469.Fragment, {
+    t6 = isExtensionInstalled && /* @__PURE__ */ jsx_runtime470.jsxs(jsx_runtime470.Fragment, {
       children: [
         " ",
         "(",
-        /* @__PURE__ */ jsx_runtime469.jsx(Link, {
+        /* @__PURE__ */ jsx_runtime470.jsx(Link, {
           url: CHROME_PERMISSIONS_URL2
         }),
         ")"
@@ -489406,7 +489492,7 @@ function ClaudeInChromeOnboarding(t0) {
   }
   let t7;
   if ($[10] !== t6) {
-    t7 = /* @__PURE__ */ jsx_runtime469.jsxs(ThemedText, {
+    t7 = /* @__PURE__ */ jsx_runtime470.jsxs(ThemedText, {
       dimColor: true,
       children: [
         "Site-level permissions are inherited from the Chrome extension. Manage permissions in the Chrome extension settings to control which sites Claude can browse, click, and type on",
@@ -489421,7 +489507,7 @@ function ClaudeInChromeOnboarding(t0) {
   }
   let t8;
   if ($[12] === Symbol.for("react.memo_cache_sentinel")) {
-    t8 = /* @__PURE__ */ jsx_runtime469.jsx(ThemedText, {
+    t8 = /* @__PURE__ */ jsx_runtime470.jsx(ThemedText, {
       bold: true,
       color: "chromeYellow",
       children: "/chrome"
@@ -489432,7 +489518,7 @@ function ClaudeInChromeOnboarding(t0) {
   }
   let t9;
   if ($[13] === Symbol.for("react.memo_cache_sentinel")) {
-    t9 = /* @__PURE__ */ jsx_runtime469.jsxs(ThemedText, {
+    t9 = /* @__PURE__ */ jsx_runtime470.jsxs(ThemedText, {
       dimColor: true,
       children: [
         "For more info, use",
@@ -489440,7 +489526,7 @@ function ClaudeInChromeOnboarding(t0) {
         t8,
         " ",
         "or visit ",
-        /* @__PURE__ */ jsx_runtime469.jsx(Link, {
+        /* @__PURE__ */ jsx_runtime470.jsx(Link, {
           url: "https://code.claude.com/docs/en/chrome"
         })
       ]
@@ -489451,7 +489537,7 @@ function ClaudeInChromeOnboarding(t0) {
   }
   let t10;
   if ($[14] !== t5 || $[15] !== t7) {
-    t10 = /* @__PURE__ */ jsx_runtime469.jsxs(ThemedBox_default, {
+    t10 = /* @__PURE__ */ jsx_runtime470.jsxs(ThemedBox_default, {
       flexDirection: "column",
       gap: 1,
       children: [
@@ -489468,7 +489554,7 @@ function ClaudeInChromeOnboarding(t0) {
   }
   let t11;
   if ($[17] !== onDone || $[18] !== t10) {
-    t11 = /* @__PURE__ */ jsx_runtime469.jsx(Dialog, {
+    t11 = /* @__PURE__ */ jsx_runtime470.jsx(Dialog, {
       title: "Claude in Chrome (Beta)",
       onCancel: onDone,
       color: "chromeYellow",
@@ -489488,7 +489574,7 @@ function _temp303(current) {
     hasCompletedClaudeInChromeOnboarding: true
   };
 }
-var import_compiler_runtime381, import_react327, jsx_runtime469, CHROME_EXTENSION_URL2 = "https://claude.ai/chrome", CHROME_PERMISSIONS_URL2 = "https://clau.de/chrome/permissions";
+var import_compiler_runtime381, import_react327, jsx_runtime470, CHROME_EXTENSION_URL2 = "https://claude.ai/chrome", CHROME_PERMISSIONS_URL2 = "https://clau.de/chrome/permissions";
 var init_ClaudeInChromeOnboarding = __esm(() => {
   init_analytics();
   init_ink2();
@@ -489497,7 +489583,7 @@ var init_ClaudeInChromeOnboarding = __esm(() => {
   init_Dialog();
   import_compiler_runtime381 = __toESM(require_compiler_runtime(), 1);
   import_react327 = __toESM(require_react(), 1);
-  jsx_runtime469 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime470 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/interactiveHelpers.tsx
@@ -489525,10 +489611,10 @@ async function exitWithMessage2(root, message, options) {
   await Promise.resolve().then(() => init_ink2());
   const color = options?.color;
   const exitCode = options?.exitCode ?? 1;
-  root.render(color ? /* @__PURE__ */ jsx_runtime470.jsx(ThemedText, {
+  root.render(color ? /* @__PURE__ */ jsx_runtime471.jsx(ThemedText, {
     color,
     children: message
-  }) : /* @__PURE__ */ jsx_runtime470.jsx(ThemedText, {
+  }) : /* @__PURE__ */ jsx_runtime471.jsx(ThemedText, {
     children: message
   }));
   root.unmount();
@@ -489536,9 +489622,9 @@ async function exitWithMessage2(root, message, options) {
   process.exit(exitCode);
 }
 function showSetupDialog(root, renderer, options) {
-  return showDialog(root, (done) => /* @__PURE__ */ jsx_runtime470.jsx(AppStateProvider, {
+  return showDialog(root, (done) => /* @__PURE__ */ jsx_runtime471.jsx(AppStateProvider, {
     onChangeAppState: options?.onChangeAppState,
-    children: /* @__PURE__ */ jsx_runtime470.jsx(KeybindingSetup, {
+    children: /* @__PURE__ */ jsx_runtime471.jsx(KeybindingSetup, {
       children: renderer(done)
     })
   }));
@@ -489558,7 +489644,7 @@ async function showSetupScreens(root, permissionMode, allowDangerouslySkipPermis
   if (!config.theme || !config.hasCompletedOnboarding) {
     onboardingShown = true;
     await Promise.resolve().then(() => init_Onboarding());
-    await showSetupDialog(root, (done) => /* @__PURE__ */ jsx_runtime470.jsx(Onboarding, {
+    await showSetupDialog(root, (done) => /* @__PURE__ */ jsx_runtime471.jsx(Onboarding, {
       onDone: () => {
         completeOnboarding();
         done();
@@ -489570,7 +489656,7 @@ async function showSetupScreens(root, permissionMode, allowDangerouslySkipPermis
   if (!isEnvTruthy(process.env.CLAUBBIT)) {
     if (!checkHasTrustDialogAccepted()) {
       await Promise.resolve().then(() => init_TrustDialog());
-      await showSetupDialog(root, (done) => /* @__PURE__ */ jsx_runtime470.jsx(TrustDialog, {
+      await showSetupDialog(root, (done) => /* @__PURE__ */ jsx_runtime471.jsx(TrustDialog, {
         commands,
         onDone: done
       }));
@@ -489588,7 +489674,7 @@ async function showSetupScreens(root, permissionMode, allowDangerouslySkipPermis
     if (await shouldShowClaudeMdExternalIncludesWarning()) {
       const externalIncludes = getExternalClaudeMdIncludes(await getMemoryFiles(true));
       await Promise.resolve().then(() => init_ClaudeMdExternalIncludesDialog());
-      await showSetupDialog(root, (done) => /* @__PURE__ */ jsx_runtime470.jsx(ClaudeMdExternalIncludesDialog, {
+      await showSetupDialog(root, (done) => /* @__PURE__ */ jsx_runtime471.jsx(ClaudeMdExternalIncludesDialog, {
         onDone: done,
         isStandaloneDialog: true,
         externalIncludes
@@ -489601,7 +489687,7 @@ async function showSetupScreens(root, permissionMode, allowDangerouslySkipPermis
   setImmediate(() => initializeTelemetryAfterTrust());
   if (await isQualifiedForGrove()) {
     await Promise.resolve().then(() => init_Grove());
-    const decision = await showSetupDialog(root, (done) => /* @__PURE__ */ jsx_runtime470.jsx(GroveDialog, {
+    const decision = await showSetupDialog(root, (done) => /* @__PURE__ */ jsx_runtime471.jsx(GroveDialog, {
       showIfAlreadyViewed: false,
       location: onboardingShown ? "onboarding" : "policy_update_modal",
       onDone: done
@@ -489617,7 +489703,7 @@ async function showSetupScreens(root, permissionMode, allowDangerouslySkipPermis
     const keyStatus = getCustomApiKeyStatus(customApiKeyTruncated);
     if (keyStatus === "new") {
       await Promise.resolve().then(() => init_ApproveApiKey());
-      await showSetupDialog(root, (done) => /* @__PURE__ */ jsx_runtime470.jsx(ApproveApiKey, {
+      await showSetupDialog(root, (done) => /* @__PURE__ */ jsx_runtime471.jsx(ApproveApiKey, {
         customApiKeyTruncated,
         onDone: done
       }), {
@@ -489627,7 +489713,7 @@ async function showSetupScreens(root, permissionMode, allowDangerouslySkipPermis
   }
   if ((permissionMode === "bypassPermissions" || allowDangerouslySkipPermissions) && !hasSkipDangerousModePermissionPrompt()) {
     await Promise.resolve().then(() => init_BypassPermissionsModeDialog());
-    await showSetupDialog(root, (done) => /* @__PURE__ */ jsx_runtime470.jsx(BypassPermissionsModeDialog, {
+    await showSetupDialog(root, (done) => /* @__PURE__ */ jsx_runtime471.jsx(BypassPermissionsModeDialog, {
       onAccept: done
     }));
   }
@@ -489635,7 +489721,7 @@ async function showSetupScreens(root, permissionMode, allowDangerouslySkipPermis
   if (false) {}
   if (claudeInChrome && !getGlobalConfig().hasCompletedClaudeInChromeOnboarding) {
     await Promise.resolve().then(() => init_ClaudeInChromeOnboarding());
-    await showSetupDialog(root, (done) => /* @__PURE__ */ jsx_runtime470.jsx(ClaudeInChromeOnboarding, {
+    await showSetupDialog(root, (done) => /* @__PURE__ */ jsx_runtime471.jsx(ClaudeInChromeOnboarding, {
       onDone: done
     }));
   }
@@ -489690,7 +489776,7 @@ function getRenderContext(exitOnCtrlC) {
     }
   };
 }
-var jsx_runtime470;
+var jsx_runtime471;
 var init_interactiveHelpers = __esm(() => {
   init_analytics();
   init_gracefulShutdown();
@@ -489716,7 +489802,7 @@ var init_interactiveHelpers = __esm(() => {
   init_renderOptions();
   init_allErrors();
   init_settings2();
-  jsx_runtime470 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime471 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/InvalidSettingsDialog.tsx
@@ -489745,7 +489831,7 @@ function InvalidSettingsDialog(t0) {
   const handleSelect = t1;
   let t2;
   if ($[3] !== settingsErrors) {
-    t2 = /* @__PURE__ */ jsx_runtime471.jsx(ValidationErrorsList, {
+    t2 = /* @__PURE__ */ jsx_runtime472.jsx(ValidationErrorsList, {
       errors: settingsErrors
     });
     $[3] = settingsErrors;
@@ -489755,7 +489841,7 @@ function InvalidSettingsDialog(t0) {
   }
   let t3;
   if ($[5] === Symbol.for("react.memo_cache_sentinel")) {
-    t3 = /* @__PURE__ */ jsx_runtime471.jsx(ThemedText, {
+    t3 = /* @__PURE__ */ jsx_runtime472.jsx(ThemedText, {
       dimColor: true,
       children: "Files with errors are skipped entirely, not just the invalid settings."
     });
@@ -489778,7 +489864,7 @@ function InvalidSettingsDialog(t0) {
   }
   let t5;
   if ($[7] !== handleSelect) {
-    t5 = /* @__PURE__ */ jsx_runtime471.jsx(Select, {
+    t5 = /* @__PURE__ */ jsx_runtime472.jsx(Select, {
       options: t4,
       onChange: handleSelect
     });
@@ -489789,7 +489875,7 @@ function InvalidSettingsDialog(t0) {
   }
   let t6;
   if ($[9] !== onExit || $[10] !== t2 || $[11] !== t5) {
-    t6 = /* @__PURE__ */ jsx_runtime471.jsxs(Dialog, {
+    t6 = /* @__PURE__ */ jsx_runtime472.jsxs(Dialog, {
       title: "Settings Error",
       onCancel: onExit,
       color: "warning",
@@ -489808,14 +489894,14 @@ function InvalidSettingsDialog(t0) {
   }
   return t6;
 }
-var import_compiler_runtime382, jsx_runtime471;
+var import_compiler_runtime382, jsx_runtime472;
 var init_InvalidSettingsDialog = __esm(() => {
   init_ink2();
   init_CustomSelect();
   init_Dialog();
   init_ValidationErrorsList();
   import_compiler_runtime382 = __toESM(require_compiler_runtime(), 1);
-  jsx_runtime471 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime472 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/hooks/useTeleportResume.tsx
@@ -489974,26 +490060,26 @@ function ResumeTask({
     loadSessions();
   }, [setHasCompletedTeleportErrorFlow, loadSessions]);
   if (!hasCompletedTeleportErrorFlow) {
-    return /* @__PURE__ */ jsx_runtime472.jsx(TeleportError, {
+    return /* @__PURE__ */ jsx_runtime473.jsx(TeleportError, {
       onComplete: handleErrorComplete
     });
   }
   if (loading) {
-    return /* @__PURE__ */ jsx_runtime472.jsxs(ThemedBox_default, {
+    return /* @__PURE__ */ jsx_runtime473.jsxs(ThemedBox_default, {
       flexDirection: "column",
       padding: 1,
       children: [
-        /* @__PURE__ */ jsx_runtime472.jsxs(ThemedBox_default, {
+        /* @__PURE__ */ jsx_runtime473.jsxs(ThemedBox_default, {
           flexDirection: "row",
           children: [
-            /* @__PURE__ */ jsx_runtime472.jsx(Spinner, {}),
-            /* @__PURE__ */ jsx_runtime472.jsx(ThemedText, {
+            /* @__PURE__ */ jsx_runtime473.jsx(Spinner, {}),
+            /* @__PURE__ */ jsx_runtime473.jsx(ThemedText, {
               bold: true,
               children: "Loading Claude Code sessions\u2026"
             })
           ]
         }),
-        /* @__PURE__ */ jsx_runtime472.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime473.jsx(ThemedText, {
           dimColor: true,
           children: retrying ? "Retrying\u2026" : "Fetching your Claude Code sessions\u2026"
         })
@@ -490001,27 +490087,27 @@ function ResumeTask({
     });
   }
   if (loadErrorType) {
-    return /* @__PURE__ */ jsx_runtime472.jsxs(ThemedBox_default, {
+    return /* @__PURE__ */ jsx_runtime473.jsxs(ThemedBox_default, {
       flexDirection: "column",
       padding: 1,
       children: [
-        /* @__PURE__ */ jsx_runtime472.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime473.jsx(ThemedText, {
           bold: true,
           color: "error",
           children: "Error loading Claude Code sessions"
         }),
         renderErrorSpecificGuidance(loadErrorType),
-        /* @__PURE__ */ jsx_runtime472.jsxs(ThemedText, {
+        /* @__PURE__ */ jsx_runtime473.jsxs(ThemedText, {
           dimColor: true,
           children: [
             "Press ",
-            /* @__PURE__ */ jsx_runtime472.jsx(ThemedText, {
+            /* @__PURE__ */ jsx_runtime473.jsx(ThemedText, {
               bold: true,
               children: "Ctrl+R"
             }),
             " to retry \xB7 Press",
             " ",
-            /* @__PURE__ */ jsx_runtime472.jsx(ThemedText, {
+            /* @__PURE__ */ jsx_runtime473.jsx(ThemedText, {
               bold: true,
               children: escKey
             }),
@@ -490032,15 +490118,15 @@ function ResumeTask({
     });
   }
   if (sessions.length === 0) {
-    return /* @__PURE__ */ jsx_runtime472.jsxs(ThemedBox_default, {
+    return /* @__PURE__ */ jsx_runtime473.jsxs(ThemedBox_default, {
       flexDirection: "column",
       padding: 1,
       children: [
-        /* @__PURE__ */ jsx_runtime472.jsxs(ThemedText, {
+        /* @__PURE__ */ jsx_runtime473.jsxs(ThemedText, {
           bold: true,
           children: [
             "No Claude Code sessions found",
-            currentRepo && /* @__PURE__ */ jsx_runtime472.jsxs(ThemedText, {
+            currentRepo && /* @__PURE__ */ jsx_runtime473.jsxs(ThemedText, {
               children: [
                 " for ",
                 currentRepo
@@ -490048,13 +490134,13 @@ function ResumeTask({
             })
           ]
         }),
-        /* @__PURE__ */ jsx_runtime472.jsx(ThemedBox_default, {
+        /* @__PURE__ */ jsx_runtime473.jsx(ThemedBox_default, {
           marginTop: 1,
-          children: /* @__PURE__ */ jsx_runtime472.jsxs(ThemedText, {
+          children: /* @__PURE__ */ jsx_runtime473.jsxs(ThemedText, {
             dimColor: true,
             children: [
               "Press ",
-              /* @__PURE__ */ jsx_runtime472.jsx(ThemedText, {
+              /* @__PURE__ */ jsx_runtime473.jsx(ThemedText, {
                 bold: true,
                 children: escKey
               }),
@@ -490085,16 +490171,16 @@ function ResumeTask({
   const maxVisibleOptions = Math.max(1, isEmbedded ? Math.min(sessions.length, 5, rows - 6 - layoutOverhead) : Math.min(sessions.length, rows - 1 - layoutOverhead));
   const maxHeight = maxVisibleOptions + layoutOverhead;
   const showScrollPosition = sessions.length > maxVisibleOptions;
-  return /* @__PURE__ */ jsx_runtime472.jsxs(ThemedBox_default, {
+  return /* @__PURE__ */ jsx_runtime473.jsxs(ThemedBox_default, {
     flexDirection: "column",
     padding: 1,
     height: maxHeight,
     children: [
-      /* @__PURE__ */ jsx_runtime472.jsxs(ThemedText, {
+      /* @__PURE__ */ jsx_runtime473.jsxs(ThemedText, {
         bold: true,
         children: [
           "Select a session to resume",
-          showScrollPosition && /* @__PURE__ */ jsx_runtime472.jsxs(ThemedText, {
+          showScrollPosition && /* @__PURE__ */ jsx_runtime473.jsxs(ThemedText, {
             dimColor: true,
             children: [
               " ",
@@ -490105,7 +490191,7 @@ function ResumeTask({
               ")"
             ]
           }),
-          currentRepo && /* @__PURE__ */ jsx_runtime472.jsxs(ThemedText, {
+          currentRepo && /* @__PURE__ */ jsx_runtime473.jsxs(ThemedText, {
             dimColor: true,
             children: [
               " (",
@@ -490116,14 +490202,14 @@ function ResumeTask({
           ":"
         ]
       }),
-      /* @__PURE__ */ jsx_runtime472.jsxs(ThemedBox_default, {
+      /* @__PURE__ */ jsx_runtime473.jsxs(ThemedBox_default, {
         flexDirection: "column",
         marginTop: 1,
         flexGrow: 1,
         children: [
-          /* @__PURE__ */ jsx_runtime472.jsx(ThemedBox_default, {
+          /* @__PURE__ */ jsx_runtime473.jsx(ThemedBox_default, {
             marginLeft: 2,
-            children: /* @__PURE__ */ jsx_runtime472.jsxs(ThemedText, {
+            children: /* @__PURE__ */ jsx_runtime473.jsxs(ThemedText, {
               bold: true,
               children: [
                 UPDATED_STRING.padEnd(maxTimeStringLength, " "),
@@ -490132,7 +490218,7 @@ function ResumeTask({
               ]
             })
           }),
-          /* @__PURE__ */ jsx_runtime472.jsx(Select, {
+          /* @__PURE__ */ jsx_runtime473.jsx(Select, {
             visibleOptionCount: maxVisibleOptions,
             options,
             onChange: (value) => {
@@ -490150,21 +490236,21 @@ function ResumeTask({
           })
         ]
       }),
-      /* @__PURE__ */ jsx_runtime472.jsx(ThemedBox_default, {
+      /* @__PURE__ */ jsx_runtime473.jsx(ThemedBox_default, {
         flexDirection: "row",
-        children: /* @__PURE__ */ jsx_runtime472.jsx(ThemedText, {
+        children: /* @__PURE__ */ jsx_runtime473.jsx(ThemedText, {
           dimColor: true,
-          children: /* @__PURE__ */ jsx_runtime472.jsxs(Byline, {
+          children: /* @__PURE__ */ jsx_runtime473.jsxs(Byline, {
             children: [
-              /* @__PURE__ */ jsx_runtime472.jsx(KeyboardShortcutHint, {
+              /* @__PURE__ */ jsx_runtime473.jsx(KeyboardShortcutHint, {
                 shortcut: "\u2191/\u2193",
                 action: "select"
               }),
-              /* @__PURE__ */ jsx_runtime472.jsx(KeyboardShortcutHint, {
+              /* @__PURE__ */ jsx_runtime473.jsx(KeyboardShortcutHint, {
                 shortcut: "Enter",
                 action: "confirm"
               }),
-              /* @__PURE__ */ jsx_runtime472.jsx(ConfigurableShortcutHint, {
+              /* @__PURE__ */ jsx_runtime473.jsx(ConfigurableShortcutHint, {
                 action: "confirm:no",
                 context: "Confirmation",
                 fallback: "Esc",
@@ -490193,28 +490279,28 @@ function determineErrorType(errorMessage) {
 function renderErrorSpecificGuidance(errorType) {
   switch (errorType) {
     case "network":
-      return /* @__PURE__ */ jsx_runtime472.jsx(ThemedBox_default, {
+      return /* @__PURE__ */ jsx_runtime473.jsx(ThemedBox_default, {
         marginY: 1,
         flexDirection: "column",
-        children: /* @__PURE__ */ jsx_runtime472.jsx(ThemedText, {
+        children: /* @__PURE__ */ jsx_runtime473.jsx(ThemedText, {
           dimColor: true,
           children: "Check your internet connection"
         })
       });
     case "auth":
-      return /* @__PURE__ */ jsx_runtime472.jsxs(ThemedBox_default, {
+      return /* @__PURE__ */ jsx_runtime473.jsxs(ThemedBox_default, {
         marginY: 1,
         flexDirection: "column",
         children: [
-          /* @__PURE__ */ jsx_runtime472.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime473.jsx(ThemedText, {
             dimColor: true,
             children: "Teleport requires a Claude account"
           }),
-          /* @__PURE__ */ jsx_runtime472.jsxs(ThemedText, {
+          /* @__PURE__ */ jsx_runtime473.jsxs(ThemedText, {
             dimColor: true,
             children: [
               "Run ",
-              /* @__PURE__ */ jsx_runtime472.jsx(ThemedText, {
+              /* @__PURE__ */ jsx_runtime473.jsx(ThemedText, {
                 bold: true,
                 children: "/login"
               }),
@@ -490224,26 +490310,26 @@ function renderErrorSpecificGuidance(errorType) {
         ]
       });
     case "api":
-      return /* @__PURE__ */ jsx_runtime472.jsx(ThemedBox_default, {
+      return /* @__PURE__ */ jsx_runtime473.jsx(ThemedBox_default, {
         marginY: 1,
         flexDirection: "column",
-        children: /* @__PURE__ */ jsx_runtime472.jsx(ThemedText, {
+        children: /* @__PURE__ */ jsx_runtime473.jsx(ThemedText, {
           dimColor: true,
           children: "Sorry, Claude encountered an error"
         })
       });
     case "other":
-      return /* @__PURE__ */ jsx_runtime472.jsx(ThemedBox_default, {
+      return /* @__PURE__ */ jsx_runtime473.jsx(ThemedBox_default, {
         marginY: 1,
         flexDirection: "row",
-        children: /* @__PURE__ */ jsx_runtime472.jsx(ThemedText, {
+        children: /* @__PURE__ */ jsx_runtime473.jsx(ThemedText, {
           dimColor: true,
           children: "Sorry, Claude Code encountered an error"
         })
       });
   }
 }
-var import_react329, jsx_runtime472, UPDATED_STRING = "Updated", SPACE_BETWEEN_TABLE_COLUMNS = "  ";
+var import_react329, jsx_runtime473, UPDATED_STRING = "Updated", SPACE_BETWEEN_TABLE_COLUMNS = "  ";
 var init_ResumeTask = __esm(() => {
   init_useTerminalSize();
   init_api2();
@@ -490260,7 +490346,7 @@ var init_ResumeTask = __esm(() => {
   init_Spinner2();
   init_TeleportError();
   import_react329 = __toESM(require_react(), 1);
-  jsx_runtime472 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime473 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/TeleportResumeWrapper.tsx
@@ -490348,11 +490434,11 @@ function TeleportResumeWrapper(t0) {
   if (isResuming && selectedSession) {
     let t8;
     if ($[12] === Symbol.for("react.memo_cache_sentinel")) {
-      t8 = /* @__PURE__ */ jsx_runtime473.jsxs(ThemedBox_default, {
+      t8 = /* @__PURE__ */ jsx_runtime474.jsxs(ThemedBox_default, {
         flexDirection: "row",
         children: [
-          /* @__PURE__ */ jsx_runtime473.jsx(Spinner, {}),
-          /* @__PURE__ */ jsx_runtime473.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime474.jsx(Spinner, {}),
+          /* @__PURE__ */ jsx_runtime474.jsx(ThemedText, {
             bold: true,
             children: "Resuming session\u2026"
           })
@@ -490364,12 +490450,12 @@ function TeleportResumeWrapper(t0) {
     }
     let t9;
     if ($[13] !== selectedSession.title) {
-      t9 = /* @__PURE__ */ jsx_runtime473.jsxs(ThemedBox_default, {
+      t9 = /* @__PURE__ */ jsx_runtime474.jsxs(ThemedBox_default, {
         flexDirection: "column",
         padding: 1,
         children: [
           t8,
-          /* @__PURE__ */ jsx_runtime473.jsxs(ThemedText, {
+          /* @__PURE__ */ jsx_runtime474.jsxs(ThemedText, {
             dimColor: true,
             children: [
               'Loading "',
@@ -490389,7 +490475,7 @@ function TeleportResumeWrapper(t0) {
   if (error && !onError) {
     let t8;
     if ($[15] === Symbol.for("react.memo_cache_sentinel")) {
-      t8 = /* @__PURE__ */ jsx_runtime473.jsx(ThemedText, {
+      t8 = /* @__PURE__ */ jsx_runtime474.jsx(ThemedText, {
         bold: true,
         color: "error",
         children: "Failed to resume session"
@@ -490400,7 +490486,7 @@ function TeleportResumeWrapper(t0) {
     }
     let t9;
     if ($[16] !== error.message) {
-      t9 = /* @__PURE__ */ jsx_runtime473.jsx(ThemedText, {
+      t9 = /* @__PURE__ */ jsx_runtime474.jsx(ThemedText, {
         dimColor: true,
         children: error.message
       });
@@ -490411,13 +490497,13 @@ function TeleportResumeWrapper(t0) {
     }
     let t10;
     if ($[18] === Symbol.for("react.memo_cache_sentinel")) {
-      t10 = /* @__PURE__ */ jsx_runtime473.jsx(ThemedBox_default, {
+      t10 = /* @__PURE__ */ jsx_runtime474.jsx(ThemedBox_default, {
         marginTop: 1,
-        children: /* @__PURE__ */ jsx_runtime473.jsxs(ThemedText, {
+        children: /* @__PURE__ */ jsx_runtime474.jsxs(ThemedText, {
           dimColor: true,
           children: [
             "Press ",
-            /* @__PURE__ */ jsx_runtime473.jsx(ThemedText, {
+            /* @__PURE__ */ jsx_runtime474.jsx(ThemedText, {
               bold: true,
               children: "Esc"
             }),
@@ -490431,7 +490517,7 @@ function TeleportResumeWrapper(t0) {
     }
     let t11;
     if ($[19] !== t9) {
-      t11 = /* @__PURE__ */ jsx_runtime473.jsxs(ThemedBox_default, {
+      t11 = /* @__PURE__ */ jsx_runtime474.jsxs(ThemedBox_default, {
         flexDirection: "column",
         padding: 1,
         children: [
@@ -490449,7 +490535,7 @@ function TeleportResumeWrapper(t0) {
   }
   let t8;
   if ($[21] !== handleCancel || $[22] !== handleSelect || $[23] !== isEmbedded) {
-    t8 = /* @__PURE__ */ jsx_runtime473.jsx(ResumeTask, {
+    t8 = /* @__PURE__ */ jsx_runtime474.jsx(ResumeTask, {
       onSelect: handleSelect,
       onCancel: handleCancel,
       isEmbedded
@@ -490463,7 +490549,7 @@ function TeleportResumeWrapper(t0) {
   }
   return t8;
 }
-var import_compiler_runtime384, import_react330, jsx_runtime473;
+var import_compiler_runtime384, import_react330, jsx_runtime474;
 var init_TeleportResumeWrapper = __esm(() => {
   init_analytics();
   init_useTeleportResume();
@@ -490473,7 +490559,7 @@ var init_TeleportResumeWrapper = __esm(() => {
   init_Spinner2();
   import_compiler_runtime384 = __toESM(require_compiler_runtime(), 1);
   import_react330 = __toESM(require_react(), 1);
-  jsx_runtime473 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime474 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/components/TeleportRepoMismatchDialog.tsx
@@ -490538,20 +490624,20 @@ function TeleportRepoMismatchDialog(t0) {
   const options = t2;
   let t3;
   if ($[8] !== availablePaths.length || $[9] !== errorMessage || $[10] !== handleChange || $[11] !== options || $[12] !== targetRepo || $[13] !== validating) {
-    t3 = availablePaths.length > 0 ? /* @__PURE__ */ jsx_runtime474.jsxs(jsx_runtime474.Fragment, {
+    t3 = availablePaths.length > 0 ? /* @__PURE__ */ jsx_runtime475.jsxs(jsx_runtime475.Fragment, {
       children: [
-        /* @__PURE__ */ jsx_runtime474.jsxs(ThemedBox_default, {
+        /* @__PURE__ */ jsx_runtime475.jsxs(ThemedBox_default, {
           flexDirection: "column",
           gap: 1,
           children: [
-            errorMessage && /* @__PURE__ */ jsx_runtime474.jsx(ThemedText, {
+            errorMessage && /* @__PURE__ */ jsx_runtime475.jsx(ThemedText, {
               color: "error",
               children: errorMessage
             }),
-            /* @__PURE__ */ jsx_runtime474.jsxs(ThemedText, {
+            /* @__PURE__ */ jsx_runtime475.jsxs(ThemedText, {
               children: [
                 "Open Claude Code in ",
-                /* @__PURE__ */ jsx_runtime474.jsx(ThemedText, {
+                /* @__PURE__ */ jsx_runtime475.jsx(ThemedText, {
                   bold: true,
                   children: targetRepo
                 }),
@@ -490560,27 +490646,27 @@ function TeleportRepoMismatchDialog(t0) {
             })
           ]
         }),
-        validating ? /* @__PURE__ */ jsx_runtime474.jsxs(ThemedBox_default, {
+        validating ? /* @__PURE__ */ jsx_runtime475.jsxs(ThemedBox_default, {
           children: [
-            /* @__PURE__ */ jsx_runtime474.jsx(Spinner, {}),
-            /* @__PURE__ */ jsx_runtime474.jsx(ThemedText, {
+            /* @__PURE__ */ jsx_runtime475.jsx(Spinner, {}),
+            /* @__PURE__ */ jsx_runtime475.jsx(ThemedText, {
               children: " Validating repository\u2026"
             })
           ]
-        }) : /* @__PURE__ */ jsx_runtime474.jsx(Select, {
+        }) : /* @__PURE__ */ jsx_runtime475.jsx(Select, {
           options,
           onChange: (value_0) => void handleChange(value_0)
         })
       ]
-    }) : /* @__PURE__ */ jsx_runtime474.jsxs(ThemedBox_default, {
+    }) : /* @__PURE__ */ jsx_runtime475.jsxs(ThemedBox_default, {
       flexDirection: "column",
       gap: 1,
       children: [
-        errorMessage && /* @__PURE__ */ jsx_runtime474.jsx(ThemedText, {
+        errorMessage && /* @__PURE__ */ jsx_runtime475.jsx(ThemedText, {
           color: "error",
           children: errorMessage
         }),
-        /* @__PURE__ */ jsx_runtime474.jsxs(ThemedText, {
+        /* @__PURE__ */ jsx_runtime475.jsxs(ThemedText, {
           dimColor: true,
           children: [
             "Run claude --teleport from a checkout of ",
@@ -490601,7 +490687,7 @@ function TeleportRepoMismatchDialog(t0) {
   }
   let t4;
   if ($[15] !== onCancel || $[16] !== t3) {
-    t4 = /* @__PURE__ */ jsx_runtime474.jsx(Dialog, {
+    t4 = /* @__PURE__ */ jsx_runtime475.jsx(Dialog, {
       title: "Teleport to Repo",
       onCancel,
       color: "background",
@@ -490617,10 +490703,10 @@ function TeleportRepoMismatchDialog(t0) {
 }
 function _temp304(path) {
   return {
-    label: /* @__PURE__ */ jsx_runtime474.jsxs(ThemedText, {
+    label: /* @__PURE__ */ jsx_runtime475.jsxs(ThemedText, {
       children: [
         "Use ",
-        /* @__PURE__ */ jsx_runtime474.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime475.jsx(ThemedText, {
           bold: true,
           children: getDisplayPath(path)
         })
@@ -490629,7 +490715,7 @@ function _temp304(path) {
     value: path
   };
 }
-var import_compiler_runtime385, import_react331, jsx_runtime474;
+var import_compiler_runtime385, import_react331, jsx_runtime475;
 var init_TeleportRepoMismatchDialog = __esm(() => {
   init_ink2();
   init_file();
@@ -490639,7 +490725,7 @@ var init_TeleportRepoMismatchDialog = __esm(() => {
   init_Spinner2();
   import_compiler_runtime385 = __toESM(require_compiler_runtime(), 1);
   import_react331 = __toESM(require_react(), 1);
-  jsx_runtime474 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime475 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/screens/ResumeConversation.tsx
@@ -490837,12 +490923,12 @@ function ResumeConversation({
     }
   }
   if (crossProjectCommand) {
-    return /* @__PURE__ */ jsx_runtime475.jsx(CrossProjectMessage, {
+    return /* @__PURE__ */ jsx_runtime476.jsx(CrossProjectMessage, {
       command: crossProjectCommand
     });
   }
   if (resumeData) {
-    return /* @__PURE__ */ jsx_runtime475.jsx(REPL, {
+    return /* @__PURE__ */ jsx_runtime476.jsx(REPL, {
       debug,
       commands,
       initialTools,
@@ -490865,29 +490951,29 @@ function ResumeConversation({
     });
   }
   if (loading) {
-    return /* @__PURE__ */ jsx_runtime475.jsxs(ThemedBox_default, {
+    return /* @__PURE__ */ jsx_runtime476.jsxs(ThemedBox_default, {
       children: [
-        /* @__PURE__ */ jsx_runtime475.jsx(Spinner, {}),
-        /* @__PURE__ */ jsx_runtime475.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime476.jsx(Spinner, {}),
+        /* @__PURE__ */ jsx_runtime476.jsx(ThemedText, {
           children: " Loading conversations\u2026"
         })
       ]
     });
   }
   if (resuming) {
-    return /* @__PURE__ */ jsx_runtime475.jsxs(ThemedBox_default, {
+    return /* @__PURE__ */ jsx_runtime476.jsxs(ThemedBox_default, {
       children: [
-        /* @__PURE__ */ jsx_runtime475.jsx(Spinner, {}),
-        /* @__PURE__ */ jsx_runtime475.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime476.jsx(Spinner, {}),
+        /* @__PURE__ */ jsx_runtime476.jsx(ThemedText, {
           children: " Resuming conversation\u2026"
         })
       ]
     });
   }
   if (filteredLogs.length === 0) {
-    return /* @__PURE__ */ jsx_runtime475.jsx(NoConversationsMessage, {});
+    return /* @__PURE__ */ jsx_runtime476.jsx(NoConversationsMessage, {});
   }
-  return /* @__PURE__ */ jsx_runtime475.jsx(LogSelector, {
+  return /* @__PURE__ */ jsx_runtime476.jsx(LogSelector, {
     logs: filteredLogs,
     maxHeight: rows,
     onCancel,
@@ -490914,13 +491000,13 @@ function NoConversationsMessage() {
   useKeybinding("app:interrupt", _temp305, t0);
   let t1;
   if ($[1] === Symbol.for("react.memo_cache_sentinel")) {
-    t1 = /* @__PURE__ */ jsx_runtime475.jsxs(ThemedBox_default, {
+    t1 = /* @__PURE__ */ jsx_runtime476.jsxs(ThemedBox_default, {
       flexDirection: "column",
       children: [
-        /* @__PURE__ */ jsx_runtime475.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime476.jsx(ThemedText, {
           children: "No conversations found to resume."
         }),
-        /* @__PURE__ */ jsx_runtime475.jsx(ThemedText, {
+        /* @__PURE__ */ jsx_runtime476.jsx(ThemedText, {
           dimColor: true,
           children: "Press Ctrl+C to exit and start a new conversation."
         })
@@ -490950,7 +491036,7 @@ function CrossProjectMessage(t0) {
   import_react332.default.useEffect(_temp360, t1);
   let t2;
   if ($[1] === Symbol.for("react.memo_cache_sentinel")) {
-    t2 = /* @__PURE__ */ jsx_runtime475.jsx(ThemedText, {
+    t2 = /* @__PURE__ */ jsx_runtime476.jsx(ThemedText, {
       children: "This conversation is from a different directory."
     });
     $[1] = t2;
@@ -490959,7 +491045,7 @@ function CrossProjectMessage(t0) {
   }
   let t3;
   if ($[2] === Symbol.for("react.memo_cache_sentinel")) {
-    t3 = /* @__PURE__ */ jsx_runtime475.jsx(ThemedText, {
+    t3 = /* @__PURE__ */ jsx_runtime476.jsx(ThemedText, {
       children: "To resume, run:"
     });
     $[2] = t3;
@@ -490968,11 +491054,11 @@ function CrossProjectMessage(t0) {
   }
   let t4;
   if ($[3] !== command) {
-    t4 = /* @__PURE__ */ jsx_runtime475.jsxs(ThemedBox_default, {
+    t4 = /* @__PURE__ */ jsx_runtime476.jsxs(ThemedBox_default, {
       flexDirection: "column",
       children: [
         t3,
-        /* @__PURE__ */ jsx_runtime475.jsxs(ThemedText, {
+        /* @__PURE__ */ jsx_runtime476.jsxs(ThemedText, {
           children: [
             " ",
             command
@@ -490987,7 +491073,7 @@ function CrossProjectMessage(t0) {
   }
   let t5;
   if ($[5] === Symbol.for("react.memo_cache_sentinel")) {
-    t5 = /* @__PURE__ */ jsx_runtime475.jsx(ThemedText, {
+    t5 = /* @__PURE__ */ jsx_runtime476.jsx(ThemedText, {
       dimColor: true,
       children: "(Command copied to clipboard)"
     });
@@ -490997,7 +491083,7 @@ function CrossProjectMessage(t0) {
   }
   let t6;
   if ($[6] !== t4) {
-    t6 = /* @__PURE__ */ jsx_runtime475.jsxs(ThemedBox_default, {
+    t6 = /* @__PURE__ */ jsx_runtime476.jsxs(ThemedBox_default, {
       flexDirection: "column",
       gap: 1,
       children: [
@@ -491020,7 +491106,7 @@ function _temp360() {
 function _temp2102() {
   process.exit(0);
 }
-var import_compiler_runtime386, import_react332, jsx_runtime475;
+var import_compiler_runtime386, import_react332, jsx_runtime476;
 var init_ResumeConversation = __esm(() => {
   init_useTerminalSize();
   init_state();
@@ -491045,13 +491131,13 @@ var init_ResumeConversation = __esm(() => {
   init_REPL();
   import_compiler_runtime386 = __toESM(require_compiler_runtime(), 1);
   import_react332 = __toESM(require_react(), 1);
-  jsx_runtime475 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime476 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/dialogLaunchers.tsx
 async function launchInvalidSettingsDialog(root, props) {
   await Promise.resolve().then(() => init_InvalidSettingsDialog());
-  return showSetupDialog(root, (done) => /* @__PURE__ */ jsx_runtime476.jsx(InvalidSettingsDialog, {
+  return showSetupDialog(root, (done) => /* @__PURE__ */ jsx_runtime477.jsx(InvalidSettingsDialog, {
     settingsErrors: props.settingsErrors,
     onContinue: done,
     onExit: props.onExit
@@ -491059,7 +491145,7 @@ async function launchInvalidSettingsDialog(root, props) {
 }
 async function launchTeleportResumeWrapper(root) {
   await Promise.resolve().then(() => init_TeleportResumeWrapper());
-  return showSetupDialog(root, (done) => /* @__PURE__ */ jsx_runtime476.jsx(TeleportResumeWrapper, {
+  return showSetupDialog(root, (done) => /* @__PURE__ */ jsx_runtime477.jsx(TeleportResumeWrapper, {
     onComplete: done,
     onCancel: () => done(null),
     source: "cliArg"
@@ -491067,7 +491153,7 @@ async function launchTeleportResumeWrapper(root) {
 }
 async function launchTeleportRepoMismatchDialog(root, props) {
   await Promise.resolve().then(() => init_TeleportRepoMismatchDialog());
-  return showSetupDialog(root, (done) => /* @__PURE__ */ jsx_runtime476.jsx(TeleportRepoMismatchDialog, {
+  return showSetupDialog(root, (done) => /* @__PURE__ */ jsx_runtime477.jsx(TeleportRepoMismatchDialog, {
     targetRepo: props.targetRepo,
     initialPaths: props.initialPaths,
     onSelectPath: done,
@@ -491080,23 +491166,23 @@ async function launchResumeChooser(root, appProps, worktreePathsPromise, resumeP
   }, {
     App
   }] = await Promise.all([worktreePathsPromise, Promise.resolve().then(() => (init_ResumeConversation(), exports_ResumeConversation)), Promise.resolve().then(() => (init_App2(), exports_App))]);
-  await renderAndRun(root, /* @__PURE__ */ jsx_runtime476.jsx(App, {
+  await renderAndRun(root, /* @__PURE__ */ jsx_runtime477.jsx(App, {
     getFpsMetrics: appProps.getFpsMetrics,
     stats: appProps.stats,
     initialState: appProps.initialState,
-    children: /* @__PURE__ */ jsx_runtime476.jsx(KeybindingSetup, {
-      children: /* @__PURE__ */ jsx_runtime476.jsx(ResumeConversation, {
+    children: /* @__PURE__ */ jsx_runtime477.jsx(KeybindingSetup, {
+      children: /* @__PURE__ */ jsx_runtime477.jsx(ResumeConversation, {
         ...resumeProps,
         worktreePaths
       })
     })
   }));
 }
-var jsx_runtime476;
+var jsx_runtime477;
 var init_dialogLaunchers = __esm(() => {
   init_interactiveHelpers();
   init_KeybindingProviderSetup();
-  jsx_runtime476 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime477 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/plugins/bundled/index.ts
@@ -503484,9 +503570,9 @@ function TeleportProgress(t0) {
   const t2 = SPINNER_FRAMES3[frame];
   let t3;
   if ($[2] !== t2) {
-    t3 = /* @__PURE__ */ jsx_runtime477.jsx(ThemedBox_default, {
+    t3 = /* @__PURE__ */ jsx_runtime478.jsx(ThemedBox_default, {
       marginBottom: 1,
-      children: /* @__PURE__ */ jsx_runtime477.jsxs(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime478.jsxs(ThemedText, {
         bold: true,
         color: "claude",
         children: [
@@ -503502,9 +503588,9 @@ function TeleportProgress(t0) {
   }
   let t4;
   if ($[4] !== sessionId) {
-    t4 = sessionId && /* @__PURE__ */ jsx_runtime477.jsx(ThemedBox_default, {
+    t4 = sessionId && /* @__PURE__ */ jsx_runtime478.jsx(ThemedBox_default, {
       marginBottom: 1,
-      children: /* @__PURE__ */ jsx_runtime477.jsx(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime478.jsx(ThemedText, {
         dimColor: true,
         children: sessionId
       })
@@ -503534,18 +503620,18 @@ function TeleportProgress(t0) {
           color = undefined;
         }
       }
-      return /* @__PURE__ */ jsx_runtime477.jsxs(ThemedBox_default, {
+      return /* @__PURE__ */ jsx_runtime478.jsxs(ThemedBox_default, {
         flexDirection: "row",
         children: [
-          /* @__PURE__ */ jsx_runtime477.jsx(ThemedBox_default, {
+          /* @__PURE__ */ jsx_runtime478.jsx(ThemedBox_default, {
             width: 2,
-            children: /* @__PURE__ */ jsx_runtime477.jsx(ThemedText, {
+            children: /* @__PURE__ */ jsx_runtime478.jsx(ThemedText, {
               color,
               dimColor: isPending,
               children: icon
             })
           }),
-          /* @__PURE__ */ jsx_runtime477.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime478.jsx(ThemedText, {
             dimColor: isPending,
             bold: isCurrent,
             children: step.label
@@ -503561,7 +503647,7 @@ function TeleportProgress(t0) {
   }
   let t6;
   if ($[9] !== t5) {
-    t6 = /* @__PURE__ */ jsx_runtime477.jsx(ThemedBox_default, {
+    t6 = /* @__PURE__ */ jsx_runtime478.jsx(ThemedBox_default, {
       flexDirection: "column",
       marginLeft: 2,
       children: t5
@@ -503573,7 +503659,7 @@ function TeleportProgress(t0) {
   }
   let t7;
   if ($[11] !== ref || $[12] !== t3 || $[13] !== t4 || $[14] !== t6) {
-    t7 = /* @__PURE__ */ jsx_runtime477.jsxs(ThemedBox_default, {
+    t7 = /* @__PURE__ */ jsx_runtime478.jsxs(ThemedBox_default, {
       ref,
       flexDirection: "column",
       paddingX: 1,
@@ -503599,13 +503685,13 @@ async function teleportWithProgress(root, sessionId) {
   function TeleportProgressWrapper() {
     const [step, _setStep] = import_react333.useState("validating");
     setStep = _setStep;
-    return /* @__PURE__ */ jsx_runtime477.jsx(TeleportProgress, {
+    return /* @__PURE__ */ jsx_runtime478.jsx(TeleportProgress, {
       currentStep: step,
       sessionId
     });
   }
-  root.render(/* @__PURE__ */ jsx_runtime477.jsx(AppStateProvider, {
-    children: /* @__PURE__ */ jsx_runtime477.jsx(TeleportProgressWrapper, {})
+  root.render(/* @__PURE__ */ jsx_runtime478.jsx(AppStateProvider, {
+    children: /* @__PURE__ */ jsx_runtime478.jsx(TeleportProgressWrapper, {})
   }));
   const result = await teleportResumeCodeSession(sessionId, setStep);
   setStep("checking_out");
@@ -503618,7 +503704,7 @@ async function teleportWithProgress(root, sessionId) {
     branchName
   };
 }
-var import_compiler_runtime387, import_react333, jsx_runtime477, SPINNER_FRAMES3, STEPS;
+var import_compiler_runtime387, import_react333, jsx_runtime478, SPINNER_FRAMES3, STEPS;
 var init_TeleportProgress = __esm(() => {
   init_figures();
   init_ink2();
@@ -503626,7 +503712,7 @@ var init_TeleportProgress = __esm(() => {
   init_teleport();
   import_compiler_runtime387 = __toESM(require_compiler_runtime(), 1);
   import_react333 = __toESM(require_react(), 1);
-  jsx_runtime477 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime478 = __toESM(require_jsx_runtime(), 1);
   SPINNER_FRAMES3 = ["\u25D0", "\u25D3", "\u25D1", "\u25D2"];
   STEPS = [{
     key: "validating",
@@ -503762,7 +503848,7 @@ No servers were imported.`);
   const t10 = `Found ${t8} MCP ${t9} in Claude Desktop.`;
   let t11;
   if ($[16] !== collisions.length) {
-    t11 = collisions.length > 0 && /* @__PURE__ */ jsx_runtime478.jsx(ThemedText, {
+    t11 = collisions.length > 0 && /* @__PURE__ */ jsx_runtime479.jsx(ThemedText, {
       color: "warning",
       children: "Note: Some servers already exist with the same name. If selected, they will be imported with a numbered suffix."
     });
@@ -503773,7 +503859,7 @@ No servers were imported.`);
   }
   let t12;
   if ($[18] === Symbol.for("react.memo_cache_sentinel")) {
-    t12 = /* @__PURE__ */ jsx_runtime478.jsx(ThemedText, {
+    t12 = /* @__PURE__ */ jsx_runtime479.jsx(ThemedText, {
       children: "Please select the servers you want to import:"
     });
     $[18] = t12;
@@ -503798,7 +503884,7 @@ No servers were imported.`);
   }
   let t15;
   if ($[23] !== handleEscCancel || $[24] !== onSubmit || $[25] !== t13 || $[26] !== t14) {
-    t15 = /* @__PURE__ */ jsx_runtime478.jsx(SelectMulti, {
+    t15 = /* @__PURE__ */ jsx_runtime479.jsx(SelectMulti, {
       options: t13,
       defaultValue: t14,
       onSubmit,
@@ -503815,7 +503901,7 @@ No servers were imported.`);
   }
   let t16;
   if ($[28] !== handleEscCancel || $[29] !== t10 || $[30] !== t11 || $[31] !== t15) {
-    t16 = /* @__PURE__ */ jsx_runtime478.jsxs(Dialog, {
+    t16 = /* @__PURE__ */ jsx_runtime479.jsxs(Dialog, {
       title: "Import MCP Servers from Claude Desktop",
       subtitle: t10,
       color: "success",
@@ -503837,22 +503923,22 @@ No servers were imported.`);
   }
   let t17;
   if ($[33] === Symbol.for("react.memo_cache_sentinel")) {
-    t17 = /* @__PURE__ */ jsx_runtime478.jsx(ThemedBox_default, {
+    t17 = /* @__PURE__ */ jsx_runtime479.jsx(ThemedBox_default, {
       paddingX: 1,
-      children: /* @__PURE__ */ jsx_runtime478.jsx(ThemedText, {
+      children: /* @__PURE__ */ jsx_runtime479.jsx(ThemedText, {
         dimColor: true,
         italic: true,
-        children: /* @__PURE__ */ jsx_runtime478.jsxs(Byline, {
+        children: /* @__PURE__ */ jsx_runtime479.jsxs(Byline, {
           children: [
-            /* @__PURE__ */ jsx_runtime478.jsx(KeyboardShortcutHint, {
+            /* @__PURE__ */ jsx_runtime479.jsx(KeyboardShortcutHint, {
               shortcut: "Space",
               action: "select"
             }),
-            /* @__PURE__ */ jsx_runtime478.jsx(KeyboardShortcutHint, {
+            /* @__PURE__ */ jsx_runtime479.jsx(KeyboardShortcutHint, {
               shortcut: "Enter",
               action: "confirm"
             }),
-            /* @__PURE__ */ jsx_runtime478.jsx(ConfigurableShortcutHint, {
+            /* @__PURE__ */ jsx_runtime479.jsx(ConfigurableShortcutHint, {
               action: "confirm:no",
               context: "Confirmation",
               fallback: "Esc",
@@ -503868,7 +503954,7 @@ No servers were imported.`);
   }
   let t18;
   if ($[34] !== t16) {
-    t18 = /* @__PURE__ */ jsx_runtime478.jsxs(jsx_runtime478.Fragment, {
+    t18 = /* @__PURE__ */ jsx_runtime479.jsxs(jsx_runtime479.Fragment, {
       children: [
         t16,
         t17
@@ -503881,7 +503967,7 @@ No servers were imported.`);
   }
   return t18;
 }
-var import_compiler_runtime388, import_react334, jsx_runtime478;
+var import_compiler_runtime388, import_react334, jsx_runtime479;
 var init_MCPServerDesktopImportDialog = __esm(() => {
   init_gracefulShutdown();
   init_ink2();
@@ -503894,7 +503980,7 @@ var init_MCPServerDesktopImportDialog = __esm(() => {
   init_KeyboardShortcutHint();
   import_compiler_runtime388 = __toESM(require_compiler_runtime(), 1);
   import_react334 = __toESM(require_react(), 1);
-  jsx_runtime478 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime479 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/entrypoints/mcp.ts
@@ -504371,9 +504457,9 @@ async function mcpAddFromDesktopHandler(options) {
     }
     const {
       unmount
-    } = await render(/* @__PURE__ */ jsx_runtime479.jsx(AppStateProvider, {
-      children: /* @__PURE__ */ jsx_runtime479.jsx(KeybindingSetup, {
-        children: /* @__PURE__ */ jsx_runtime479.jsx(MCPServerDesktopImportDialog, {
+    } = await render(/* @__PURE__ */ jsx_runtime480.jsx(AppStateProvider, {
+      children: /* @__PURE__ */ jsx_runtime480.jsx(KeybindingSetup, {
+        children: /* @__PURE__ */ jsx_runtime480.jsx(MCPServerDesktopImportDialog, {
           servers,
           scope,
           onDone: () => {
@@ -504399,7 +504485,7 @@ async function mcpResetChoicesHandler() {
   cliOk(`All project-scoped (.mcp.json) server approvals and rejections have been reset.
 You will be prompted for approval next time you start Claude Code.`);
 }
-var jsx_runtime479;
+var jsx_runtime480;
 var init_mcp5 = __esm(() => {
   init_p_map();
   init_MCPServerDesktopImportDialog();
@@ -504416,7 +504502,7 @@ var init_mcp5 = __esm(() => {
   init_gracefulShutdown();
   init_json();
   init_platform2();
-  jsx_runtime479 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime480 = __toESM(require_jsx_runtime(), 1);
 });
 
 // src/cli/handlers/plugins.ts
@@ -504949,11 +505035,11 @@ function SetupNotes(t0) {
   }
   let t1;
   if ($[0] === Symbol.for("react.memo_cache_sentinel")) {
-    t1 = /* @__PURE__ */ jsx_runtime480.jsx(ThemedBox_default, {
-      children: /* @__PURE__ */ jsx_runtime480.jsxs(ThemedText, {
+    t1 = /* @__PURE__ */ jsx_runtime481.jsx(ThemedBox_default, {
+      children: /* @__PURE__ */ jsx_runtime481.jsxs(ThemedText, {
         color: "warning",
         children: [
-          /* @__PURE__ */ jsx_runtime480.jsx(StatusIcon, {
+          /* @__PURE__ */ jsx_runtime481.jsx(StatusIcon, {
             status: "warning",
             withSpace: true
           }),
@@ -504975,7 +505061,7 @@ function SetupNotes(t0) {
   }
   let t3;
   if ($[3] !== t2) {
-    t3 = /* @__PURE__ */ jsx_runtime480.jsxs(ThemedBox_default, {
+    t3 = /* @__PURE__ */ jsx_runtime481.jsxs(ThemedBox_default, {
       flexDirection: "column",
       gap: 0,
       marginBottom: 1,
@@ -504992,9 +505078,9 @@ function SetupNotes(t0) {
   return t3;
 }
 function _temp306(message, index) {
-  return /* @__PURE__ */ jsx_runtime480.jsx(ThemedBox_default, {
+  return /* @__PURE__ */ jsx_runtime481.jsx(ThemedBox_default, {
     marginLeft: 2,
-    children: /* @__PURE__ */ jsx_runtime480.jsxs(ThemedText, {
+    children: /* @__PURE__ */ jsx_runtime481.jsxs(ThemedText, {
       dimColor: true,
       children: [
         "\u2022 ",
@@ -505110,19 +505196,19 @@ function Install({
       });
     }
   }, [state, onDone]);
-  return /* @__PURE__ */ jsx_runtime480.jsxs(ThemedBox_default, {
+  return /* @__PURE__ */ jsx_runtime481.jsxs(ThemedBox_default, {
     flexDirection: "column",
     marginTop: 1,
     children: [
-      state.type === "checking" && /* @__PURE__ */ jsx_runtime480.jsx(ThemedText, {
+      state.type === "checking" && /* @__PURE__ */ jsx_runtime481.jsx(ThemedText, {
         color: "claude",
         children: "Checking installation status..."
       }),
-      state.type === "cleaning-npm" && /* @__PURE__ */ jsx_runtime480.jsx(ThemedText, {
+      state.type === "cleaning-npm" && /* @__PURE__ */ jsx_runtime481.jsx(ThemedText, {
         color: "warning",
         children: "Cleaning up old npm installations..."
       }),
-      state.type === "installing" && /* @__PURE__ */ jsx_runtime480.jsxs(ThemedText, {
+      state.type === "installing" && /* @__PURE__ */ jsx_runtime481.jsxs(ThemedText, {
         color: "claude",
         children: [
           "Installing Claude Code native build ",
@@ -505130,54 +505216,54 @@ function Install({
           "..."
         ]
       }),
-      state.type === "setting-up" && /* @__PURE__ */ jsx_runtime480.jsx(ThemedText, {
+      state.type === "setting-up" && /* @__PURE__ */ jsx_runtime481.jsx(ThemedText, {
         color: "claude",
         children: "Setting up launcher and shell integration..."
       }),
-      state.type === "set-up" && /* @__PURE__ */ jsx_runtime480.jsx(SetupNotes, {
+      state.type === "set-up" && /* @__PURE__ */ jsx_runtime481.jsx(SetupNotes, {
         messages: state.messages
       }),
-      state.type === "success" && /* @__PURE__ */ jsx_runtime480.jsxs(ThemedBox_default, {
+      state.type === "success" && /* @__PURE__ */ jsx_runtime481.jsxs(ThemedBox_default, {
         flexDirection: "column",
         gap: 1,
         children: [
-          /* @__PURE__ */ jsx_runtime480.jsxs(ThemedBox_default, {
+          /* @__PURE__ */ jsx_runtime481.jsxs(ThemedBox_default, {
             children: [
-              /* @__PURE__ */ jsx_runtime480.jsx(StatusIcon, {
+              /* @__PURE__ */ jsx_runtime481.jsx(StatusIcon, {
                 status: "success",
                 withSpace: true
               }),
-              /* @__PURE__ */ jsx_runtime480.jsx(ThemedText, {
+              /* @__PURE__ */ jsx_runtime481.jsx(ThemedText, {
                 color: "success",
                 bold: true,
                 children: "Claude Code successfully installed!"
               })
             ]
           }),
-          /* @__PURE__ */ jsx_runtime480.jsxs(ThemedBox_default, {
+          /* @__PURE__ */ jsx_runtime481.jsxs(ThemedBox_default, {
             marginLeft: 2,
             flexDirection: "column",
             gap: 1,
             children: [
-              state.version !== "current" && /* @__PURE__ */ jsx_runtime480.jsxs(ThemedBox_default, {
+              state.version !== "current" && /* @__PURE__ */ jsx_runtime481.jsxs(ThemedBox_default, {
                 children: [
-                  /* @__PURE__ */ jsx_runtime480.jsx(ThemedText, {
+                  /* @__PURE__ */ jsx_runtime481.jsx(ThemedText, {
                     dimColor: true,
                     children: "Version: "
                   }),
-                  /* @__PURE__ */ jsx_runtime480.jsx(ThemedText, {
+                  /* @__PURE__ */ jsx_runtime481.jsx(ThemedText, {
                     color: "claude",
                     children: state.version
                   })
                 ]
               }),
-              /* @__PURE__ */ jsx_runtime480.jsxs(ThemedBox_default, {
+              /* @__PURE__ */ jsx_runtime481.jsxs(ThemedBox_default, {
                 children: [
-                  /* @__PURE__ */ jsx_runtime480.jsx(ThemedText, {
+                  /* @__PURE__ */ jsx_runtime481.jsx(ThemedText, {
                     dimColor: true,
                     children: "Location: "
                   }),
-                  /* @__PURE__ */ jsx_runtime480.jsx(ThemedText, {
+                  /* @__PURE__ */ jsx_runtime481.jsx(ThemedText, {
                     color: "text",
                     children: getInstallationPath2()
                   })
@@ -505185,57 +505271,57 @@ function Install({
               })
             ]
           }),
-          /* @__PURE__ */ jsx_runtime480.jsx(ThemedBox_default, {
+          /* @__PURE__ */ jsx_runtime481.jsx(ThemedBox_default, {
             marginLeft: 2,
             flexDirection: "column",
             gap: 1,
-            children: /* @__PURE__ */ jsx_runtime480.jsxs(ThemedBox_default, {
+            children: /* @__PURE__ */ jsx_runtime481.jsxs(ThemedBox_default, {
               marginTop: 1,
               children: [
-                /* @__PURE__ */ jsx_runtime480.jsx(ThemedText, {
+                /* @__PURE__ */ jsx_runtime481.jsx(ThemedText, {
                   dimColor: true,
                   children: "Next: Run "
                 }),
-                /* @__PURE__ */ jsx_runtime480.jsx(ThemedText, {
+                /* @__PURE__ */ jsx_runtime481.jsx(ThemedText, {
                   color: "claude",
                   bold: true,
                   children: "claude --help"
                 }),
-                /* @__PURE__ */ jsx_runtime480.jsx(ThemedText, {
+                /* @__PURE__ */ jsx_runtime481.jsx(ThemedText, {
                   dimColor: true,
                   children: " to get started"
                 })
               ]
             })
           }),
-          state.setupMessages && /* @__PURE__ */ jsx_runtime480.jsx(SetupNotes, {
+          state.setupMessages && /* @__PURE__ */ jsx_runtime481.jsx(SetupNotes, {
             messages: state.setupMessages
           })
         ]
       }),
-      state.type === "error" && /* @__PURE__ */ jsx_runtime480.jsxs(ThemedBox_default, {
+      state.type === "error" && /* @__PURE__ */ jsx_runtime481.jsxs(ThemedBox_default, {
         flexDirection: "column",
         gap: 1,
         children: [
-          /* @__PURE__ */ jsx_runtime480.jsxs(ThemedBox_default, {
+          /* @__PURE__ */ jsx_runtime481.jsxs(ThemedBox_default, {
             children: [
-              /* @__PURE__ */ jsx_runtime480.jsx(StatusIcon, {
+              /* @__PURE__ */ jsx_runtime481.jsx(StatusIcon, {
                 status: "error",
                 withSpace: true
               }),
-              /* @__PURE__ */ jsx_runtime480.jsx(ThemedText, {
+              /* @__PURE__ */ jsx_runtime481.jsx(ThemedText, {
                 color: "error",
                 children: "Installation failed"
               })
             ]
           }),
-          /* @__PURE__ */ jsx_runtime480.jsx(ThemedText, {
+          /* @__PURE__ */ jsx_runtime481.jsx(ThemedText, {
             color: "error",
             children: state.message
           }),
-          /* @__PURE__ */ jsx_runtime480.jsx(ThemedBox_default, {
+          /* @__PURE__ */ jsx_runtime481.jsx(ThemedBox_default, {
             marginTop: 1,
-            children: /* @__PURE__ */ jsx_runtime480.jsx(ThemedText, {
+            children: /* @__PURE__ */ jsx_runtime481.jsx(ThemedText, {
               dimColor: true,
               children: "Try running with --force to override checks"
             })
@@ -505245,7 +505331,7 @@ function Install({
     ]
   });
 }
-var import_compiler_runtime389, import_react335, jsx_runtime480, install;
+var import_compiler_runtime389, import_react335, jsx_runtime481, install;
 var init_install = __esm(() => {
   init_analytics();
   init_StatusIcon();
@@ -505257,7 +505343,7 @@ var init_install = __esm(() => {
   init_settings2();
   import_compiler_runtime389 = __toESM(require_compiler_runtime(), 1);
   import_react335 = __toESM(require_react(), 1);
-  jsx_runtime480 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime481 = __toESM(require_jsx_runtime(), 1);
   install = {
     type: "local-jsx",
     name: "install",
@@ -505269,7 +505355,7 @@ var init_install = __esm(() => {
       const target = nonFlagArgs[0];
       const {
         unmount
-      } = await render(/* @__PURE__ */ jsx_runtime480.jsx(Install, {
+      } = await render(/* @__PURE__ */ jsx_runtime481.jsx(Install, {
         onDone: (result, options) => {
           unmount();
           onDone(result, options);
@@ -505294,28 +505380,28 @@ async function setupTokenHandler(root) {
   const showAuthWarning = !isAnthropicAuthEnabled();
   await Promise.resolve().then(() => init_ConsoleOAuthFlow());
   await new Promise((resolve) => {
-    root.render(/* @__PURE__ */ jsx_runtime481.jsx(AppStateProvider, {
+    root.render(/* @__PURE__ */ jsx_runtime482.jsx(AppStateProvider, {
       onChangeAppState,
-      children: /* @__PURE__ */ jsx_runtime481.jsx(KeybindingSetup, {
-        children: /* @__PURE__ */ jsx_runtime481.jsxs(ThemedBox_default, {
+      children: /* @__PURE__ */ jsx_runtime482.jsx(KeybindingSetup, {
+        children: /* @__PURE__ */ jsx_runtime482.jsxs(ThemedBox_default, {
           flexDirection: "column",
           gap: 1,
           children: [
-            /* @__PURE__ */ jsx_runtime481.jsx(WelcomeV2, {}),
-            showAuthWarning && /* @__PURE__ */ jsx_runtime481.jsxs(ThemedBox_default, {
+            /* @__PURE__ */ jsx_runtime482.jsx(WelcomeV2, {}),
+            showAuthWarning && /* @__PURE__ */ jsx_runtime482.jsxs(ThemedBox_default, {
               flexDirection: "column",
               children: [
-                /* @__PURE__ */ jsx_runtime481.jsx(ThemedText, {
+                /* @__PURE__ */ jsx_runtime482.jsx(ThemedText, {
                   color: "warning",
                   children: "Warning: You already have authentication configured via environment variable or API key helper."
                 }),
-                /* @__PURE__ */ jsx_runtime481.jsx(ThemedText, {
+                /* @__PURE__ */ jsx_runtime482.jsx(ThemedText, {
                   color: "warning",
                   children: "The setup-token command will create a new OAuth token which you can use instead."
                 })
               ]
             }),
-            /* @__PURE__ */ jsx_runtime481.jsx(ConsoleOAuthFlow, {
+            /* @__PURE__ */ jsx_runtime482.jsx(ConsoleOAuthFlow, {
               onDone: () => {
                 resolve();
               },
@@ -505338,9 +505424,9 @@ function DoctorWithPlugins(t0) {
   useManagePlugins();
   let t1;
   if ($[0] !== onDone) {
-    t1 = /* @__PURE__ */ jsx_runtime481.jsx(import_react336.default.Suspense, {
+    t1 = /* @__PURE__ */ jsx_runtime482.jsx(import_react336.default.Suspense, {
       fallback: null,
-      children: /* @__PURE__ */ jsx_runtime481.jsx(DoctorLazy, {
+      children: /* @__PURE__ */ jsx_runtime482.jsx(DoctorLazy, {
         onDone
       })
     });
@@ -505354,12 +505440,12 @@ function DoctorWithPlugins(t0) {
 async function doctorHandler(root) {
   logEvent("tengu_doctor_command", {});
   await new Promise((resolve) => {
-    root.render(/* @__PURE__ */ jsx_runtime481.jsx(AppStateProvider, {
-      children: /* @__PURE__ */ jsx_runtime481.jsx(KeybindingSetup, {
-        children: /* @__PURE__ */ jsx_runtime481.jsx(MCPConnectionManager, {
+    root.render(/* @__PURE__ */ jsx_runtime482.jsx(AppStateProvider, {
+      children: /* @__PURE__ */ jsx_runtime482.jsx(KeybindingSetup, {
+        children: /* @__PURE__ */ jsx_runtime482.jsx(MCPConnectionManager, {
           dynamicMcpConfig: undefined,
           isStrictMcpConfig: false,
-          children: /* @__PURE__ */ jsx_runtime481.jsx(DoctorWithPlugins, {
+          children: /* @__PURE__ */ jsx_runtime482.jsx(DoctorWithPlugins, {
             onDone: () => {
               resolve();
             }
@@ -505387,7 +505473,7 @@ async function installHandler(target, options) {
     }, {}, args);
   });
 }
-var import_compiler_runtime390, import_react336, jsx_runtime481, DoctorLazy;
+var import_compiler_runtime390, import_react336, jsx_runtime482, DoctorLazy;
 var init_util3 = __esm(() => {
   init_WelcomeV2();
   init_useManagePlugins();
@@ -505400,7 +505486,7 @@ var init_util3 = __esm(() => {
   init_auth();
   import_compiler_runtime390 = __toESM(require_compiler_runtime(), 1);
   import_react336 = __toESM(require_react(), 1);
-  jsx_runtime481 = __toESM(require_jsx_runtime(), 1);
+  jsx_runtime482 = __toESM(require_jsx_runtime(), 1);
   DoctorLazy = import_react336.default.lazy(() => Promise.resolve().then(() => (init_Doctor(), {})).then((m) => ({
     default: Doctor
   })));
@@ -508303,4 +508389,4 @@ async function main2() {
 }
 main2();
 
-//# debugId=C3853A652FDD1CE864756E2164756E21
+//# debugId=EE9C02775164D1B964756E2164756E21
