@@ -49,8 +49,9 @@ export function createWhatsNewFeed(releaseNotes: string[]): FeedConfig {
 }
 export function createProjectOnboardingFeed(steps: Step[]): FeedConfig {
   const enabledSteps = steps.filter(({
-    isEnabled
-  }) => isEnabled).sort((a, b) => Number(a.isComplete) - Number(b.isComplete));
+    isEnabled,
+    key
+  }) => isEnabled && key !== 'claudemd').sort((a, b) => Number(a.isComplete) - Number(b.isComplete));
   const lines: FeedLine[] = enabledSteps.map(({
     text,
     isComplete
@@ -66,9 +67,10 @@ export function createProjectOnboardingFeed(steps: Step[]): FeedConfig {
       text: warningText
     });
   }
-  // Forge Code: always show the active model + how to change it.
+  // Forge Code: always show the active model + how to change it. Kept short
+  // so it fits the welcome panel without truncation.
   lines.push({
-    text: `Default model is z-ai/glm-5.2 — change it with /openrouter <model>`
+    text: `Model: z-ai/glm-5.2 — switch with /openrouter`
   });
   return {
     title: 'Tips for getting started',
