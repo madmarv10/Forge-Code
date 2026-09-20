@@ -52,13 +52,26 @@ paths (see the `// STUB` comments).
 
 ## Run (prebuilt bundle)
 
-A prebuilt bundle is included at `dist/bundle.js`.
+A prebuilt bundle is included at `dist/bundle.js`. The quickest way to run it
+is to install the bin alias once, then launch Forge from anywhere in your
+terminal:
 
 ```bash
 cp .env.example .env      # fill in your API key + base URL
-bun dist/bundle.js --version          # → 2.1.88 (Forge Code)
-bun dist/bundle.js -p "say hello"      # one-shot mode
+bun install --global .    # registers the `forge` command on your PATH
+forge --version           # → 2.1.88 (Forge Code)
+forge -p "say hello"      # one-shot mode: run a task and exit
+forge                     # interactive REPL — the default way to drive Forge
+```
+
+`forge` and `bun dist/bundle.js` are the same program; the alias just saves
+typing. You don't have to install it globally — from the repo you can always
+run the bundle directly:
+
+```bash
 bun dist/bundle.js                    # interactive REPL
+bun dist/bundle.js -p "say hello"    # one-shot mode
+bun dist/bundle.js --version         # → 2.1.88 (Forge Code)
 ```
 
 ## Build from source

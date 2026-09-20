@@ -5,7 +5,8 @@
   "type": "module",
   "private": true,
   "bin": {
-    "claude": "dist/bundle.js"
+    "claude": "dist/bundle.js",
+    "forge": "dist/bundle.js"
   },
   "scripts": {
     "build": "bun run build.ts",
