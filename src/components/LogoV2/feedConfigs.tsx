@@ -66,6 +66,10 @@ export function createProjectOnboardingFeed(steps: Step[]): FeedConfig {
       text: warningText
     });
   }
+  // Forge Code: always show the active model + how to change it.
+  lines.push({
+    text: `Default model is z-ai/glm-5.2 — change it with /openrouter <model>`
+  });
   return {
     title: 'Tips for getting started',
     lines
