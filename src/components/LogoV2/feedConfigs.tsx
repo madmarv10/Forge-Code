@@ -70,7 +70,7 @@ export function createProjectOnboardingFeed(steps: Step[]): FeedConfig {
   // Forge Code: always show the active model + how to change it. Kept short
   // so it fits the welcome panel without truncation.
   lines.push({
-    text: `Model: z-ai/glm-5.2 — switch with /openrouter`
+    text: `Default model: z-ai/glm-5.2 — switch with /openrouter`
   });
   return {
     title: 'Tips for getting started',
