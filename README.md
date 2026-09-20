@@ -1,16 +1,19 @@
 # Forge Code
 
-A buildable, runnable fork of the Claude Code CLI, reconstructed from the public
+**Forge** is a terminal-based AI coding harness — an interactive agent that
+runs in your shell, reads and edits files, runs commands, searches your
+codebase, and drives multi-step engineering tasks. It is a buildable, runnable
+fork of the Claude Code CLI, reconstructed from the public
 `@anthropic-ai/claude-code` npm package (v2.1.88) via its source map, with the
-build machinery restored so it compiles with [Bun](https://bun.sh). Rebranded
-**Forge Code** with a blue theme.
+build machinery restored so it compiles with [Bun](https://bun.sh). The whole
+thing ships as a single `bundle.js` you launch from the command line.
 
-> [!WARNING]
-> This repository is **unofficial** and is reconstructed from the public npm
-> package and source map analysis, **for research and educational purposes
-> only**. The source code copyright belongs to [Anthropic](https://www.anthropic.com).
-> It does **not** represent Anthropic's original internal development repository
-> structure. Do not use it for commercial purposes.
+Instead of talking to Anthropic directly, Forge is configured to route its
+model calls through **[OpenRouter](https://openrouter.ai)** — point the harness
+at OpenRouter's endpoint, set your OpenRouter API key, and pick any model
+OpenRouter exposes (e.g. `z-ai/glm-5.2`, `anthropic/claude-sonnet-4.5`). Forge
+speaks the Anthropic Messages API on the inside; OpenRouter translates that to
+whatever backend provider you select.
 
 ## What this is
 
